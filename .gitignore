@@ -30,10 +30,13 @@
 !bin/console
 !bin/symfony_requirements
 /vendor/
+/node_modules/
 
 # Assets and user uploads
 /web/bundles/
 /web/uploads/
+/etc/build/*
+!/etc/build/.gitignore
 
 # PHPUnit
 /app/phpunit.xml
@@ -44,9 +47,14 @@
 
 # Composer PHAR
 /composer.phar
+/tests/Application/yarn.lock
 
 # Backup entities generated with doctrine:generate:entities command
 **/Entity/*~
 
 # Embedded web-server pid file
 /.web-server-pid
+/.phpunit.result.cache
+/behat.yml
+/phpspec.yml
+/phpunit.xml
