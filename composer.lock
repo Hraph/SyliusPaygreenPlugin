@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "20b9dcfc68bbf4bcc60b54c30e25c980",
+    "content-hash": "5326479224daf41c03417babe947538e",
     "packages": [
         {
             "name": "api-platform/core",
@@ -264,24 +264,24 @@
         },
         {
             "name": "composer/package-versions-deprecated",
-            "version": "1.11.99",
+            "version": "1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/package-versions-deprecated.git",
-                "reference": "c8c9aa8a14cc3d3bec86d0a8c3fa52ea79936855"
+                "reference": "7a8001fe2c9befad9d001bf54ef0b4a17d950d0f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/c8c9aa8a14cc3d3bec86d0a8c3fa52ea79936855",
-                "reference": "c8c9aa8a14cc3d3bec86d0a8c3fa52ea79936855",
+                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/7a8001fe2c9befad9d001bf54ef0b4a17d950d0f",
+                "reference": "7a8001fe2c9befad9d001bf54ef0b4a17d950d0f",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.1.0 || ^2.0",
-                "php": "^7 || ^8"
+                "php": "^7"
             },
             "replace": {
-                "ocramius/package-versions": "1.11.99"
+                "ocramius/package-versions": "1.8.99"
             },
             "require-dev": {
                 "composer/composer": "^1.9.3 || ^2.0@dev",
@@ -329,7 +329,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-25T05:50:16+00:00"
+            "time": "2020-07-10T14:10:26+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -2526,25 +2526,78 @@
             "time": "2020-07-09T08:09:16+00:00"
         },
         {
-            "name": "imagine/imagine",
-            "version": "1.2.3",
+            "name": "hraph/paygreen-api-php",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/avalanche123/Imagine.git",
-                "reference": "cb2361e5bb4410b681462d8e4f912bc5dabf84ab"
+                "url": "https://github.com/Hraph/PaygreenApiPHP.git",
+                "reference": "2f292212e90dee8e3e709aa50968a1be469a4622"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/cb2361e5bb4410b681462d8e4f912bc5dabf84ab",
-                "reference": "cb2361e5bb4410b681462d8e4f912bc5dabf84ab",
+                "url": "https://api.github.com/repos/Hraph/PaygreenApiPHP/zipball/2f292212e90dee8e3e709aa50968a1be469a4622",
+                "reference": "2f292212e90dee8e3e709aa50968a1be469a4622",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": "^6.2",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.12",
+                "phpunit/phpunit": "^7.4",
+                "squizlabs/php_codesniffer": "~2.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Hraph\\PaygreenApi\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Hraph",
+                    "homepage": "https://github.com/hraph"
+                }
+            ],
+            "description": "PHP SQK for Paygreen.io payment provider",
+            "keywords": [
+                "api",
+                "openapi",
+                "paygreen",
+                "php",
+                "rest",
+                "sdk"
+            ],
+            "time": "2020-11-04T00:44:41+00:00"
+        },
+        {
+            "name": "imagine/imagine",
+            "version": "1.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/avalanche123/Imagine.git",
+                "reference": "d2e18be6e930ca169e4f921ef73ebfc061bf55d8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/d2e18be6e930ca169e4f921ef73ebfc061bf55d8",
+                "reference": "d2e18be6e930ca169e4f921ef73ebfc061bf55d8",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "2.2.*",
-                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.4"
+                "friendsofphp/php-cs-fixer": "^2.2",
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.4 || ^9.3"
             },
             "suggest": {
                 "ext-gd": "to use the GD implementation",
@@ -2581,7 +2634,7 @@
                 "image manipulation",
                 "image processing"
             ],
-            "time": "2019-12-04T09:55:33+00:00"
+            "time": "2020-11-03T22:35:03+00:00"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -4347,21 +4400,21 @@
         },
         {
             "name": "ocramius/proxy-manager",
-            "version": "2.8.0",
+            "version": "2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ocramius/ProxyManager.git",
-                "reference": "ac1dd414fd114cfc0da9930e0ab46063c2f5e62a"
+                "reference": "371c8f2d9d1e888ce1f8f2137d9187252b07ee94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/ac1dd414fd114cfc0da9930e0ab46063c2f5e62a",
-                "reference": "ac1dd414fd114cfc0da9930e0ab46063c2f5e62a",
+                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/371c8f2d9d1e888ce1f8f2137d9187252b07ee94",
+                "reference": "371c8f2d9d1e888ce1f8f2137d9187252b07ee94",
                 "shasum": ""
             },
             "require": {
                 "laminas/laminas-code": "^3.4.1",
-                "ocramius/package-versions": "^1.8.0",
+                "ocramius/package-versions": "^1.8.0,<1.10.0",
                 "php": "~7.4.1",
                 "webimpress/safe-writer": "^2.0.1"
             },
@@ -4428,7 +4481,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-04-13T14:42:16+00:00"
+            "time": "2020-07-13T19:23:57+00:00"
         },
         {
             "name": "pagerfanta/pagerfanta",
@@ -7744,16 +7797,16 @@
         },
         {
             "name": "symfony/doctrine-bridge",
-            "version": "v4.4.16",
+            "version": "v4.4.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/doctrine-bridge.git",
-                "reference": "12ce8950c685afb954026c2d0c975dfed3fc32f3"
+                "reference": "98c60d6dbaafeaf6204d3476ab1b54335ff7f540"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/doctrine-bridge/zipball/12ce8950c685afb954026c2d0c975dfed3fc32f3",
-                "reference": "12ce8950c685afb954026c2d0c975dfed3fc32f3",
+                "url": "https://api.github.com/repos/symfony/doctrine-bridge/zipball/98c60d6dbaafeaf6204d3476ab1b54335ff7f540",
+                "reference": "98c60d6dbaafeaf6204d3476ab1b54335ff7f540",
                 "shasum": ""
             },
             "require": {
@@ -7806,6 +7859,11 @@
                 "symfony/validator": ""
             },
             "type": "symfony-bridge",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.4-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Symfony\\Bridge\\Doctrine\\": ""
@@ -7844,7 +7902,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-24T11:50:19+00:00"
+            "time": "2020-09-27T14:14:06+00:00"
         },
         {
             "name": "symfony/error-handler",
@@ -12836,16 +12894,16 @@
     "packages-dev": [
         {
             "name": "amphp/amp",
-            "version": "v2.5.0",
+            "version": "v2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/amp.git",
-                "reference": "f220a51458bf4dd0dedebb171ac3457813c72bbc"
+                "reference": "ecdc3c476b3ccff02f8e5d5bcc04f7ccfd18751c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/amp/zipball/f220a51458bf4dd0dedebb171ac3457813c72bbc",
-                "reference": "f220a51458bf4dd0dedebb171ac3457813c72bbc",
+                "url": "https://api.github.com/repos/amphp/amp/zipball/ecdc3c476b3ccff02f8e5d5bcc04f7ccfd18751c",
+                "reference": "ecdc3c476b3ccff02f8e5d5bcc04f7ccfd18751c",
                 "shasum": ""
             },
             "require": {
@@ -12916,7 +12974,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-07-14T21:47:18+00:00"
+            "time": "2020-11-03T16:23:45+00:00"
         },
         {
             "name": "amphp/byte-stream",
@@ -17294,12 +17352,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/autowire-array-parameter.git",
-                "reference": "f9724f75cae8ae86fb80d9332665587395cde3ee"
+                "reference": "721e29f2e656cc3cf1101fcc0dbb4f4a44d9309b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/autowire-array-parameter/zipball/f9724f75cae8ae86fb80d9332665587395cde3ee",
-                "reference": "f9724f75cae8ae86fb80d9332665587395cde3ee",
+                "url": "https://api.github.com/repos/symplify/autowire-array-parameter/zipball/721e29f2e656cc3cf1101fcc0dbb4f4a44d9309b",
+                "reference": "721e29f2e656cc3cf1101fcc0dbb4f4a44d9309b",
                 "shasum": ""
             },
             "require": {
@@ -17406,12 +17464,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/console-color-diff.git",
-                "reference": "521ef50cc829563630fc6794e8e72869f38e95be"
+                "reference": "6cae4c121271da963698a9f0a50717a7d2ee9567"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/console-color-diff/zipball/521ef50cc829563630fc6794e8e72869f38e95be",
-                "reference": "521ef50cc829563630fc6794e8e72869f38e95be",
+                "url": "https://api.github.com/repos/symplify/console-color-diff/zipball/6cae4c121271da963698a9f0a50717a7d2ee9567",
+                "reference": "6cae4c121271da963698a9f0a50717a7d2ee9567",
                 "shasum": ""
             },
             "require": {
@@ -17536,12 +17594,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/package-builder.git",
-                "reference": "4a8f4ad06d9be05e379d168423071d7de5525821"
+                "reference": "d262d5c2043c669f145d3eabf7d8114ae64cf169"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/package-builder/zipball/4a8f4ad06d9be05e379d168423071d7de5525821",
-                "reference": "4a8f4ad06d9be05e379d168423071d7de5525821",
+                "url": "https://api.github.com/repos/symplify/package-builder/zipball/d262d5c2043c669f145d3eabf7d8114ae64cf169",
+                "reference": "d262d5c2043c669f145d3eabf7d8114ae64cf169",
                 "shasum": ""
             },
             "require": {
@@ -17687,12 +17745,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/set-config-resolver.git",
-                "reference": "fefb51817aa3fa81d5f877f2860b24eb7826b73c"
+                "reference": "1333995e30b7acfa7c4378c5f85de1dd96226c93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/set-config-resolver/zipball/fefb51817aa3fa81d5f877f2860b24eb7826b73c",
-                "reference": "fefb51817aa3fa81d5f877f2860b24eb7826b73c",
+                "url": "https://api.github.com/repos/symplify/set-config-resolver/zipball/1333995e30b7acfa7c4378c5f85de1dd96226c93",
+                "reference": "1333995e30b7acfa7c4378c5f85de1dd96226c93",
                 "shasum": ""
             },
             "require": {
@@ -17744,12 +17802,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/smart-file-system.git",
-                "reference": "57ded5446e9d0ae307072400c716cb2d9da53c5d"
+                "reference": "4146069c725b7c6e2f53924a151286f1e26c132f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/smart-file-system/zipball/57ded5446e9d0ae307072400c716cb2d9da53c5d",
-                "reference": "57ded5446e9d0ae307072400c716cb2d9da53c5d",
+                "url": "https://api.github.com/repos/symplify/smart-file-system/zipball/4146069c725b7c6e2f53924a151286f1e26c132f",
+                "reference": "4146069c725b7c6e2f53924a151286f1e26c132f",
                 "shasum": ""
             },
             "require": {
@@ -17788,7 +17846,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-23T21:04:57+00:00"
+            "time": "2020-10-26T10:38:48+00:00"
         },
         {
             "name": "symplify/symplify-kernel",
@@ -17796,12 +17854,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/symplify-kernel.git",
-                "reference": "d8faa0e865ec4d3e3eb7c743b0b5c9189ecddd4f"
+                "reference": "c79dc6ce559b408c08e9fbc044f59cbb64961cf9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/symplify-kernel/zipball/d8faa0e865ec4d3e3eb7c743b0b5c9189ecddd4f",
-                "reference": "d8faa0e865ec4d3e3eb7c743b0b5c9189ecddd4f",
+                "url": "https://api.github.com/repos/symplify/symplify-kernel/zipball/c79dc6ce559b408c08e9fbc044f59cbb64961cf9",
+                "reference": "c79dc6ce559b408c08e9fbc044f59cbb64961cf9",
                 "shasum": ""
             },
             "require": {

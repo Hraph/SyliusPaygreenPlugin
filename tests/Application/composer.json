@@ -1,0 +1,5 @@
+{
+    "name": "hraph/sylius-paygreen-plugin-test",
+    "description": "Sylius application for plugin testing purposes (composer.json needed for project dir resolving)",
+    "license": "Apache-2.0"
+}

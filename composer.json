@@ -6,7 +6,9 @@
     "license": "Apache-2.0",
     "require": {
         "php": "^7.3",
-        "sylius/sylius": "^1.8"
+        "hraph/paygreen-api-php": "^1.0.1",
+        "sylius/sylius": "^1.8",
+        "symfony/doctrine-bridge": "4.4.15"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
