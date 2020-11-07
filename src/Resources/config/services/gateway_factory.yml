@@ -1,0 +1,7 @@
+services:
+    hraph_sylius_paygreen_plugin.gateway_factory.paygreen:
+        class: Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder
+        arguments:
+            - Hraph\SyliusPaygreenPlugin\Payum\PaygreenGatewayFactory
+        tags:
+              - { name: payum.gateway_factory_builder, factory: paygreen }

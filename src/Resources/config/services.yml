@@ -1,0 +1,9 @@
+imports:
+    - { resource: "services/form.yml" }
+    - { resource: "services/gateway_factory.yml" }
+    - { resource: "services/action.yml" }
+
+services:
+    hraph_sylius_paygreen_plugin.client.paygreen_api:
+        class: Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClient
+        public: true
