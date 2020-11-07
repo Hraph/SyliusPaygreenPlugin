@@ -8,18 +8,15 @@ namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 use Hraph\PaygreenApi\ApiException;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
-use Payum\Core\Action\ActionInterface;
-use Payum\Core\ApiAwareInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
-use Payum\Core\GatewayAwareInterface;
 use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Reply\HttpResponse;
 use Payum\Core\Request\GetHttpRequest;
 use Payum\Core\Request\Notify;
 use Symfony\Component\HttpFoundation\Response;
 
-final class NotifyAction extends BaseApiAwareAction implements ActionInterface, ApiAwareInterface, GatewayAwareInterface
+final class NotifyAction extends BaseApiAwareAction implements NotifyActionInterface
 {
     use GatewayAwareTrait;
 

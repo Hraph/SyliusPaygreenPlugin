@@ -6,8 +6,6 @@ use Hraph\PaygreenApi\ApiException;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Hraph\SyliusPaygreenPlugin\Types\TransactionStatus;
-use Payum\Core\Action\ActionInterface;
-use Payum\Core\ApiAwareInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Sylius\Bundle\PayumBundle\Request\GetStatus;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -17,7 +15,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
  * Check the status of the payment after capture and notify
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
-final class StatusAction extends BaseApiAwareAction implements ActionInterface, ApiAwareInterface
+final class StatusAction extends BaseApiAwareAction implements StatusActionInterface
 {
     /**
      * @inheritDoc
