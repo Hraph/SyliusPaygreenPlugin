@@ -2,49 +2,80 @@
 
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
+use Hraph\PaygreenApi\ApiException;
+use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
+use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
+use Hraph\SyliusPaygreenPlugin\Types\TransactionStatus;
 use Payum\Core\Action\ActionInterface;
+use Payum\Core\ApiAwareInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Sylius\Bundle\PayumBundle\Request\GetStatus;
 use Sylius\Component\Core\Model\PaymentInterface;
 
-final class StatusAction implements ActionInterface
+/**
+ * Class StatusAction
+ * Handles the after payment url and checks if the payment has been successfully captured
+ * @package Hraph\SyliusPaygreenPlugin\Payum\Action
+ */
+final class StatusAction extends BaseApiAwareAction implements ActionInterface, ApiAwareInterface
 {
-    public const STATUS_CAPTURED = 'CAPTURED';
-
-    public const STATUS_CREATED = 'CREATED';
-
-    public const STATUS_COMPLETED = 'COMPLETED';
-
-    public const STATUS_PROCESSING = 'PROCESSING';
-
     /**
      * @inheritDoc
      */
     public function execute($request)
     {
         RequestNotSupportedException::assertSupports($this, $request);
-        /** @var array $model */
-        $model = $request->getModel();
 
-        if ($model['status'] === self::STATUS_CREATED) {
+        /** @var PaymentInterface $payment */
+        $payment = $request->getModel();
+        $paymentDetails = $payment->getDetails();
+
+        // Transaction ID is not set. Invalid payment
+        if (!isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID])) {
             $request->markNew();
 
             return;
         }
 
-        if ($model['status'] === self::STATUS_CAPTURED) {
-            $request->markPending();
+        try {
+            // Search transaction
+            $paymentData = $this
+                ->api
+                ->getPayinsTransactionApi()
+                ->apiIdentifiantPayinsTransactionIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID]);
 
-            return;
+            // Got transaction and valid status
+            if (!is_null($paymentData->getData()) && !is_null($paymentData->getData()->getResult()) && !is_null($paymentData->getData()->getResult()->getStatus())) {
+
+                switch ($paymentData->getData()->getResult()->getStatus()){
+                    case TransactionStatus::STATUS_REFUSED:
+                        $request->markRefused();
+                        break;
+
+                    case TransactionStatus::STATUS_CANCELLED:
+                        $request->markCanceled();
+                        break;
+
+                    case TransactionStatus::STATUS_SUCCEEDED:
+                        $request->markCaptured();
+                        break;
+
+                    case TransactionStatus::STATUS_PENDING:
+                        $request->markPending();
+                        break;
+
+                    default:
+                        $request->markUnknown();
+                        break;
+                }
+            }
+            else throw new ApiException("Invalid API data exception.");
+
         }
-
-        if ($model['status'] === self::STATUS_COMPLETED) {
-            $request->markCaptured();
-
-            return;
+        catch (ApiException $e){
+            //TODO handle exception
+            echo 'Exception when calling API: ', $e->getMessage(), PHP_EOL;
         }
-
-        $request->markFailed();
     }
 
     /**
