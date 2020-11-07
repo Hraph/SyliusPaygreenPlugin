@@ -4,6 +4,8 @@ imports:
     - { resource: "services/action.yml" }
 
 services:
+    _defaults:
+        public: true
+
     hraph_sylius_paygreen_plugin.client.paygreen_api:
         class: Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClient
-        public: true

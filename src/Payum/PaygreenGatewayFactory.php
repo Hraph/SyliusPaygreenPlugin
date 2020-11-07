@@ -22,6 +22,7 @@ final class PaygreenGatewayFactory extends GatewayFactory
         $config->defaults([
             'payum.factory_name' => self::FACTORY_NAME,
             'payum.factory_title' => 'PayGreen',
+            'payum.api_client' => '@hraph_sylius_paygreen_plugin.client.paygreen_api', // Use registered service instance
             'payum.action.status' => new StatusAction(),
         ]);
 
@@ -40,11 +41,12 @@ final class PaygreenGatewayFactory extends GatewayFactory
                 'api_key',
             ];
 
-            // Set api config to client object
+            // Set config API and save object for ApiAwareInterface
             $config['payum.api'] = function (ArrayObject $config) {
                 $config->validateNotEmpty($config['payum.required_options']);
 
-                $paygreenApiClient = new PaygreenApiClient();
+                /** @var PaygreenApiClientInterface $paygreenApiClient */
+                $paygreenApiClient = $config['payum.api_client']; // Use service
 
                 $paygreenApiClient->setUsername($config['username']);
                 $paygreenApiClient->setApiKey($config['api_key']);
