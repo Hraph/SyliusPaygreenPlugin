@@ -9,3 +9,6 @@ services:
 
     hraph_sylius_paygreen_plugin.client.paygreen_api:
         class: Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClient
+
+    hraph_sylius_paygreen_plugin.request.get_http_request:
+        class: Payum\Core\Request\GetHttpRequest
