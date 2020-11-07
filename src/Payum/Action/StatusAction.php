@@ -14,7 +14,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 
 /**
  * Class StatusAction
- * Handles the after payment url and checks if the payment has been successfully captured
+ * Check the status of the payment after capture and notify
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
 final class StatusAction extends BaseApiAwareAction implements ActionInterface, ApiAwareInterface
@@ -64,13 +64,16 @@ final class StatusAction extends BaseApiAwareAction implements ActionInterface, 
                         $request->markPending();
                         break;
 
+                    case TransactionStatus::STATUS_REFUNDED:
+                        $request->markRefunded();
+                        break;
+
                     default:
                         $request->markUnknown();
                         break;
                 }
             }
-            else throw new ApiException("Invalid API data exception.");
-
+            else throw new ApiException("Invalid API data exception. Wrong result!");
         }
         catch (ApiException $e){
             //TODO handle exception
