@@ -2,7 +2,9 @@ services:
     _defaults:
         public: true
 
-    hraph_sylius_paygreen_plugin.helper.convert_refund_data:
-        class: Hraph\SyliusPaygreenPlugin\Helper\ConvertRefundData
     hraph_sylius_paygreen_plugin.helper.int_to_string:
         class: Hraph\SyliusPaygreenPlugin\Helper\IntToStringConverter
+    hraph_sylius_paygreen_plugin.helper.convert_refund_data:
+        class: Hraph\SyliusPaygreenPlugin\Helper\ConvertRefundData
+        arguments:
+            - "@hraph_sylius_paygreen_plugin.helper.int_to_string"

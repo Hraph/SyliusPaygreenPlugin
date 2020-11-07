@@ -38,7 +38,30 @@ final class CaptureAction extends BaseApiAwareAction implements CaptureActionInt
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
-        
+        $details = ArrayObject::ensureArrayObject($request->getModel());
+
+        // Transaction id is already in payment details: payment already been made
+        if (true === isset($details[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID])) {
+            return;
+        }
+
+        if (null === $this->tokenFactory) {
+            throw new RuntimeException();
+        }
+
+        /** @var TokenInterface $token */
+        $token = $request->getToken(); // Get current token
+
+        // Create a notify token to get status updates from PayGreen
+        $notifyToken = $this->tokenFactory->createNotifyToken($token->getGatewayName(), $token->getDetails());
+
+        $details['notifiedUrl'] = $notifyToken->getTargetUrl();
+        $details['returnedUrl'] = $token->getAfterUrl();
+
+        $metadata = $details['metadata'];
+        $details['metadata'] = $metadata;
+
+        $this->gateway->execute(new CreatePayment($details));
     }
 
     /**
@@ -48,7 +71,7 @@ final class CaptureAction extends BaseApiAwareAction implements CaptureActionInt
     {
         return
             $request instanceof Capture &&
-            $request->getModel() instanceof PaymentInterface
+            $request->getModel() instanceof \ArrayAccess
             ;
     }
 }

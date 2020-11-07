@@ -23,7 +23,6 @@ final class PaygreenGatewayFactory extends GatewayFactory
             'payum.factory_name' => self::FACTORY_NAME,
             'payum.factory_title' => 'PayGreen',
             'payum.api_client' => '@hraph_sylius_paygreen_plugin.client.paygreen_api', // Use registered service instance
-            'payum.action.status' => new StatusAction(),
         ]);
 
         if (false === (bool) $config['payum.api']) {

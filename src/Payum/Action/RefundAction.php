@@ -35,6 +35,9 @@ class RefundAction extends BaseApiAwareAction implements RefundActionInterface
         $this->convertOrderRefundData = $convertOrderRefundData;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function execute($request)
     {
         RequestNotSupportedException::assertSupports($this, $request);
@@ -62,6 +65,9 @@ class RefundAction extends BaseApiAwareAction implements RefundActionInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supports($request)
     {
         return
