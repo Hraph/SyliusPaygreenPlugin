@@ -16,3 +16,9 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\CaptureAction
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.capture }
+    hraph_sylius_paygreen_plugin.action.refund:
+        class: Hraph\SyliusPaygreenPlugin\Payum\Action\RefundAction
+        arguments:
+            - "@hraph_sylius_paygreen_plugin.helper.convert_refund_data"
+        tags:
+            - { name: payum.action, factory: paygreen, alias: payum.action.refund }
