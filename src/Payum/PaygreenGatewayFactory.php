@@ -12,7 +12,7 @@ use Payum\Core\GatewayFactory;
 
 final class PaygreenGatewayFactory extends GatewayFactory
 {
-    public const FACTORY_NAME = 'mollie';
+    public const FACTORY_NAME = 'paygreen';
 
     /**
      * {@inheritdoc}
