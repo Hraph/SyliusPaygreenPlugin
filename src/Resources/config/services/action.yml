@@ -1,0 +1,11 @@
+services:
+    hraph_sylius_paygreen_plugin.action.status:
+        class: Hraph\SyliusPaygreenPlugin\Payum\Action\StatusAction
+        public: true
+        tags:
+            - { name: payum.action, factory: paygreen, alias: payum.action.status }
+    hraph_sylius_paygreen_plugin.action.capture:
+        class: Hraph\SyliusPaygreenPlugin\Payum\Action\CaptureAction
+        public: true
+        tags:
+            - { name: payum.action, factory: paygreen, alias: payum.action.capture }
