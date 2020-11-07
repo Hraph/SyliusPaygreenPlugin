@@ -1,5 +1,5 @@
 services:
-    _default:
+    _defaults:
         public: true
 
     hraph_sylius_paygreen_plugin.helper.convert_refund_data:
