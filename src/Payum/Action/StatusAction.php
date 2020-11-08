@@ -66,6 +66,10 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
                         $request->markRefunded();
                         break;
 
+                    case TransactionStatus::STATUS_EXPIRED:
+                        $request->markExpired();
+                        break;
+
                     default:
                         $request->markUnknown();
                         break;
