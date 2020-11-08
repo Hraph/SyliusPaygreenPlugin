@@ -13,7 +13,6 @@ use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Reply\HttpPostRedirect;
-use Sylius\Component\Core\Model\PaymentInterface;
 
 class CreatePaymentAction extends BaseApiAwareAction implements ActionInterface
 {
@@ -53,9 +52,11 @@ class CreatePaymentAction extends BaseApiAwareAction implements ActionInterface
                 // Save transaction id for status action
                 $details[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID] = $paymentRequest->getData()->getId();
             }
-            else throw new ApiException("Invalid API data exception. Wrong id!");
+            else
+                throw new ApiException("Invalid API data exception. Wrong id!");
 
-        } catch (ApiException $e) {
+        }
+        catch (ApiException $e) {
             throw new ApiException(sprintf('Error with create payment with: %s', $e->getMessage()));
         }
         catch (\Exception $e){

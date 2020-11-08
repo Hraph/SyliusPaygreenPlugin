@@ -1,0 +1,5 @@
+# Override Payum capture route
+payum_capture_do:
+    path: /payment/capture/{payum_token}
+    defaults:
+        _controller: SyliusPaygreenPlugin:Capture:do

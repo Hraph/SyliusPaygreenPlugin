@@ -3,6 +3,7 @@ imports:
     - { resource: "services/gateway_factory.yml" }
     - { resource: "services/action.yml" }
     - { resource: "services/helper.yml" }
+    - { resource: "services/controller.yml" }
 
 services:
     _defaults:

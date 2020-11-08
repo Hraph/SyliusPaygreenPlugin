@@ -1,0 +1,14 @@
+{% extends '@SyliusShop/Checkout/layout.html.twig' %}
+
+{% block title %}{{ 'sylius.ui.payment'|trans }} | {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="ui padded segment">
+        {% include '@SyliusPaygreenPlugin/Checkout/Payment/_header.html.twig' %}
+        <div class="ui grid">
+            <div class="column">
+                <iframe src="{{ execute_url ~ "?display=insite" }}" style="border: 0;width: 100%; height: 600px"></iframe>
+            </div>
+        </div>
+    </div>
+{% endblock %}
