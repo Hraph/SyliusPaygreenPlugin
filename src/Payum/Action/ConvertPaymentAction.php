@@ -4,6 +4,7 @@
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
 
+use Hraph\SyliusPaygreenPlugin\Helper\PaymentDescriptionInterface;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\ApiAwareInterface;
@@ -19,6 +20,20 @@ class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface
 {
     use GatewayAwareTrait;
 
+    /**
+     * @var PaymentDescriptionInterface
+     */
+    private PaymentDescriptionInterface $paymentDescription;
+
+    /**
+     * ConvertPaymentAction constructor.
+     * @param PaymentDescriptionInterface $paymentDescription
+     */
+    public function __construct(PaymentDescriptionInterface $paymentDescription)
+    {
+        $this->paymentDescription = $paymentDescription;
+    }
+
 
     /**
      * {@inheritdoc}
@@ -33,21 +48,19 @@ class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface
         /** @var OrderInterface $order */
         $order = $payment->getOrder();
 
-        $customer = $order->getCustomer();
-
         $details = [
             'amount' => $payment->getAmount(),
             'currencyCode' => $payment->getCurrencyCode(),
             'customer' => [
-                'firstName' => $order->getCustomer()->getFirstName(),
-                'lastName' => $order->getCustomer()->getLastName(),
-                'fullName' => $order->getCustomer()->getFullName(),
+                'firstName' => $order->getBillingAddress()->getFirstName(),
+                'lastName' => $order->getBillingAddress()->getLastName(),
                 'email' => $order->getCustomer()->getEmail(),
             ],
-//            'description' => $this->paymentDescription->getPaymentDescription($payment, $method, $order),
+            //'description' => $this->paymentDescription->getPaymentDescription($payment, $order),
             'metadata' => [
+                'payment_id' => $payment->getId(),
                 'order_id' => $order->getId(),
-                'customer_id' => $customer->getId() ?? null
+                'customer_id' => $order->getCustomer()->getId() ?? null,
             ],
         ];
 

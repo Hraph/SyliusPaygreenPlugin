@@ -35,12 +35,13 @@ class CreatePaymentAction extends BaseApiAwareAction implements ActionInterface
             ->setLastName($details['customer']['lastName']);
 
         $payins->setAmount($details['amount'])
-            ->setOrderId($details['metadata']['order_id'])
+            ->setOrderId("{$details['metadata']['order_id']}-{$details['metadata']['payment_id']}") // Cause an order ID is unique for PayGreen we need to add paymentId in case of new attempt
             ->setBuyer($buyer)
             ->setPaymentType($this->api->getPaymentType())
             ->setCurrency($details['currencyCode'])
             ->setNotifiedUrl($details['notifiedUrl'])
             ->setReturnedUrl($details['returnedUrl']);
+
 
         try {
             $paymentRequest = $this

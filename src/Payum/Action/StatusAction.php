@@ -47,9 +47,6 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
 
                 switch ($paymentData->getData()->getResult()->getStatus()){
                     case TransactionStatus::STATUS_REFUSED:
-                        $request->markRefused();
-                        break;
-
                     case TransactionStatus::STATUS_CANCELLED:
                         $request->markCanceled();
                         break;

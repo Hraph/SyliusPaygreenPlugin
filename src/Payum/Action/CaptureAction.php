@@ -40,11 +40,6 @@ final class CaptureAction extends BaseApiAwareAction implements CaptureActionInt
 
         $details = ArrayObject::ensureArrayObject($request->getModel());
 
-        // Transaction id is already in payment details: payment already been made
-        if (true === isset($details[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID])) {
-            return;
-        }
-
         if (null === $this->tokenFactory) {
             throw new RuntimeException();
         }

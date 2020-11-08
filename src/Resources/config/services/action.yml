@@ -24,6 +24,8 @@ services:
             - { name: payum.action, factory: paygreen, alias: payum.action.refund }
     hraph_sylius_paygreen_plugin.action.convert_payment_action:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\ConvertPaymentAction
+        arguments:
+            - "@hraph_sylius_paygreen_plugin.helper.payment_description"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.convert_payment }
     hraph_sylius_paygreen_plugin.action.create_payment:
