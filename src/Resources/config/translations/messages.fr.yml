@@ -1,0 +1,10 @@
+hraph_sylius_paygreen_plugin:
+    ui:
+        paygreen_multiple_gateway: PayGreen
+        paygreen_multiple_gateway_label: PayGreen - Paiement en plusieurs fois
+    form:
+        username: Identifiant API
+        api_key: Clé privée API
+        times: Nombre d'échéances
+        times_min_range: Nombre d'échéances minimale
+        use_sandbox_api: Mode bac à sable (sandbox) ?

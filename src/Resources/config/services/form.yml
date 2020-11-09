@@ -4,3 +4,8 @@ services:
         tags:
             - { name: sylius.gateway_configuration_type, type: paygreen, label: hraph_sylius_paygreen_plugin.ui.paygreen_gateway_label } # Define name and label for admin configuration
             - { name: form.type }
+    hraph_sylius_paygreen_plugin.form.type.paygreen_multiple_configuration:
+        class: Hraph\SyliusPaygreenPlugin\Form\Type\PaygreenMultipleConfigurationType
+        tags:
+            - { name: sylius.gateway_configuration_type, type: paygreen_multiple, label: hraph_sylius_paygreen_plugin.ui.paygreen_multiple_gateway_label } # Define name and label for admin configuration
+            - { name: form.type }

@@ -5,3 +5,9 @@ services:
             - Hraph\SyliusPaygreenPlugin\Payum\PaygreenGatewayFactory
         tags:
               - { name: payum.gateway_factory_builder, factory: paygreen }
+    hraph_sylius_paygreen_plugin.gateway_factory.paygreen_multiple:
+        class: Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder
+        arguments:
+            - Hraph\SyliusPaygreenPlugin\Payum\PaygreenGatewayFactoryMultiple
+        tags:
+              - { name: payum.gateway_factory_builder, factory: paygreen_multiple }

@@ -16,6 +16,16 @@ class PaygreenApiClient extends PaygreenApiClientBase implements PaygreenApiClie
     private string $paymentType;
 
     /**
+     * @var bool Recurring Subscription
+     */
+    private bool $isMultipleTimePayment;
+
+    /**
+     * @var int Number of times
+     */
+    private int $multipleTimePaymentTimes = 3;
+
+    /**
      * PaygreenApiClient constructor.
      */
     public function __construct()
@@ -39,6 +49,38 @@ class PaygreenApiClient extends PaygreenApiClientBase implements PaygreenApiClie
     public function setPaymentType(string $paymentType): void
     {
         $this->paymentType = $paymentType;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMultipleTimePayment(): bool
+    {
+        return $this->isMultipleTimePayment;
+    }
+
+    /**
+     * @param bool $bool
+     */
+    public function setIsMultipleTimePayment(bool $bool): void
+    {
+        $this->isMultipleTimePayment = $bool;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMultipleTimePaymentTimes(): int
+    {
+        return $this->multipleTimePaymentTimes;
+    }
+
+    /**
+     * @param int $times
+     */
+    public function setMultipleTimePaymentTimes(int $times): void
+    {
+        $this->multipleTimePaymentTimes = $times;
     }
 
 

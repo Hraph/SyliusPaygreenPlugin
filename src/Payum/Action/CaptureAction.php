@@ -4,27 +4,17 @@ declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
-use Hraph\PaygreenApi\ApiException;
-use Hraph\PaygreenApi\Model\Payins;
-use Hraph\PaygreenApi\Model\PayinsBuyer;
 use Hraph\SyliusPaygreenPlugin\Model\PaymentDetails;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
 use Hraph\SyliusPaygreenPlugin\Request\Api\CreatePayment;
-use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
+use Hraph\SyliusPaygreenPlugin\Request\Api\CreatePaymentMultiple;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareTrait;
-use Payum\Core\Model\Payment as PayumPayment;
-use Payum\Core\Reply\HttpPostRedirect;
 use Payum\Core\Request\Capture;
-use Payum\Core\Request\Convert;
 use Payum\Core\Security\GenericTokenFactoryAwareTrait;
 use Payum\Core\Security\TokenInterface;
 use RuntimeException;
-use Sylius\Bundle\PayumBundle\Request\GetStatus;
-use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Core\Model\PaymentInterface as SyliusPaymentInterface;
 
 final class CaptureAction extends BaseApiAwareAction implements CaptureActionInterface
 {
@@ -49,14 +39,22 @@ final class CaptureAction extends BaseApiAwareAction implements CaptureActionInt
 
         // Create a notify token to get status updates from PayGreen
         $notifyToken = $this->tokenFactory->createNotifyToken($token->getGatewayName(), $token->getDetails());
+//        $refundToken = $this->tokenFactory->createRefundToken($token->getGatewayName(), $token->getDetails());
 
         $details['notifiedUrl'] = $notifyToken->getTargetUrl();
         $details['returnedUrl'] = $token->getAfterUrl();
 
         $metadata = $details['metadata'];
+//        $metadata['refund_token'] = $refundToken->getHash();
         $details['metadata'] = $metadata;
 
-        $this->gateway->execute(new CreatePayment($details));
+        if (true === $this->api->isMultipleTimePayment()) {
+            $this->gateway->execute(new CreatePaymentMultiple($details));
+        }
+
+        if (false === $this->api->isMultipleTimePayment()) {
+            $this->gateway->execute(new CreatePayment($details));
+        }
     }
 
     /**

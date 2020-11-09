@@ -64,7 +64,10 @@ class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface
             ],
         ];
 
-//        if (true === $this->api->isRecurringSubscription()) {
+        if (true === $this->api->isMultipleTimePayment()) {
+            $details['times'] = $this->api->getMultipleTimePaymentTimes();
+        }
+//        if (true === $this->api->isMultipleTimePayment()) {
 //            $config = $this->api->getConfig();
 //
 //            $details['times'] = $config['times'];

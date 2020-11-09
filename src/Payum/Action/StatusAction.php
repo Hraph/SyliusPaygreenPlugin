@@ -27,20 +27,31 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
         /** @var PaymentInterface $payment */
         $payment = $request->getModel();
         $paymentDetails = $payment->getDetails();
+        $pid = null;
 
-        // Transaction ID is not set. Invalid payment
-        if (!isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID])) {
+        // Transaction ID is not set in payment data. Invalid payment
+        if (!isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID]) && !isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID])) {
             $request->markNew();
 
             return;
         }
 
+        // Multiple payment
+        if (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID])) {
+            $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID];
+        }
+
+        // One time payment
+        elseif (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID])) {
+            $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID];
+        }
+        
         try {
             // Search transaction
             $paymentData = $this
                 ->api
                 ->getPayinsTransactionApi()
-                ->apiIdentifiantPayinsTransactionIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID]);
+                ->apiIdentifiantPayinsTransactionIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $pid);
 
             // Got transaction and valid status
             if (!is_null($paymentData->getData()) && !is_null($paymentData->getData()->getResult()) && !is_null($paymentData->getData()->getResult()->getStatus())) {

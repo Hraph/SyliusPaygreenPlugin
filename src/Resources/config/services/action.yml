@@ -6,29 +6,38 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\StatusAction
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.status }
+            - { name: payum.action, factory: paygreen_multiple, alias: payum.action.status }
     hraph_sylius_paygreen_plugin.action.notify:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\NotifyAction
         arguments:
             - "@hraph_sylius_paygreen_plugin.request.get_http_request"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.notify }
+            - { name: payum.action, factory: paygreen_multiple, alias: payum.action.notify }
     hraph_sylius_paygreen_plugin.action.capture:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\CaptureAction
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.capture }
+            - { name: payum.action, factory: paygreen_multiple, alias: payum.action.capture }
     hraph_sylius_paygreen_plugin.action.refund:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\RefundAction
         arguments:
             - "@hraph_sylius_paygreen_plugin.helper.convert_refund_data"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.refund }
+            - { name: payum.action, factory: paygreen_multiple, alias: payum.action.refund }
     hraph_sylius_paygreen_plugin.action.convert_payment_action:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\ConvertPaymentAction
         arguments:
             - "@hraph_sylius_paygreen_plugin.helper.payment_description"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.convert_payment }
+            - { name: payum.action, factory: paygreen_multiple, alias: payum.action.convert_payment }
     hraph_sylius_paygreen_plugin.action.create_payment:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\Api\CreatePaymentAction
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.create_payment }
+    hraph_sylius_paygreen_plugin.action.create_payment_multiple:
+        class: Hraph\SyliusPaygreenPlugin\Payum\Action\Api\CreatePaymentMultipleAction
+        tags:
+            - { name: payum.action, factory: paygreen_multiple, alias: payum.action.create_payment }
