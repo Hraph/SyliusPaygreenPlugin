@@ -1,0 +1,24 @@
+imports:
+    - { resource: "services/form.yaml" }
+    - { resource: "services/gateway_factory.yaml" }
+    - { resource: "services/action.yaml" }
+    - { resource: "services/helper.yaml" }
+    - { resource: "services/controller.yaml" }
+    - { resource: "services/console.yaml" }
+#    - { resource: "services/validators.yaml" }
+#    - { resource: "services/payment_processing.yaml" }
+
+services:
+    _defaults:
+        public: true
+
+    hraph_sylius_paygreen_plugin.client.paygreen_api:
+        class: Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClient
+
+    hraph_sylius_paygreen_plugin.request.get_http_request:
+        class: Payum\Core\Request\GetHttpRequest
+
+    hraph_sylius_paygreen_plugin.client.repository.paygreen_shop_repository:
+        class: Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenShopRepository
+        arguments:
+            - "@hraph_sylius_paygreen_plugin.client.paygreen_api"
