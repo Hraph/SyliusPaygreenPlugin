@@ -8,7 +8,6 @@
         "php": "^7.3",
         "hraph/paygreen-api-php": "^1.0.0",
         "sylius/sylius": "^1.8",
-        "sylius/refund-plugin": "^1.0.0-RC.3",
         "symfony/doctrine-bridge": "4.4.15"
     },
     "require-dev": {

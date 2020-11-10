@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5326479224daf41c03417babe947538e",
+    "content-hash": "90de9a314f39f0f402c63665c2ff8772",
     "packages": [
         {
             "name": "api-platform/core",
@@ -846,20 +846,20 @@
         },
         {
             "name": "doctrine/doctrine-bundle",
-            "version": "1.12.10",
+            "version": "1.12.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineBundle.git",
-                "reference": "2ee4c25a847e744e93d7fc2895e059ad9ef7d10c"
+                "reference": "df45ea464f201e6ab6ba02757204eaaf4120bcfa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/2ee4c25a847e744e93d7fc2895e059ad9ef7d10c",
-                "reference": "2ee4c25a847e744e93d7fc2895e059ad9ef7d10c",
+                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/df45ea464f201e6ab6ba02757204eaaf4120bcfa",
+                "reference": "df45ea464f201e6ab6ba02757204eaaf4120bcfa",
                 "shasum": ""
             },
             "require": {
-                "doctrine/dbal": "^2.5.12",
+                "doctrine/dbal": "^2.5.12|^3.0",
                 "doctrine/doctrine-cache-bundle": "~1.2",
                 "doctrine/persistence": "^1.3.3",
                 "jdorn/sql-formatter": "^1.2.16",
@@ -950,7 +950,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-05-25T19:50:59+00:00"
+            "time": "2020-11-07T08:28:55+00:00"
         },
         {
             "name": "doctrine/doctrine-cache-bundle",
@@ -2527,16 +2527,16 @@
         },
         {
             "name": "hraph/paygreen-api-php",
-            "version": "1.0.1",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Hraph/PaygreenApiPHP.git",
-                "reference": "2f292212e90dee8e3e709aa50968a1be469a4622"
+                "reference": "dbcd7cb96439177893d502a6f21ca788d9b968e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Hraph/PaygreenApiPHP/zipball/2f292212e90dee8e3e709aa50968a1be469a4622",
-                "reference": "2f292212e90dee8e3e709aa50968a1be469a4622",
+                "url": "https://api.github.com/repos/Hraph/PaygreenApiPHP/zipball/dbcd7cb96439177893d502a6f21ca788d9b968e2",
+                "reference": "dbcd7cb96439177893d502a6f21ca788d9b968e2",
                 "shasum": ""
             },
             "require": {
@@ -2576,7 +2576,7 @@
                 "rest",
                 "sdk"
             ],
-            "time": "2020-11-04T00:44:41+00:00"
+            "time": "2020-11-09T01:28:31+00:00"
         },
         {
             "name": "imagine/imagine",
@@ -4250,21 +4250,21 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.25.5",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "1817faadd1846cd08be9a49e905dc68823bc38c0"
+                "reference": "f9eee5cec93dfb313a38b6b288741e84e53f02d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1817faadd1846cd08be9a49e905dc68823bc38c0",
-                "reference": "1817faadd1846cd08be9a49e905dc68823bc38c0",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/f9eee5cec93dfb313a38b6b288741e84e53f02d5",
+                "reference": "f9eee5cec93dfb313a38b6b288741e84e53f02d5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0",
-                "psr/log": "~1.0"
+                "php": ">=7.2",
+                "psr/log": "^1.0.1"
             },
             "provide": {
                 "psr/log-implementation": "1.0.0"
@@ -4272,32 +4272,36 @@
             "require-dev": {
                 "aws/aws-sdk-php": "^2.4.9 || ^3.0",
                 "doctrine/couchdb": "~1.0@dev",
-                "graylog2/gelf-php": "~1.0",
+                "elasticsearch/elasticsearch": "^6.0",
+                "graylog2/gelf-php": "^1.4.2",
                 "php-amqplib/php-amqplib": "~2.4",
                 "php-console/php-console": "^3.1.3",
                 "php-parallel-lint/php-parallel-lint": "^1.0",
-                "phpunit/phpunit": "~4.5",
+                "phpspec/prophecy": "^1.6.1",
+                "phpunit/phpunit": "^8.5",
+                "predis/predis": "^1.1",
+                "rollbar/rollbar": "^1.3",
                 "ruflin/elastica": ">=0.90 <3.0",
-                "sentry/sentry": "^0.13",
                 "swiftmailer/swiftmailer": "^5.3|^6.0"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
                 "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+                "elasticsearch/elasticsearch": "Allow sending log messages to an Elasticsearch server via official client",
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
-                "ext-mongo": "Allow sending log messages to a MongoDB server",
+                "ext-mbstring": "Allow to work properly with unicode symbols",
+                "ext-mongodb": "Allow sending log messages to a MongoDB server (via driver)",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
-                "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+                "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
                 "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
-                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-                "sentry/sentry": "Allow sending log messages to a Sentry server"
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "2.x-dev"
                 }
             },
             "autoload": {
@@ -4333,7 +4337,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-23T08:35:51+00:00"
+            "time": "2020-07-23T08:41:23+00:00"
         },
         {
             "name": "namshi/jose",
@@ -6459,35 +6463,35 @@
         },
         {
             "name": "sylius/fixtures-bundle",
-            "version": "v1.6.1",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sylius/SyliusFixturesBundle.git",
-                "reference": "1f29bdddd3df1823eda103d87ff6945e964eac9f"
+                "reference": "156ae4839e3473330673a7daf40dc428ba9a69a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sylius/SyliusFixturesBundle/zipball/1f29bdddd3df1823eda103d87ff6945e964eac9f",
-                "reference": "1f29bdddd3df1823eda103d87ff6945e964eac9f",
+                "url": "https://api.github.com/repos/Sylius/SyliusFixturesBundle/zipball/156ae4839e3473330673a7daf40dc428ba9a69a9",
+                "reference": "156ae4839e3473330673a7daf40dc428ba9a69a9",
                 "shasum": ""
             },
             "require": {
                 "doctrine/data-fixtures": "^1.2",
-                "monolog/monolog": "^1.8",
-                "php": "^7.2",
-                "symfony/framework-bundle": "^4.4|^5.0",
-                "symfony/monolog-bridge": "^4.4|^5.0",
-                "webmozart/assert": "^1.0"
+                "monolog/monolog": "^1.25 || ^2.1",
+                "php": "^7.3 || ^8.0",
+                "symfony/framework-bundle": "^4.4 || ^5.1",
+                "symfony/monolog-bridge": "^4.4 || ^5.1",
+                "webmozart/assert": "^1.9"
             },
             "require-dev": {
-                "doctrine/doctrine-bundle": "^2.0",
+                "doctrine/doctrine-bundle": "^2.1",
                 "doctrine/orm": "^2.7",
                 "matthiasnoback/symfony-config-test": "^4.2",
-                "matthiasnoback/symfony-dependency-injection-test": "^4.0",
-                "phpspec/phpspec": "^6.1",
-                "phpunit/phpunit": "^8.5",
-                "sylius-labs/coding-standard": "^3.1",
-                "vimeo/psalm": "3.11.4"
+                "matthiasnoback/symfony-dependency-injection-test": "^4.2",
+                "phpspec/phpspec": "^7.0",
+                "phpunit/phpunit": "^9.4",
+                "sylius-labs/coding-standard": "^3.2",
+                "vimeo/psalm": "4.1.1"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -6507,25 +6511,25 @@
             "authors": [
                 {
                     "name": "Kamil Kokot",
-                    "homepage": "http://kamil.kokot.me"
+                    "homepage": "https://kamilkokot.com"
                 },
                 {
                     "name": "Sylius project",
-                    "homepage": "http://sylius.com"
+                    "homepage": "https://sylius.com"
                 },
                 {
                     "name": "Community contributions",
-                    "homepage": "http://github.com/Sylius/Sylius/contributors"
+                    "homepage": "https://github.com/Sylius/Sylius/contributors"
                 }
             ],
             "description": "Configurable fixtures for Symfony applications.",
-            "homepage": "http://sylius.com",
+            "homepage": "https://sylius.com",
             "keywords": [
                 "fixtures",
                 "sylius",
                 "symfony"
             ],
-            "time": "2020-05-25T09:23:15+00:00"
+            "time": "2020-11-05T12:08:16+00:00"
         },
         {
             "name": "sylius/grid-bundle",
@@ -6867,16 +6871,16 @@
         },
         {
             "name": "sylius/sylius",
-            "version": "v1.8.3",
+            "version": "v1.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sylius/Sylius.git",
-                "reference": "a01c94031e570f37776c443b902c858ac8c58738"
+                "reference": "13a1029062eba5a5bf7620a13bbe393a39db55f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sylius/Sylius/zipball/a01c94031e570f37776c443b902c858ac8c58738",
-                "reference": "a01c94031e570f37776c443b902c858ac8c58738",
+                "url": "https://api.github.com/repos/Sylius/Sylius/zipball/13a1029062eba5a5bf7620a13bbe393a39db55f8",
+                "reference": "13a1029062eba5a5bf7620a13bbe393a39db55f8",
                 "shasum": ""
             },
             "require": {
@@ -6955,6 +6959,7 @@
                 "symfony/security-csrf": "^4.4",
                 "symfony/security-guard": "^4.4",
                 "symfony/security-http": "^4.4",
+                "symfony/serializer": "^4.4",
                 "symfony/swiftmailer-bundle": "^3.4",
                 "symfony/templating": "^4.4",
                 "symfony/thanks": "^1.2",
@@ -6974,9 +6979,9 @@
             },
             "conflict": {
                 "doctrine/inflector": "^1.4",
-                "nikic/php-parser": "^4.7",
                 "phpspec/prophecy": "1.11.0",
                 "sylius/grid-bundle": "1.7.4",
+                "symfony/doctrine-bridge": "4.4.16",
                 "twig/twig": "2.6.1"
             },
             "replace": {
@@ -7056,7 +7061,7 @@
                 "symfony/dotenv": "^4.4",
                 "symfony/flex": "^1.7",
                 "symfony/web-profiler-bundle": "^4.4",
-                "vimeo/psalm": "3.11.6"
+                "vimeo/psalm": "^3.11.6"
             },
             "suggest": {
                 "ext-iconv": "For better performance than using Symfony Polyfill Component",
@@ -7102,7 +7107,7 @@
             ],
             "description": "E-Commerce platform for PHP, based on Symfony framework.",
             "homepage": "https://sylius.com",
-            "time": "2020-10-19T12:43:53+00:00"
+            "time": "2020-11-05T08:25:10+00:00"
         },
         {
             "name": "sylius/theme-bundle",
@@ -10900,51 +10905,50 @@
         },
         {
             "name": "symfony/serializer",
-            "version": "v5.1.8",
+            "version": "v4.4.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/serializer.git",
-                "reference": "20d3c6c58c41344a427488c0d2902bfbfbe17ddb"
+                "reference": "2af7e86db04ee65fdf1991b17ee0b3e955c93de9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/serializer/zipball/20d3c6c58c41344a427488c0d2902bfbfbe17ddb",
-                "reference": "20d3c6c58c41344a427488c0d2902bfbfbe17ddb",
+                "url": "https://api.github.com/repos/symfony/serializer/zipball/2af7e86db04ee65fdf1991b17ee0b3e955c93de9",
+                "reference": "2af7e86db04ee65fdf1991b17ee0b3e955c93de9",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.5",
-                "symfony/polyfill-ctype": "~1.8",
-                "symfony/polyfill-php80": "^1.15"
+                "php": ">=7.1.3",
+                "symfony/polyfill-ctype": "~1.8"
             },
             "conflict": {
                 "phpdocumentor/type-resolver": "<0.2.1",
-                "symfony/dependency-injection": "<4.4",
-                "symfony/property-access": "<4.4",
-                "symfony/property-info": "<4.4",
-                "symfony/yaml": "<4.4"
+                "symfony/dependency-injection": "<3.4",
+                "symfony/property-access": "<3.4",
+                "symfony/property-info": "<3.4",
+                "symfony/yaml": "<3.4"
             },
             "require-dev": {
                 "doctrine/annotations": "~1.0",
                 "doctrine/cache": "~1.0",
                 "phpdocumentor/reflection-docblock": "^3.2|^4.0",
-                "symfony/cache": "^4.4|^5.0",
-                "symfony/config": "^4.4|^5.0",
-                "symfony/dependency-injection": "^4.4|^5.0",
+                "symfony/cache": "^3.4|^4.0|^5.0",
+                "symfony/config": "^3.4|^4.0|^5.0",
+                "symfony/dependency-injection": "^3.4|^4.0|^5.0",
                 "symfony/error-handler": "^4.4|^5.0",
-                "symfony/http-foundation": "^4.4|^5.0",
+                "symfony/http-foundation": "^3.4|^4.0|^5.0",
                 "symfony/mime": "^4.4|^5.0",
-                "symfony/property-access": "^4.4|^5.0",
-                "symfony/property-info": "^4.4|^5.0",
-                "symfony/validator": "^4.4|^5.0",
-                "symfony/yaml": "^4.4|^5.0"
+                "symfony/property-access": "^3.4|^4.0|^5.0",
+                "symfony/property-info": "^3.4.13|~4.0|^5.0",
+                "symfony/validator": "^3.4|^4.0|^5.0",
+                "symfony/yaml": "^3.4|^4.0|^5.0"
             },
             "suggest": {
                 "doctrine/annotations": "For using the annotation mapping. You will also need doctrine/cache.",
                 "doctrine/cache": "For using the default cached annotation reader and metadata cache.",
                 "psr/cache-implementation": "For using the metadata cache.",
                 "symfony/config": "For using the XML mapping loader.",
-                "symfony/mime": "For using a MIME type guesser within the DataUriNormalizer.",
+                "symfony/http-foundation": "For using a MIME type guesser within the DataUriNormalizer.",
                 "symfony/property-access": "For using the ObjectNormalizer.",
                 "symfony/property-info": "To deserialize relations.",
                 "symfony/yaml": "For using the default YAML mapping loader."
@@ -10988,7 +10992,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-24T12:01:57+00:00"
+            "time": "2020-10-24T11:50:19+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -13044,16 +13048,16 @@
         },
         {
             "name": "behat/behat",
-            "version": "v3.8.0",
+            "version": "v3.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Behat.git",
-                "reference": "304661d4bc00934314c835c79fe36c0ce38da268"
+                "reference": "fbb065457d523d9856d4b50775b4151a7598b510"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Behat/zipball/304661d4bc00934314c835c79fe36c0ce38da268",
-                "reference": "304661d4bc00934314c835c79fe36c0ce38da268",
+                "url": "https://api.github.com/repos/Behat/Behat/zipball/fbb065457d523d9856d4b50775b4151a7598b510",
+                "reference": "fbb065457d523d9856d4b50775b4151a7598b510",
                 "shasum": ""
             },
             "require": {
@@ -13120,7 +13124,7 @@
                 "symfony",
                 "testing"
             ],
-            "time": "2020-11-01T16:09:28+00:00"
+            "time": "2020-11-07T15:55:18+00:00"
         },
         {
             "name": "behat/gherkin",
@@ -13815,27 +13819,24 @@
         },
         {
             "name": "friends-of-behat/page-object-extension",
-            "version": "v0.3.1",
+            "version": "v0.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfBehat/PageObjectExtension.git",
-                "reference": "b77db7346ba0e8fe60efd5855effe23635dc73d9"
+                "reference": "2e65b0bd7cca6ff2085b0fa885dc13dc57b18d4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfBehat/PageObjectExtension/zipball/b77db7346ba0e8fe60efd5855effe23635dc73d9",
-                "reference": "b77db7346ba0e8fe60efd5855effe23635dc73d9",
+                "url": "https://api.github.com/repos/FriendsOfBehat/PageObjectExtension/zipball/2e65b0bd7cca6ff2085b0fa885dc13dc57b18d4b",
+                "reference": "2e65b0bd7cca6ff2085b0fa885dc13dc57b18d4b",
                 "shasum": ""
             },
             "require": {
                 "behat/mink": "^1.7",
-                "php": "^7.1"
-            },
-            "conflict": {
-                "symfony/routing": "<3.4"
+                "php": "^7.1 || ^8.0"
             },
             "require-dev": {
-                "symfony/routing": "^3.4"
+                "symfony/routing": "^3.4 || ^4.4 || ^5.1"
             },
             "suggest": {
                 "symfony/routing": "Allow better support for PageObject pattern in Symfony applications"
@@ -13872,7 +13873,7 @@
                 }
             ],
             "description": "Provides default classes for Page object pattern in Behat",
-            "time": "2019-12-19T10:42:44+00:00"
+            "time": "2020-11-05T20:37:07+00:00"
         },
         {
             "name": "friends-of-behat/suite-settings-extension",
@@ -14599,16 +14600,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.6.0",
+            "version": "v4.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "c346bbfafe2ff60680258b631afb730d186ed864"
+                "reference": "658f1be311a230e0907f5dfe0213742aff0596de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/c346bbfafe2ff60680258b631afb730d186ed864",
-                "reference": "c346bbfafe2ff60680258b631afb730d186ed864",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/658f1be311a230e0907f5dfe0213742aff0596de",
+                "reference": "658f1be311a230e0907f5dfe0213742aff0596de",
                 "shasum": ""
             },
             "require": {
@@ -14616,8 +14617,8 @@
                 "php": ">=7.0"
             },
             "require-dev": {
-                "ircmaxell/php-yacc": "0.0.5",
-                "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0"
+                "ircmaxell/php-yacc": "^0.0.7",
+                "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0 || ^9.0"
             },
             "bin": [
                 "bin/php-parse"
@@ -14625,7 +14626,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.3-dev"
+                    "dev-master": "4.9-dev"
                 }
             },
             "autoload": {
@@ -14647,7 +14648,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2020-07-02T17:12:47+00:00"
+            "time": "2020-09-26T10:30:38+00:00"
         },
         {
             "name": "openlss/lib-array2xml",

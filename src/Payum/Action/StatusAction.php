@@ -45,7 +45,7 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
         elseif (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID])) {
             $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID];
         }
-        
+
         try {
             // Search transaction
             $paymentData = $this
@@ -85,9 +85,8 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
             }
             else throw new ApiException("Invalid API data exception. Wrong result!");
         }
-        catch (ApiException $e){
-            //TODO handle exception
-            echo 'Exception when calling API: ', $e->getMessage(), PHP_EOL;
+        catch (\Exception $e){
+            throw new ApiException(sprintf("Error with get transaction from PayGreen with %s", $e->getMessage()));
         }
     }
 
