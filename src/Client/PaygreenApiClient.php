@@ -18,7 +18,7 @@ class PaygreenApiClient extends PaygreenApiClientBase implements PaygreenApiClie
     /**
      * @var bool Recurring Subscription
      */
-    private bool $isMultipleTimePayment;
+    private bool $isMultipleTimePayment = false;
 
     /**
      * @var int Number of times
