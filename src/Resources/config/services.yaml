@@ -5,6 +5,7 @@ imports:
     - { resource: "services/helper.yaml" }
     - { resource: "services/controller.yaml" }
     - { resource: "services/console.yaml" }
+    - { resource: "services/client.yaml" }
 #    - { resource: "services/validators.yaml" }
 #    - { resource: "services/payment_processing.yaml" }
 
@@ -12,18 +13,5 @@ services:
     _defaults:
         public: true
 
-    hraph_sylius_paygreen_plugin.client.paygreen_api:
-        class: Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClient
-        arguments:
-            - "%hraph_sylius_paygreen_plugin.client.username%" # Parameter fitted in with username dynamically on load
-            - "%hraph_sylius_paygreen_plugin.client.api_key%" # Parameter fitted in with api_key dynamically on load
-            - "%hraph_sylius_paygreen_plugin.client.sandbox%" # Parameter fitted in with sandbox dynamically on load
-            - "%hraph_sylius_paygreen_plugin.client.payment_type%" # Parameter fitted in with payment_type dynamically on load
-
     hraph_sylius_paygreen_plugin.request.get_http_request:
         class: Payum\Core\Request\GetHttpRequest
-
-    hraph_sylius_paygreen_plugin.client.repository.paygreen_shop_repository:
-        class: Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenShopRepository
-        arguments:
-            - "@hraph_sylius_paygreen_plugin.client.paygreen_api"
