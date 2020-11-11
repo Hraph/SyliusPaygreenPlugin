@@ -1,0 +1,2 @@
+imports:
+    - { resource: "resources/paygreen_shop.yaml" }

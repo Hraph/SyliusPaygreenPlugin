@@ -1,0 +1,2 @@
+hraph_paygreen_shop:
+    resource: "routing/admin/paygreen_shop.yaml"

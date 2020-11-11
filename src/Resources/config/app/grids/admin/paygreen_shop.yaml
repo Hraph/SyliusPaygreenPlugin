@@ -1,0 +1,20 @@
+sylius_grid:
+    grids:
+        hraph_sylius_paygreen_plugin_paygreen_shop:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop
+            fields:
+                id:
+                    type: string
+                name:
+                    type: string
+                activate:
+                    type: string
+                validatedAt:
+                    type: datetime
+            actions:
+                item:
+                    update:
+                        type: update
