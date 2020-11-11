@@ -1,4 +1,4 @@
-sylius_paygreen_plugin:
+sylius_paygreen:
     api:
         username: '%env(string:PAYGREEN_API_USERNAME)%'
         api_key: '%env(string:PAYGREEN_API_KEY)%'

@@ -29,4 +29,13 @@ final class SyliusPaygreenPluginExtension extends ConfigurableExtension
     {
         return new Configuration();
     }
+
+    /**
+     * Override alias for config root node
+     * @return string
+     */
+    public function getAlias()
+    {
+        return 'sylius_paygreen';
+    }
 }
