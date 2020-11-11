@@ -27,17 +27,11 @@ final class PaygreenGatewayFactory extends GatewayFactory
 
         if (false === (bool) $config['payum.api']) {
             $config['payum.default_options'] = [
-                'username' => null,
-                'api_key' => null,
-                'use_sandbox_api' => false,
-                'payment_type' => "CB"
             ];
 
             $config->defaults($config['payum.default_options']);
 
             $config['payum.required_options'] = [
-                'username',
-                'api_key',
             ];
 
             // Set config API and save object for ApiAwareInterface
@@ -46,12 +40,6 @@ final class PaygreenGatewayFactory extends GatewayFactory
 
                 /** @var PaygreenApiClientInterface $paygreenApiClient */
                 $paygreenApiClient = $config['payum.api_client']; // Use service
-
-                $paygreenApiClient->setUsername($config['username']);
-                $paygreenApiClient->setApiKey($config['api_key']);
-                if ($config['use_sandbox_api'])
-                    $paygreenApiClient->useSandboxApi($config['use_sandbox_api']);
-                $paygreenApiClient->setPaymentType($config['payment_type']);
 
                 return $paygreenApiClient;
             };

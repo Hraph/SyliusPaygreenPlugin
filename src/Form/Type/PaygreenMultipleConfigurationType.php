@@ -16,12 +16,6 @@ class PaygreenMultipleConfigurationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('username', TextType::class, [
-            'label' => 'hraph_sylius_paygreen_plugin.form.username'
-        ]);
-        $builder->add('api_key', TextType::class, [
-            'label' => 'hraph_sylius_paygreen_plugin.form.api_key'
-        ]);
         $builder->add('times', IntegerType::class, [
             'label' => 'hraph_sylius_paygreen_plugin.form.times',
             'constraints' => [
@@ -31,9 +25,6 @@ class PaygreenMultipleConfigurationType extends AbstractType
                     'groups' => ['sylius'],
                 ]),
             ],
-        ]);
-        $builder->add('use_sandbox_api', CheckboxType::class, [
-            'label' => 'hraph_sylius_paygreen_plugin.form.use_sandbox_api'
         ]);
     }
 }

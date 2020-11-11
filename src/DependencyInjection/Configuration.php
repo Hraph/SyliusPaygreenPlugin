@@ -11,8 +11,31 @@ final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('sylius_paygreen');
-        $rootNode = $treeBuilder->getRootNode();
+        $treeBuilder = new TreeBuilder('sylius_paygreen_plugin');
+
+        $treeBuilder->getRootNode()
+            ->children()
+                ->arrayNode("api")
+                    ->children()
+                        ->scalarNode('username')
+                            ->info("Username of the main shop")
+                            ->defaultValue("username")
+                        ->end()
+                        ->scalarNode('api_key')
+                            ->info("API Key of the main shop")
+                            ->defaultValue("key")
+                        ->end()
+                        ->booleanNode('sandbox')
+                            ->info("Use sandbox mode")
+                            ->defaultFalse()
+                        ->end()
+                        ->scalarNode('payment_type')
+                            ->info("Type of payment")
+                            ->defaultValue("CB")
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

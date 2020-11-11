@@ -10,6 +10,7 @@ use Hraph\PaygreenApi\PaygreenApiClient as PaygreenApiClientBase;
 
 class PaygreenApiClient extends PaygreenApiClientBase implements PaygreenApiClientInterface
 {
+
     /**
      * @var string PaymentType
      */
@@ -27,12 +28,21 @@ class PaygreenApiClient extends PaygreenApiClientBase implements PaygreenApiClie
 
     /**
      * PaygreenApiClient constructor.
+     * @param string $username
+     * @param string $apiKey
+     * @param bool $sandbox
+     * @param string $paymentType
      */
-    public function __construct()
+    public function __construct(string $username, string $apiKey, bool $sandbox, string $paymentType)
     {
         $header = new HeaderSelector();
         $config = new Configuration();
         parent::__construct($config, $header, $host_index = 0);
+
+        $this->setUsername($username);
+        $this->setApiKey($apiKey);
+        $this->useSandboxApi($sandbox);
+        $this->setPaymentType($paymentType);
     }
 
     /**

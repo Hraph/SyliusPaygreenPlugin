@@ -1,0 +1,5 @@
+sylius_paygreen_plugin:
+    api:
+        username: '%env(string:PAYGREEN_API_USERNAME)%'
+        api_key: '%env(string:PAYGREEN_API_KEY)%'
+        sandbox: '%env(bool:PAYGREEN_API_SANDBOX)%'
