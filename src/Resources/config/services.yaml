@@ -5,6 +5,7 @@ imports:
     - { resource: "services/helper.yaml" }
     - { resource: "services/controller.yaml" }
     - { resource: "services/console.yaml" }
+    - { resource: "services/event_listener.yaml" }
     - { resource: "services/client.yaml" }
 #    - { resource: "services/validators.yaml" }
 #    - { resource: "services/payment_processing.yaml" }
