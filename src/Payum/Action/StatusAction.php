@@ -7,6 +7,8 @@ use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Hraph\SyliusPaygreenPlugin\Types\TransactionStatus;
 use Payum\Core\Exception\RequestNotSupportedException;
+use Payum\Core\GatewayAwareTrait;
+use Payum\Core\Request\GetHttpRequest;
 use Sylius\Bundle\PayumBundle\Request\GetStatus;
 use Sylius\Component\Core\Model\PaymentInterface;
 
@@ -17,12 +19,30 @@ use Sylius\Component\Core\Model\PaymentInterface;
  */
 final class StatusAction extends BaseApiAwareAction implements StatusActionInterface
 {
+    use GatewayAwareTrait;
+
+    /**
+     * @var GetHttpRequest
+     */
+    private GetHttpRequest $getHttpRequest;
+
+    /**
+     * StatusAction constructor.
+     * @param GetHttpRequest $getHttpRequest
+     */
+    public function __construct(GetHttpRequest $getHttpRequest)
+    {
+        $this->getHttpRequest = $getHttpRequest;
+    }
+
     /**
      * @inheritDoc
+     * @throws ApiException
      */
     public function execute($request)
     {
         RequestNotSupportedException::assertSupports($this, $request);
+        $this->gateway->execute($this->getHttpRequest); // Get POST/GET data and query from request
 
         /** @var PaymentInterface $payment */
         $payment = $request->getModel();
@@ -38,6 +58,14 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
             return;
         }
 
+        // User has returned to shop. Mark Payment as canceled because api would return pending status instead
+        if (true === isset($this->getHttpRequest->query['action']) && $this->getHttpRequest->query['action'] === 'returnToShop') {
+            $request->markCanceled();
+            return;
+        }
+
+        $isFingerprintTransaction = false;
+
         // Multiple payment
         if (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID])) {
             $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID];
@@ -48,8 +76,10 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
             $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID];
         }
 
+        // Fringerprint transaction
         elseif (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID])) {
             $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID];
+            $isFingerprintTransaction = true;
         }
 
         try {
@@ -69,7 +99,10 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
                         break;
 
                     case TransactionStatus::STATUS_SUCCEEDED:
-                        $request->markCaptured();
+                        if (!$isFingerprintTransaction)
+                            $request->markCaptured(); // Succeeded when payment
+                        else
+                            $request->markAuthorized(); // Authorized when Fingerprint
                         break;
 
                     case TransactionStatus::STATUS_PENDING:
