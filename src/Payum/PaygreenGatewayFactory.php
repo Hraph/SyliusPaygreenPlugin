@@ -27,6 +27,7 @@ final class PaygreenGatewayFactory extends GatewayFactory
 
         if (false === (bool) $config['payum.api']) {
             $config['payum.default_options'] = [
+                'use_authorize' => false
             ];
 
             $config->defaults($config['payum.default_options']);

@@ -14,6 +14,11 @@ services:
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.notify }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.notify }
+    hraph_sylius_paygreen_plugin.action.authorize:
+        class: Hraph\SyliusPaygreenPlugin\Payum\Action\AuthorizeAction
+        tags:
+            - { name: payum.action, factory: paygreen, alias: payum.action.authorize }
+            - { name: payum.action, factory: paygreen_multiple, alias: payum.action.authorize }
     hraph_sylius_paygreen_plugin.action.capture:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\CaptureAction
         tags:
@@ -41,3 +46,8 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\Api\CreatePaymentMultipleAction
         tags:
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.create_payment }
+    hraph_sylius_paygreen_plugin.action.create_fingerprint:
+        class: Hraph\SyliusPaygreenPlugin\Payum\Action\Api\CreateFingerprintAction
+        tags:
+            - { name: payum.action, factory: paygreen, alias: payum.action.create_fingerprint }
+            - { name: payum.action, factory: paygreen_multiple, alias: payum.action.create_fingerprint }

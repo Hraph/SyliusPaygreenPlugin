@@ -14,6 +14,7 @@ hraph_sylius_paygreen_plugin:
         gateway:
             times: Multiple times payment
             times_min_range: Minimal recurring time
+            authorize: Authorize payment (fingerprint)
         url: URL
         business_identifier: Business identifier
         description: Description

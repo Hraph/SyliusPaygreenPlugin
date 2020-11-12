@@ -34,7 +34,6 @@ final class NotifyAction extends BaseApiAwareAction implements NotifyActionInter
         $this->getHttpRequest = $getHttpRequest;
     }
 
-
     /**
      * {@inheritdoc}
      * @throws ApiException
@@ -47,8 +46,11 @@ final class NotifyAction extends BaseApiAwareAction implements NotifyActionInter
         $details = ArrayObject::ensureArrayObject($request->getModel());
         $this->gateway->execute($this->getHttpRequest); // Get POST data and query from request
 
-        // Transaction ID must be set in payment details
-        if (true === isset($details[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID]) && true === isset($this->getHttpRequest->request['pid'])) {
+        // Transaction check. And transaction ID must be set in payment details
+        if ((true === isset($details[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID]) ||
+                true === isset($details[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID]) ||
+                true === isset($details[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID]))
+            && true === isset($this->getHttpRequest->request['pid'])) {
             try {
                 $payment = $this
                     ->api
@@ -63,6 +65,7 @@ final class NotifyAction extends BaseApiAwareAction implements NotifyActionInter
 
             throw new HttpResponse('OK', Response::HTTP_OK);
         }
+
         throw new HttpResponse('Invalid data', Response::HTTP_BAD_REQUEST); // Invalid pid
     }
 

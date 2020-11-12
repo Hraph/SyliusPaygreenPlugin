@@ -14,6 +14,7 @@ hraph_sylius_paygreen_plugin:
         gateway:
             times: Nombre d'échéances
             times_min_range: Nombre d'échéances minimale
+            authorize: Réaliser une empreinte
         url: URL
         business_identifier: SIRET
         description: Description

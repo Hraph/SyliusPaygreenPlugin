@@ -16,15 +16,19 @@ class PaygreenMultipleConfigurationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('times', IntegerType::class, [
-            'label' => 'hraph_sylius_paygreen_plugin.form.times',
-            'constraints' => [
-                new Range([
-                    'min' => 1,
-                    'minMessage' => 'hraph_sylius_paygreen_plugin.form.times_min_range',
-                    'groups' => ['sylius'],
-                ]),
-            ],
-        ]);
+        $builder
+            ->add('times', IntegerType::class, [
+                'label' => 'hraph_sylius_paygreen_plugin.form.gateway.times',
+                'constraints' => [
+                    new Range([
+                        'min' => 1,
+                        'groups' => ['sylius']
+                    ]),
+                ],
+            ])
+            ->add('use_authorize', CheckboxType::class, [
+                'label' => 'hraph_sylius_paygreen_plugin.form.gateway.authorize',
+                'data' => true
+            ]);
     }
 }

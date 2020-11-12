@@ -30,7 +30,9 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
         $pid = null;
 
         // Transaction ID is not set in payment data. Invalid payment
-        if (!isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID]) && !isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID])) {
+        if (!isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID])
+            && !isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID])
+            && !isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID])) {
             $request->markNew();
 
             return;
@@ -44,6 +46,10 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
         // One time payment
         elseif (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID])) {
             $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID];
+        }
+
+        elseif (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID])) {
+            $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID];
         }
 
         try {

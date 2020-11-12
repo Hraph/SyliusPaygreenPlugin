@@ -13,5 +13,10 @@ class PaygreenConfigurationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $builder
+            ->add('use_authorize', CheckboxType::class, [
+                'label' => 'hraph_sylius_paygreen_plugin.form.gateway.authorize',
+                'data' => true
+            ]);
     }
 }
