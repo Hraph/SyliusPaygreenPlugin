@@ -4,6 +4,8 @@ services:
 
     hraph_sylius_paygreen_plugin.action.status:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\StatusAction
+        arguments:
+            - "@hraph_sylius_paygreen_plugin.request.get_http_request"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.status }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.status }
