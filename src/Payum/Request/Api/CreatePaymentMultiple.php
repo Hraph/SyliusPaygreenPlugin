@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hraph\SyliusPaygreenPlugin\Request\Api;
+namespace Hraph\SyliusPaygreenPlugin\Payum\Request\Api;
 
 
 use Payum\Core\Request\Generic;
