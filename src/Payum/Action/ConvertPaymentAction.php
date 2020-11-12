@@ -50,22 +50,30 @@ class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface
 
         $details = [
             'amount' => $payment->getAmount(),
-            'currencyCode' => $payment->getCurrencyCode(),
-            'customer' => [
-                'firstName' => $order->getBillingAddress()->getFirstName(),
-                'lastName' => $order->getBillingAddress()->getLastName(),
+            'currency' => $payment->getCurrencyCode(),
+            'buyer' => [
+                'id' => $order->getCustomer()->getId() ?? null,
                 'email' => $order->getCustomer()->getEmail(),
+                'country' => $order->getBillingAddress()->getCountryCode(),
+                'first_name' => $order->getBillingAddress()->getFirstName(),
+                'last_name' => $order->getBillingAddress()->getLastName(),
             ],
+            "order_id" => "{$order->getId()}-{$payment->getId()}", // Cause an order ID is unique for PayGreen we need to add paymentId in case of new attempt
+            "payment_type" => $this->api->getPaymentType(),
+
             //'description' => $this->paymentDescription->getPaymentDescription($payment, $order),
             'metadata' => [
                 'payment_id' => $payment->getId(),
                 'order_id' => $order->getId(),
-                'customer_id' => $order->getCustomer()->getId() ?? null,
             ],
         ];
 
         if (true === $this->api->isMultipleTimePayment()) {
-            $details['times'] = $this->api->getMultipleTimePaymentTimes();
+            $details['order_details'] = [
+                'times' => $this->api->getMultipleTimePaymentTimes(),
+                'cycle' => 40, // Cycle 40 is monthly
+                'day' => -1, // Same day as today
+            ];
         }
 //        if (true === $this->api->isMultipleTimePayment()) {
 //            $config = $this->api->getConfig();

@@ -15,7 +15,7 @@ services:
         arguments:
             - "@hraph_sylius_paygreen_plugin.client.repository.paygreen_shop_repository"
             - "@doctrine.orm.default_entity_manager"
-                
+
     hraph_sylius_paygreen_plugin.client.repository.paygreen_shop_repository:
         class: Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenShopRepository
         arguments:

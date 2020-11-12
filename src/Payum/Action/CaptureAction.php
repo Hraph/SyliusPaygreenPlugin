@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
-use Hraph\SyliusPaygreenPlugin\Model\PaymentDetails;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
-use Hraph\SyliusPaygreenPlugin\Request\Api\CreatePayment;
-use Hraph\SyliusPaygreenPlugin\Request\Api\CreatePaymentMultiple;
+use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePayment;
+use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePaymentMultiple;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareTrait;
@@ -41,8 +40,8 @@ final class CaptureAction extends BaseApiAwareAction implements CaptureActionInt
         $notifyToken = $this->tokenFactory->createNotifyToken($token->getGatewayName(), $token->getDetails());
 //        $refundToken = $this->tokenFactory->createRefundToken($token->getGatewayName(), $token->getDetails());
 
-        $details['notifiedUrl'] = $notifyToken->getTargetUrl();
-        $details['returnedUrl'] = $token->getAfterUrl();
+        $details['notified_url'] = $notifyToken->getTargetUrl();
+        $details['returned_url'] = $token->getAfterUrl();
 
         $metadata = $details['metadata'];
 //        $metadata['refund_token'] = $refundToken->getHash();

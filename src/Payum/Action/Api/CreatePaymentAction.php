@@ -8,7 +8,7 @@ namespace Hraph\SyliusPaygreenPlugin\Payum\Action\Api;
 use Hraph\PaygreenApi\ApiException;
 use Hraph\PaygreenApi\Model\Payins;
 use Hraph\PaygreenApi\Model\PayinsBuyer;
-use Hraph\SyliusPaygreenPlugin\Request\Api\CreatePayment;
+use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePayment;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
@@ -25,25 +25,12 @@ class CreatePaymentAction extends BaseApiAwareAction implements ActionInterface
     {
         $details = ArrayObject::ensureArrayObject($request->getModel());
 
-        $payins = new Payins();
-        $buyer = new PayinsBuyer();
+        // Create payins object for PayGreen API from ConvertAction
+        $payins = new Payins($details->toUnsafeArrayWithoutLocal());
+        $payins->setBuyer(new PayinsBuyer($details['buyer']));
 
-        // Create payins object for PayGreen API
-        $buyer
-            ->setId($details['metadata']['customer_id'])
-            ->setEmail($details['customer']['email'])
-            ->setFirstName($details['customer']['firstName'])
-            ->setLastName($details['customer']['lastName']);
-
-        $payins
-            ->setAmount($details['amount'])
-            ->setOrderId("{$details['metadata']['order_id']}-{$details['metadata']['payment_id']}") // Cause an order ID is unique for PayGreen we need to add paymentId in case of new attempt
-            ->setBuyer($buyer)
-            ->setPaymentType($this->api->getPaymentType())
-            ->setCurrency($details['currencyCode'])
-            ->setNotifiedUrl($details['notifiedUrl'])
-            ->setReturnedUrl($details['returnedUrl']);
-
+        if (isset($details[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID]))
+            $payins->setIdFingerprint(PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID);
 
         try {
             $paymentRequest = $this
@@ -72,7 +59,7 @@ class CreatePaymentAction extends BaseApiAwareAction implements ActionInterface
 
         // Otherwise use returnedUrl
         else
-            throw new HttpPostRedirect($details['returnedUrl']);
+            throw new HttpPostRedirect($details['returned_url']);
     }
 
     /**

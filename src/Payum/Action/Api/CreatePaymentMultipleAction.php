@@ -10,8 +10,7 @@ use Hraph\PaygreenApi\Model\Payins;
 use Hraph\PaygreenApi\Model\PayinsBuyer;
 use Hraph\PaygreenApi\Model\PayinsRecc;
 use Hraph\PaygreenApi\Model\PayinsReccOrderDetails;
-use Hraph\SyliusPaygreenPlugin\Request\Api\CreatePayment;
-use Hraph\SyliusPaygreenPlugin\Request\Api\CreatePaymentMultiple;
+use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePaymentMultiple;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
@@ -28,33 +27,14 @@ class CreatePaymentMultipleAction extends BaseApiAwareAction implements ActionIn
     {
         $details = ArrayObject::ensureArrayObject($request->getModel());
 
-        $payinsRecc = new PayinsRecc();
-        $buyer = new PayinsBuyer();
-        $orderDetails = new PayinsReccOrderDetails();
-
-        $buyer
-            ->setId($details['metadata']['customer_id'])
-            ->setEmail($details['customer']['email'])
-            ->setFirstName($details['customer']['firstName'])
-            ->setLastName($details['customer']['lastName']);
-
-        $orderDetails
-            ->setCount($details['times'])
-            ->setCycle(40) // Cycle 40 is monthly
-            ->setDay(-1); // Same day as today
-
-        // Create payins object for PayGreen API
+        // Create payins object for PayGreen API from ConvertAction
+        $payinsRecc = new PayinsRecc($details->toUnsafeArrayWithoutLocal());
         $payinsRecc
-            ->setAmount($details['amount'])
-            ->setOrderDetails($orderDetails)
-            ->setBuyer($buyer)
-            ->setOrderId("{$details['metadata']['order_id']}-{$details['metadata']['payment_id']}") // Cause an order ID is unique for PayGreen we need to add paymentId in case of new attempt
-            ->setPaymentType($this->api->getPaymentType())
-            ->setCurrency($details['currencyCode'])
-            ->setNotifiedUrl($details['notifiedUrl'])
-            ->setReturnedUrl($details['returnedUrl'])
-            ->setMetadata($details['metadata']);
+            ->setBuyer(new PayinsBuyer($details['buyer']))
+            ->setOrderDetails(new PayinsReccOrderDetails($details['order_details']));
 
+        if (isset($details[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID]))
+            $payinsRecc->setIdFingerprint($details[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID]);
 
         try {
             $paymentRequest = $this
@@ -71,10 +51,10 @@ class CreatePaymentMultipleAction extends BaseApiAwareAction implements ActionIn
 
         }
         catch (ApiException $e) {
-            throw new ApiException(sprintf('Error with create payment with: %s', $e->getMessage()));
+            throw new ApiException(sprintf('Error with create payment multiple with: %s', $e->getMessage()));
         }
         catch (\Exception $e){
-            throw new ApiException(sprintf('Error with create payment with: %s', $e->getMessage()));
+            throw new ApiException(sprintf('Error with create payment multiple with: %s', $e->getMessage()));
         }
 
         // API has returned a redirect url
@@ -83,7 +63,7 @@ class CreatePaymentMultipleAction extends BaseApiAwareAction implements ActionIn
 
         // Otherwise use returnedUrl
         else
-            throw new HttpPostRedirect($details['returnedUrl']);
+            throw new HttpPostRedirect($details['returned_url']);
     }
 
     /**
