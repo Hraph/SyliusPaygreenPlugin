@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        public: true
+
+    hraph_sylius_paygreen_plugin.command.paygreen_synchronize_shops:
+        class: Hraph\SyliusPaygreenPlugin\Command\PaygreenSynchronizeShopsCommand
+        arguments:
+            - "@hraph_sylius_paygreen_plugin.client.paygreen_api_manager"
+        tags:
+            - { name: console.command }

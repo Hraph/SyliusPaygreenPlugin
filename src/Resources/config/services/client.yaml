@@ -10,6 +10,12 @@ services:
             - "%hraph_sylius_paygreen_plugin.client.sandbox%" # Parameter fitted in with sandbox dynamically on load
             - "%hraph_sylius_paygreen_plugin.client.payment_type%" # Parameter fitted in with payment_type dynamically on load
 
+    hraph_sylius_paygreen_plugin.client.paygreen_api_manager:
+        class: Hraph\SyliusPaygreenPlugin\Client\PaygreenApiManager
+        arguments:
+            - "@hraph_sylius_paygreen_plugin.client.repository.paygreen_shop_repository"
+            - "@doctrine.orm.default_entity_manager"
+                
     hraph_sylius_paygreen_plugin.client.repository.paygreen_shop_repository:
         class: Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenShopRepository
         arguments:
