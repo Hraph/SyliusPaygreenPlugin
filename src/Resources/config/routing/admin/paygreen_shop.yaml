@@ -1,6 +1,8 @@
 hraph_sylius_paygreen_plugin_paygreen_shop:
     resource: |
         alias: hraph_sylius_paygreen_plugin.paygreen_shop
+        only: ['show', 'index', 'update']
+        form: Hraph\SyliusPaygreenPlugin\Form\Type\PaygreenShopType
         section: admin
         path: /paygreen/shop
         permission: true
@@ -9,7 +11,7 @@ hraph_sylius_paygreen_plugin_paygreen_shop:
         grid: hraph_sylius_paygreen_plugin_paygreen_shop
         vars:
             all:
-                subheader: hraph_sylius_paygreen_plugin.ui.paygreen_shop
+                subheader: hraph_sylius_paygreen_plugin.ui.paygreen_shops_subheader
                 index:
                     icon: 'universal access'
     type: sylius.resource

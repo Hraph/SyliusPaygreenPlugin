@@ -5,15 +5,36 @@ sylius_grid:
                 name: doctrine/orm
                 options:
                     class: Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop
+            sorting:
+                name: asc
             fields:
                 id:
                     type: string
+                    label: sylius.ui.id
                 name:
                     type: string
+                    label: sylius.ui.name
+                    sortable: ~
                 activate:
-                    type: string
+                    type: twig
+                    label: hraph_sylius_paygreen_plugin.ui.validated
+                    sortable: ~
+                    options:
+                        template: "@SyliusUi/Grid/Field/yesNo.html.twig"
                 validatedAt:
                     type: datetime
+                    label: hraph_sylius_paygreen_plugin.ui.validated_at
+                    options:
+                        format: d-m-Y H:i
+            filters:
+                search:
+                    type: string
+                    label: sylius.ui.search
+                    options:
+                        fields: [id, name]
+                activate:
+                    type: boolean
+                    label: sylius.ui.enabled
             actions:
                 item:
                     update:

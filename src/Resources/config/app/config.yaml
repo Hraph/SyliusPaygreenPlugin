@@ -1,3 +1,6 @@
 imports:
     - { resource: "resources.yaml" }
     - { resource: "grids.yaml" }
+
+framework:
+    translator: { fallbacks: en }

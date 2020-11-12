@@ -7,6 +7,7 @@ imports:
     - { resource: "services/console.yaml" }
     - { resource: "services/event_listener.yaml" }
     - { resource: "services/client.yaml" }
+    - { resource: "services/menu.yaml" }
 #    - { resource: "services/validators.yaml" }
 #    - { resource: "services/payment_processing.yaml" }
 

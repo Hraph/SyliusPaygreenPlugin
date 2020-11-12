@@ -8,7 +8,6 @@ namespace Hraph\SyliusPaygreenPlugin\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Hraph\PaygreenApi\Model\ModelInterface;
 use Hraph\PaygreenApi\Model\Shop;
-use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
  * Class PaygreenShop
@@ -26,52 +25,52 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
     private string $id;
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(name="private_key", type="string", nullable=true)
      */
-    private string $privateKey;
+    private ?string $privateKey;
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(name="name", type="string", nullable=true)
      */
-    private string $name;
+    private ?string $name;
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(name="url", type="string", nullable=true)
      */
-    private string $url;
+    private ?string $url;
 
     /**
-     * @var string[]
+     * @var string[]|null
      * @ORM\Column(name="available_mode", type="simple_array", nullable=true)
      */
-    private array $availableMode = [];
+    private ?array $availableMode = [];
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(name="business_identifier", type="string", nullable=true)
      */
-    private string $businessIdentifier;
+    private ?string $businessIdentifier;
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(name="description", type="string", nullable=true)
      */
-    private string $description;
+    private ?string $description;
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(name="company_type", type="string", nullable=true)
      */
-    private string $companyType;
+    private ?string $companyType;
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(name="paiement_type", type="string", nullable=true)
      */
-    private string $paiementType;
+    private ?string $paiementType;
 
     /**
      * @var bool
@@ -92,9 +91,9 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
     private ?\DateTime $validatedAt;
 
     /**
-     * @var array []string
+     * @var array|null
      */
-    private array $extra = [];
+    private ?array $extra = [];
 
 
     /**
@@ -122,113 +121,113 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPrivateKey(): string
+    public function getPrivateKey(): ?string
     {
         return $this->privateKey;
     }
 
     /**
-     * @param string $privateKey
+     * @param string|null $privateKey
      */
-    public function setPrivateKey(string $privateKey): void
+    public function setPrivateKey(?string $privateKey): void
     {
         $this->privateKey = $privateKey;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUrl(): string
+    public function getUrl(): ?string
     {
         return $this->url;
     }
 
     /**
-     * @param string $url
+     * @param string|null $url
      */
-    public function setUrl(string $url): void
+    public function setUrl(?string $url): void
     {
         $this->url = $url;
     }
 
     /**
-     * @return string[]
+     * @return array|string[]|null
      */
-    public function getAvailableMode(): array
+    public function getAvailableMode(): ?array
     {
         return $this->availableMode;
     }
 
     /**
-     * @param string[] $availableMode
+     * @param array|null $availableMode
      */
-    public function setAvailableMode(array $availableMode): void
+    public function setAvailableMode(?array $availableMode): void
     {
         $this->availableMode = $availableMode;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getBusinessIdentifier(): string
+    public function getBusinessIdentifier(): ?string
     {
         return $this->businessIdentifier;
     }
 
     /**
-     * @param string $businessIdentifier
+     * @param string|null $businessIdentifier
      */
-    public function setBusinessIdentifier(string $businessIdentifier): void
+    public function setBusinessIdentifier(?string $businessIdentifier): void
     {
         $this->businessIdentifier = $businessIdentifier;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      */
-    public function setDescription(string $description): void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCompanyType(): string
+    public function getCompanyType(): ?string
     {
         return $this->companyType;
     }
 
     /**
-     * @param string $companyType
+     * @param string|null $companyType
      */
-    public function setCompanyType(string $companyType): void
+    public function setCompanyType(?string $companyType): void
     {
         $this->companyType = $companyType;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPaiementType(): string
+    public function getPaiementType(): ?string
     {
         return $this->paiementType;
     }
 
     /**
-     * @param string $paiementType
+     * @param string|null $paiementType
      */
-    public function setPaiementType(string $paiementType): void
+    public function setPaiementType(?string $paiementType): void
     {
         $this->paiementType = $paiementType;
     }
@@ -266,17 +265,17 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      */
-    public function setName(string $name): void
+    public function setName(?string $name): void
     {
         $this->name = $name;
     }
@@ -297,16 +296,25 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
         $this->validatedAt = $validatedAt;
     }
 
-    public function getExtra(): array
+    /**
+     * @return array|null
+     */
+    public function getExtra(): ?array
     {
         return $this->extra;
     }
 
-    public function setExtra(array $extra): void
+    /**
+     * @param array|null $extra
+     */
+    public function setExtra(?array $extra): void
     {
         $this->extra = $extra;
     }
 
+    /**
+     * @return bool
+     */
     public function getActivate(): bool
     {
         return $this->activate;

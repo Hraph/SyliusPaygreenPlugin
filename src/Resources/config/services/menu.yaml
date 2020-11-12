@@ -1,0 +1,5 @@
+services:
+    hraph_sylius_paygreen_plugin.menu.admin_paygreen_menu_listener:
+        class: Hraph\SyliusPaygreenPlugin\Menu\AdminPaygreenMenuListener
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu.admin.main, method: buildMenu }

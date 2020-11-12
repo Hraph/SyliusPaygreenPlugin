@@ -1,10 +1,31 @@
 hraph_sylius_paygreen_plugin:
     ui:
-        paygreen_multiple_gateway: PayGreen
+        validated: Validé
+        validated_at: Validé le
+        paygreen: PayGreen
+        paygreen_shops: Boutiques PayGreen
+        paygreen_shops_subheader: Gérer les boutiques PayGreen
+        edit_paygreen_shop: Edition d'une boutique
+        paygreen_gateway: PayGreen
+        paygreen_gateway_label: PayGreen - Paiement direct
+        paygreen_multiple_gateway: PayGreen Multiple
         paygreen_multiple_gateway_label: PayGreen - Paiement en plusieurs fois
     form:
-        username: Identifiant API
-        api_key: Clé privée API
-        times: Nombre d'échéances
-        times_min_range: Nombre d'échéances minimale
-        use_sandbox_api: Mode bac à sable (sandbox) ?
+        gateway:
+            times: Nombre d'échéances
+            times_min_range: Nombre d'échéances minimale
+        url: URL
+        business_identifier: SIRET
+        description: Description
+        company_type: Forme juridique
+        company_types:
+            eieirl: Entrepreneur Individuel EI/EIRL
+            crafts: Artisans
+            liberal: Profession libérale
+            auto_enter: Auto Entrepreneur
+            company: SARL/SAS
+            marketing: Agents commerciaux
+            accountant: Expert comptable
+            guesthouse: Chambre d'hôtes/Gîtes
+            charitable_org: Association
+            public_org: Organisme publique

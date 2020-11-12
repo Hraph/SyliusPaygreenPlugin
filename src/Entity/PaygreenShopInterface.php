@@ -5,42 +5,39 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\Entity;
 
 
-use Hraph\PaygreenApi\Model\ModelInterface;
-use Hraph\PaygreenApi\Model\Shop;
-
 interface PaygreenShopInterface extends ApiEntityInterface
 {
     public function getId(): string;
 
     public function setId(string $id): void;
 
-    public function getName(): string;
+    public function getName(): ?string;
 
-    public function setName(string $name): void;
+    public function setName(?string $name): void;
 
-    public function getUrl(): string;
+    public function getUrl(): ?string;
 
-    public function setUrl(string $url): void;
+    public function setUrl(?string $url): void;
 
-    public function getPrivateKey(): string;
+    public function getPrivateKey(): ?string;
 
-    public function setPrivateKey(string $privateKey): void;
+    public function setPrivateKey(?string $privateKey): void;
 
-    public function getAvailableMode(): array ;
+    public function getAvailableMode(): ?array ;
 
-    public function setAvailableMode(array $availableMode): void;
+    public function setAvailableMode(?array $availableMode): void;
 
-    public function getBusinessIdentifier(): string;
+    public function getBusinessIdentifier(): ?string;
 
-    public function setBusinessIdentifier(string $businessIdentifier): void;
+    public function setBusinessIdentifier(?string $businessIdentifier): void;
 
-    public function getCompanyType(): string;
+    public function getCompanyType(): ?string;
 
-    public function setCompanyType(string $companyType): void;
+    public function setCompanyType(?string $companyType): void;
 
-    public function getDescription(): string;
+    public function getDescription(): ?string;
 
-    public function setDescription(string $description): void;
+    public function setDescription(?string $description): void;
 
     public function getActivate(): bool ;
 
@@ -54,11 +51,11 @@ interface PaygreenShopInterface extends ApiEntityInterface
 
     public function setCreatedAt(?\DateTime $created): void;
 
-    public function getPaiementType(): string;
+    public function getPaiementType(): ?string;
 
-    public function setPaiementType(string $paiementType): void;
+    public function setPaiementType(?string $paiementType): void;
 
-    public function getExtra(): array;
+    public function getExtra(): ?array;
 
-    public function setExtra(array $extra): void;
+    public function setExtra(?array $extra): void;
 }
