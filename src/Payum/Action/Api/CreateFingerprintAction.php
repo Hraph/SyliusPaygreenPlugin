@@ -10,11 +10,10 @@ use Hraph\PaygreenApi\Model\CardPrint;
 use Hraph\PaygreenApi\Model\PayinsBuyer;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreateFingerprint;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
-use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Reply\HttpPostRedirect;
 
-class CreateFingerprintAction extends BaseApiAwareAction implements ActionInterface
+class CreateFingerprintAction extends BaseRenderableAction implements BaseRenderableActionInterface
 {
     /**
      * @inheritDoc
@@ -51,7 +50,7 @@ class CreateFingerprintAction extends BaseApiAwareAction implements ActionInterf
 
         // API has returned a redirect url
         if (!is_null($paymentRequest->getData()->getUrl()))
-            throw new HttpPostRedirect($paymentRequest->getData()->getUrl());
+            $this->renderUrl($paymentRequest->getData()->getUrl());
 
         // Otherwise use returnedUrl
         else

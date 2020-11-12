@@ -39,6 +39,10 @@ final class Configuration implements ConfigurationInterface
                     ->info("Force all gateways payments to use authorise")
                     ->defaultFalse()
                 ->end()
+                ->scalarNode('use_insite_mode')
+                    ->info("Use the integrated iFrame")
+                    ->defaultFalse()
+                ->end()
             ->end();
 
         return $treeBuilder;

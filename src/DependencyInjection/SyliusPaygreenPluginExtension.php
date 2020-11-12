@@ -24,6 +24,7 @@ final class SyliusPaygreenPluginExtension extends ConfigurableExtension
         $container->setParameter("hraph_sylius_paygreen_plugin.client.sandbox", $mergedConfig['api']['sandbox']);
         $container->setParameter("hraph_sylius_paygreen_plugin.client.payment_type", $mergedConfig['payment_type']);
         $container->setParameter("hraph_sylius_paygreen_plugin.client.force_use_authorize", $mergedConfig['force_use_authorize']);
+        $container->setParameter("hraph_sylius_paygreen_plugin.client.use_insite_mode", $mergedConfig['use_insite_mode']);
     }
 
     public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface

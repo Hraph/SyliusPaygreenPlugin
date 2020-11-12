@@ -42,14 +42,20 @@ services:
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.convert_payment }
     hraph_sylius_paygreen_plugin.action.create_payment:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\Api\CreatePaymentAction
+        arguments:
+            - "%hraph_sylius_paygreen_plugin.client.use_insite_mode" # Parameter fitted in with use_insite_mode dynamically on load
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.create_payment }
     hraph_sylius_paygreen_plugin.action.create_payment_multiple:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\Api\CreatePaymentMultipleAction
+        arguments:
+            - "%hraph_sylius_paygreen_plugin.client.use_insite_mode" # Parameter fitted in with use_insite_mode dynamically on load
         tags:
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.create_payment }
     hraph_sylius_paygreen_plugin.action.create_fingerprint:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\Api\CreateFingerprintAction
+        arguments:
+            - "%hraph_sylius_paygreen_plugin.client.use_insite_mode" # Parameter fitted in with use_insite_mode dynamically on load
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.create_fingerprint }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.create_fingerprint }

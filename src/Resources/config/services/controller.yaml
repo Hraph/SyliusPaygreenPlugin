@@ -1,3 +1,1 @@
 services:
-    hraph_sylius_paygreen_plugin.controller.capture:
-        class: Hraph\SyliusPaygreenPlugin\Controller\CaptureController

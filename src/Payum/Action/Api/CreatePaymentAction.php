@@ -10,13 +10,11 @@ use Hraph\PaygreenApi\Model\Payins;
 use Hraph\PaygreenApi\Model\PayinsBuyer;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePayment;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
-use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Reply\HttpPostRedirect;
 
-class CreatePaymentAction extends BaseApiAwareAction implements ActionInterface
+class CreatePaymentAction extends BaseRenderableAction implements BaseRenderableActionInterface
 {
-
     /**
      * @param mixed $request
      * @throws ApiException
@@ -55,7 +53,7 @@ class CreatePaymentAction extends BaseApiAwareAction implements ActionInterface
 
         // API has returned a redirect url
         if (!is_null($paymentRequest->getData()->getUrl()))
-            throw new HttpPostRedirect($paymentRequest->getData()->getUrl());
+            $this->renderUrl($paymentRequest->getData()->getUrl());
 
         // Otherwise use returnedUrl
         else

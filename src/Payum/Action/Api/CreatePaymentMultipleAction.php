@@ -6,19 +6,16 @@ namespace Hraph\SyliusPaygreenPlugin\Payum\Action\Api;
 
 
 use Hraph\PaygreenApi\ApiException;
-use Hraph\PaygreenApi\Model\Payins;
 use Hraph\PaygreenApi\Model\PayinsBuyer;
 use Hraph\PaygreenApi\Model\PayinsRecc;
 use Hraph\PaygreenApi\Model\PayinsReccOrderDetails;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePaymentMultiple;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
-use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Reply\HttpPostRedirect;
 
-class CreatePaymentMultipleAction extends BaseApiAwareAction implements ActionInterface
+class CreatePaymentMultipleAction extends BaseRenderableAction implements BaseRenderableActionInterface
 {
-
     /**
      * @param mixed $request
      * @throws ApiException
@@ -59,7 +56,7 @@ class CreatePaymentMultipleAction extends BaseApiAwareAction implements ActionIn
 
         // API has returned a redirect url
         if (!is_null($paymentRequest->getData()->getUrl()))
-            throw new HttpPostRedirect($paymentRequest->getData()->getUrl());
+            $this->renderUrl($paymentRequest->getData()->getUrl());
 
         // Otherwise use returnedUrl
         else
