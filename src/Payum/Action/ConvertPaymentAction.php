@@ -60,12 +60,12 @@ class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface
             ],
             "order_id" => "{$order->getId()}-{$payment->getId()}", // Cause an order ID is unique for PayGreen we need to add paymentId in case of new attempt
             "payment_type" => $this->api->getPaymentType(),
-
-            //'description' => $this->paymentDescription->getPaymentDescription($payment, $order),
+            'description' => $this->paymentDescription->getPaymentDescription($payment, $order),
             'metadata' => [
                 'payment_id' => $payment->getId(),
                 'order_id' => $order->getId(),
             ],
+            'ttl' => 'PT20M'
         ];
 
         if (true === $this->api->isMultipleTimePayment()) {
