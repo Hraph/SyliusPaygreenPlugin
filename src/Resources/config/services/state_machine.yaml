@@ -1,0 +1,6 @@
+services:
+    hraph_sylius_paygreen_plugin.state_machine.state_resolver:
+        class: Hraph\SyliusPaygreenPlugin\StateMachine\StateResolver
+        public: true
+        arguments:
+            - "@payum"

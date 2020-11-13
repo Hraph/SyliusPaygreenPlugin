@@ -4,3 +4,12 @@ imports:
 
 framework:
     translator: { fallbacks: en }
+
+winzou_state_machine:
+    sylius_order_payment:
+        callbacks:
+            before:
+                sylius_complete_payment:
+                    on: ["pay", "refund"] # Also called when payment is authorized
+                    do: ["@hraph_sylius_paygreen_plugin.state_machine.state_resolver", "resolve"]
+                    args: ["object"]

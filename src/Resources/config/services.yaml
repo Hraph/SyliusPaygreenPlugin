@@ -8,8 +8,7 @@ imports:
     - { resource: "services/event_listener.yaml" }
     - { resource: "services/client.yaml" }
     - { resource: "services/menu.yaml" }
-#    - { resource: "services/validators.yaml" }
-#    - { resource: "services/payment_processing.yaml" }
+    - { resource: "services/state_machine.yaml" }
 
 services:
     _defaults:
