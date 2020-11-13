@@ -30,8 +30,8 @@ class CreatePaymentMultipleAction extends BaseRenderableAction implements BaseRe
             ->setBuyer(new PayinsBuyer($details['buyer']))
             ->setOrderDetails(new PayinsReccOrderDetails($details['order_details']));
 
-        if (isset($details[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID]))
-            $payinsRecc->setIdFingerprint($details[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID]);
+        if (isset($details[PaymentDetailsKeys::PAYGREEN_CARDPRINT_ID]))
+            $payinsRecc->setIdFingerprint($details[PaymentDetailsKeys::PAYGREEN_CARDPRINT_ID]);
 
         try {
             $paymentRequest = $this
@@ -53,7 +53,7 @@ class CreatePaymentMultipleAction extends BaseRenderableAction implements BaseRe
 
         // API has returned a redirect url
         if (!is_null($paymentRequest->getData()->getUrl()))
-            $this->renderUrl($paymentRequest->getData()->getUrl());
+            $this->redirectOrRenderUrl($paymentRequest->getData()->getUrl());
 
         // Otherwise use returnedUrl
         else

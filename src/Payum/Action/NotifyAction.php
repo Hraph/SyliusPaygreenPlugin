@@ -46,10 +46,10 @@ final class NotifyAction extends BaseApiAwareAction implements NotifyActionInter
         $details = ArrayObject::ensureArrayObject($request->getModel());
         $this->gateway->execute($this->getHttpRequest); // Get POST/GET data and query from request
 
-        // Transaction check. And transaction ID must be set in payment details
+        // Transaction check. And transaction ID must be set in payment details and present in request POST
         if ((true === isset($details[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID]) ||
                 true === isset($details[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID]) ||
-                true === isset($details[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID]))
+                true === isset($details[PaymentDetailsKeys::PAYGREEN_CARDPRINT_ID]))
             && true === isset($this->getHttpRequest->request['pid'])) {
             try {
                 $payment = $this

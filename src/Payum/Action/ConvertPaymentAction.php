@@ -52,13 +52,13 @@ class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface
             'amount' => $payment->getAmount(),
             'currency' => $payment->getCurrencyCode(),
             'buyer' => [
-                'id' => $order->getCustomer()->getId() ?? null,
+                'id' => $order->getCustomer()->getId() ?? 0,
                 'email' => $order->getCustomer()->getEmail(),
                 'country' => $order->getBillingAddress()->getCountryCode(),
                 'first_name' => $order->getBillingAddress()->getFirstName(),
                 'last_name' => $order->getBillingAddress()->getLastName(),
             ],
-            "order_id" => "{$order->getId()}-{$payment->getId()}", // Cause an order ID is unique for PayGreen we need to add paymentId in case of new attempt
+            "order_id" => "{$order->getNumber()}-{$order->getPayments()->count()}", // Cause an order ID is unique for PayGreen we need to add paymentId in case of new attempt
             "payment_type" => $this->api->getPaymentType(),
             'description' => $this->paymentDescription->getPaymentDescription($payment, $order),
             'metadata' => [
@@ -75,12 +75,6 @@ class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface
                 'day' => -1, // Same day as today
             ];
         }
-//        if (true === $this->api->isMultipleTimePayment()) {
-//            $config = $this->api->getConfig();
-//
-//            $details['times'] = $config['times'];
-//            $details['interval'] = $config['interval'];
-//        }
 
         $request->setResult($details);
     }

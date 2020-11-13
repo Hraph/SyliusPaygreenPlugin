@@ -35,7 +35,7 @@ class CreateFingerprintAction extends BaseRenderableAction implements BaseRender
 
             if (!is_null($paymentRequest->getData()) && !is_null($paymentRequest->getData()->getId())) {
                 // Save transaction id for status action
-                $details[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID] = $paymentRequest->getData()->getId();
+                $details[PaymentDetailsKeys::PAYGREEN_CARDPRINT_ID] = $paymentRequest->getData()->getId();
             }
             else
                 throw new ApiException("Invalid API data exception. Wrong id!");
@@ -47,7 +47,7 @@ class CreateFingerprintAction extends BaseRenderableAction implements BaseRender
 
         // API has returned a redirect url
         if (!is_null($paymentRequest->getData()->getUrl()))
-            $this->renderUrl($paymentRequest->getData()->getUrl());
+            $this->redirectOrRenderUrl($paymentRequest->getData()->getUrl());
 
         // Otherwise use returnedUrl
         else

@@ -20,7 +20,7 @@ abstract class BaseRenderableAction extends BaseApiAwareAction implements BaseRe
      * BaseRenderableAction constructor.
      * @param bool $useInsiteMode
      */
-    public function __construct(bool $useInsiteMode)
+    public function __construct(bool $useInsiteMode = false)
     {
         $this->useInsiteMode = $useInsiteMode;
     }
@@ -29,7 +29,7 @@ abstract class BaseRenderableAction extends BaseApiAwareAction implements BaseRe
      * Render the url in insite mode
      * @param $url
      */
-    protected function renderUrl($url){
+    protected function redirectOrRenderUrl($url){
         if (!$this->useInsiteMode) {
             throw new HttpPostRedirect($url);
         }

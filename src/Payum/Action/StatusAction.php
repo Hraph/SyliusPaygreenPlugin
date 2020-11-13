@@ -59,19 +59,13 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
             $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID];
         }
         // Fringerprint transaction
-        elseif (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID])) {
-            $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID];
+        elseif (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_CARDPRINT_ID])) {
+            $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_CARDPRINT_ID];
             $isFingerprintTransaction = true;
         }
         // Transaction ID is not set in payment data. Invalid payment
         else {
             $request->markNew();
-            return;
-        }
-
-        // User has returned to shop. Mark Payment as canceled because api would return pending status instead
-        if (true === isset($this->getHttpRequest->query['action']) && $this->getHttpRequest->query['action'] === 'returnToShop') {
-            $request->markCanceled();
             return;
         }
 
@@ -98,8 +92,8 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
                             $request->markAuthorized(); // Authorized when Fingerprint
                         break;
 
-                    case TransactionStatus::STATUS_PENDING:
-                        $request->markPending();
+                    case TransactionStatus::STATUS_PENDING: // Paygreen pending means no payment attempts
+                        $request->markNew();
                         break;
 
                     case TransactionStatus::STATUS_REFUNDED:

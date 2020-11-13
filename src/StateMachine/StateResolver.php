@@ -52,7 +52,7 @@ final class StateResolver implements StateResolverInterface
         $details = $lastPayment->getDetails();
         if (false === isset($details[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID]) &&
             false === isset($details[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID]) &&
-            false === isset($details[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID])) {
+            false === isset($details[PaymentDetailsKeys::PAYGREEN_CARDPRINT_ID])) {
             return;
         }
         if (false === isset($details[PaymentDetailsKeys::FACTORY_USED]))
