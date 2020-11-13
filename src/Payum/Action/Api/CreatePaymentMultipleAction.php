@@ -47,9 +47,6 @@ class CreatePaymentMultipleAction extends BaseRenderableAction implements BaseRe
                 throw new ApiException("Invalid API data exception. Wrong id!");
 
         }
-        catch (ApiException $e) {
-            throw new ApiException(sprintf('Error with create payment multiple with: %s', $e->getMessage()));
-        }
         catch (\Exception $e){
             throw new ApiException(sprintf('Error with create payment multiple with: %s', $e->getMessage()));
         }
@@ -60,7 +57,7 @@ class CreatePaymentMultipleAction extends BaseRenderableAction implements BaseRe
 
         // Otherwise use returnedUrl
         else
-            throw new HttpPostRedirect($details['returned_url']);
+            throw new HttpPostRedirect($details[PaymentDetailsKeys::RETURNED_URL]);
     }
 
     /**

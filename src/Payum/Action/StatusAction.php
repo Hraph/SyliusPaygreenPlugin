@@ -48,13 +48,24 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
         $payment = $request->getModel();
         $paymentDetails = $payment->getDetails();
         $pid = null;
+        $isFingerprintTransaction = false;
 
+        // Multiple payment
+        if (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID])) {
+            $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID];
+        }
+        // One time payment
+        elseif (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID])) {
+            $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID];
+        }
+        // Fringerprint transaction
+        elseif (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID])) {
+            $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID];
+            $isFingerprintTransaction = true;
+        }
         // Transaction ID is not set in payment data. Invalid payment
-        if (!isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID])
-            && !isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID])
-            && !isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID])) {
+        else {
             $request->markNew();
-
             return;
         }
 
@@ -62,24 +73,6 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
         if (true === isset($this->getHttpRequest->query['action']) && $this->getHttpRequest->query['action'] === 'returnToShop') {
             $request->markCanceled();
             return;
-        }
-
-        $isFingerprintTransaction = false;
-
-        // Multiple payment
-        if (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID])) {
-            $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID];
-        }
-
-        // One time payment
-        elseif (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID])) {
-            $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID];
-        }
-
-        // Fringerprint transaction
-        elseif (true === isset($paymentDetails[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID])) {
-            $pid = $paymentDetails[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID];
-            $isFingerprintTransaction = true;
         }
 
         try {

@@ -28,7 +28,7 @@ class CreatePaymentAction extends BaseRenderableAction implements BaseRenderable
         $payins->setBuyer(new PayinsBuyer($details['buyer']));
 
         if (isset($details[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID]))
-            $payins->setIdFingerprint(PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID);
+            $payins->setIdFingerprint($details[PaymentDetailsKeys::PAYGREEN_FINGERPRINT_ID]);
 
         try {
             $paymentRequest = $this
@@ -44,9 +44,6 @@ class CreatePaymentAction extends BaseRenderableAction implements BaseRenderable
                 throw new ApiException("Invalid API data exception. Wrong id!");
 
         }
-        catch (ApiException $e) {
-            throw new ApiException(sprintf('Error with create payment with: %s', $e->getMessage()));
-        }
         catch (\Exception $e){
             throw new ApiException(sprintf('Error with create payment with: %s', $e->getMessage()));
         }
@@ -57,7 +54,7 @@ class CreatePaymentAction extends BaseRenderableAction implements BaseRenderable
 
         // Otherwise use returnedUrl
         else
-            throw new HttpPostRedirect($details['returned_url']);
+            throw new HttpPostRedirect($details[PaymentDetailsKeys::RETURNED_URL]);
     }
 
     /**

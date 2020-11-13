@@ -41,9 +41,6 @@ class CreateFingerprintAction extends BaseRenderableAction implements BaseRender
                 throw new ApiException("Invalid API data exception. Wrong id!");
 
         }
-        catch (ApiException $e) {
-            throw new ApiException(sprintf('Error with create fingerprint with: %s', $e->getMessage()));
-        }
         catch (\Exception $e){
             throw new ApiException(sprintf('Error with create fingerprint with: %s', $e->getMessage()));
         }
@@ -54,7 +51,7 @@ class CreateFingerprintAction extends BaseRenderableAction implements BaseRender
 
         // Otherwise use returnedUrl
         else
-            throw new HttpPostRedirect($details['returned_url']);
+            throw new HttpPostRedirect($details[PaymentDetailsKeys::RETURNED_URL]);
     }
 
     /**
