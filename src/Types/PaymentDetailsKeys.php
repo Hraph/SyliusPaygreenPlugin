@@ -9,6 +9,8 @@ class PaymentDetailsKeys
 {
     public const PAYGREEN_TRANSACTION_ID = "paygreen_pid";
     public const PAYGREEN_MULTIPLE_TRANSACTION_ID = "paygreen_multiple_pid";
-    public const PAYGREEN_FINGERPRINT_ID = "paygreen_fingerprint_id";
-
+    public const PAYGREEN_FINGERPRINT_ID = "paygreen_fingerprint_pid";
+    public const FACTORY_USED = "factory_used";
+    public const NOTIFIED_URL = "notified_url";
+    public const RETURNED_URL = "returned_url";
 }
