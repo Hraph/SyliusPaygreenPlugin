@@ -12,6 +12,7 @@ use Hraph\PaygreenApi\Model\PayinsCard;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePayment;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
+use Payum\Core\Exception\RuntimeException;
 use Payum\Core\Reply\HttpPostRedirect;
 
 class CreatePaymentAction extends BaseRenderableAction implements BaseRenderableActionInterface
@@ -24,7 +25,6 @@ class CreatePaymentAction extends BaseRenderableAction implements BaseRenderable
     {
         $details = ArrayObject::ensureArrayObject($request->getModel());
         $doRedirectOrRender = true; // Redirect or render after transaction
-
         // Create payins object for PayGreen API from ConvertAction
         $payins = new Payins($details->toUnsafeArrayWithoutLocal());
         $payins->setBuyer(new PayinsBuyer($details['buyer']));
@@ -43,16 +43,16 @@ class CreatePaymentAction extends BaseRenderableAction implements BaseRenderable
                 ->getPayinsTransactionApi()
                 ->apiIdentifiantPayinsTransactionCashPost($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $payins);
 
+
             if (!is_null($paymentRequest->getData()) && !is_null($paymentRequest->getData()->getId())) {
                 // Save transaction id for status action
                 $details[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID] = $paymentRequest->getData()->getId();
             }
             else
-                throw new ApiException("Invalid API data exception. Wrong id!");
-
+                throw new ApiException("Invalid API transaction data.");
         }
-        catch (\Exception $e){
-            throw new ApiException(sprintf('Error with create payment with: %s', $e->getMessage()));
+        catch (ApiException $e){
+            throw new RuntimeException("PayGreen API Error: {$e->getMessage()}", $e->getCode());
         }
 
         if (!$doRedirectOrRender) // Background request: no need to redirect

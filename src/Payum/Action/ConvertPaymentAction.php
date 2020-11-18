@@ -70,7 +70,7 @@ class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface
 
         if (true === $this->api->isMultipleTimePayment()) {
             $details['order_details'] = [
-                'times' => $this->api->getMultipleTimePaymentTimes(),
+                'count' => $this->api->getMultipleTimePaymentTimes(),
                 'cycle' => 40, // Cycle 40 is monthly
                 'day' => -1, // Same day as today
             ];

@@ -7,6 +7,7 @@ use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Hraph\SyliusPaygreenPlugin\Types\TransactionStatus;
 use Payum\Core\Exception\RequestNotSupportedException;
+use Payum\Core\Exception\RuntimeException;
 use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\GetHttpRequest;
 use Sylius\Bundle\PayumBundle\Request\GetStatus;
@@ -109,10 +110,10 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
                         break;
                 }
             }
-            else throw new ApiException("Invalid API data exception. Wrong result!");
+            else throw new ApiException("Invalid API transaction data.");
         }
-        catch (\Exception $e){
-            throw new ApiException(sprintf("Error with get transaction from PayGreen with %s", $e->getMessage()));
+        catch (ApiException $e){
+            throw new RuntimeException("PayGreen API Error: {$e->getMessage()}", $e->getCode());
         }
     }
 

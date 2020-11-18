@@ -11,6 +11,7 @@ use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
+use Payum\Core\Exception\RuntimeException;
 use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\Refund;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -37,6 +38,7 @@ class RefundAction extends BaseApiAwareAction implements RefundActionInterface
 
     /**
      * {@inheritdoc}
+     * @throws UpdateHandlingException
      */
     public function execute($request)
     {
@@ -47,21 +49,25 @@ class RefundAction extends BaseApiAwareAction implements RefundActionInterface
         /** @var PaymentInterface $payment */
         $payment = $request->getFirstModel();
 
-        if (true === isset($details[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID])){
-            try {
-                $refundData = $this->convertOrderRefundData->convert($details['metadata']['refund'], $payment->getCurrencyCode());
+        // Must have a valid transaction to be refund
+        if (true === isset($details[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID]))
+            $pid = $details[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID]; // Direct
+        elseif (true === isset($details[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID]))
+            $pid = $details[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID]; // Multiple
+        else
+            return;
 
-                $payment = $this
-                    ->api
-                    ->getPayinsTransactionApi()
-                    ->apiIdentifiantPayinsTransactionIdDelete($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $details[PaymentDetailsKeys::PAYGREEN_TRANSACTION_ID]);
+        try {
+            $refund = $this
+                ->api
+                ->getPayinsTransactionApi()
+                ->apiIdentifiantPayinsTransactionIdDelete($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $pid);
 
-                // TODO ADD AMOUNT (amount parameter is not available in api)
-
-            }
-            catch (ApiException $e){
-                throw new UpdateHandlingException(sprintf('API call failed: %s', htmlspecialchars($e->getMessage())));
-            }
+            if (false === $refund->getSuccess())
+                throw new ApiException("Refund has not succeed" . (!empty($refund->getMessage()) ? ": ({$refund->getMessage()})." : "."));
+        }
+        catch (ApiException $e){
+            throw new RuntimeException("PayGreen API Error: {$e->getMessage()}", $e->getCode());
         }
     }
 

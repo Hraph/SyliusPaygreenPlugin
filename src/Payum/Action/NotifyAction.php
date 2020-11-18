@@ -57,16 +57,18 @@ final class NotifyAction extends BaseApiAwareAction implements NotifyActionInter
                     ->getPayinsTransactionApi()
                     ->apiIdentifiantPayinsTransactionIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $this->getHttpRequest->request['pid']);
 
-                // Todo check order id and update transaction id
+                if (false === $payment->getSuccess())
+                    throw new ApiException("Payment has not succeed" . (!empty($payment->getMessage()) ? ": ({$payment->getMessage()})." : "."));
             }
             catch (\Exception $e){
-                throw new ApiException(sprintf("Error with get transaction from PayGreen with %s", $e->getMessage()));
+                // TODO LOG ERROR
+                throw new HttpResponse('Invalid API request', Response::HTTP_BAD_REQUEST); // Invalid pid
             }
 
             throw new HttpResponse('OK', Response::HTTP_OK);
         }
 
-        throw new HttpResponse('Invalid data', Response::HTTP_BAD_REQUEST); // Invalid pid
+        throw new HttpResponse('Invalid parameters', Response::HTTP_BAD_REQUEST); // Invalid pid
     }
 
     /**

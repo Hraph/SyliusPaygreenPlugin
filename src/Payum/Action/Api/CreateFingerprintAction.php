@@ -11,6 +11,7 @@ use Hraph\PaygreenApi\Model\PayinsBuyer;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreateFingerprint;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
+use Payum\Core\Exception\RuntimeException;
 use Payum\Core\Reply\HttpPostRedirect;
 
 class CreateFingerprintAction extends BaseRenderableAction implements BaseRenderableActionInterface
@@ -38,11 +39,10 @@ class CreateFingerprintAction extends BaseRenderableAction implements BaseRender
                 $details[PaymentDetailsKeys::PAYGREEN_CARDPRINT_ID] = $paymentRequest->getData()->getId();
             }
             else
-                throw new ApiException("Invalid API data exception. Wrong id!");
-
+                throw new ApiException("Invalid API transaction data.");
         }
-        catch (\Exception $e){
-            throw new ApiException(sprintf('Error with create fingerprint with: %s', $e->getMessage()));
+        catch (ApiException $e){
+            throw new RuntimeException("PayGreen API Error: {$e->getMessage()}", $e->getCode());
         }
 
         // API has returned a redirect url

@@ -26,6 +26,11 @@ services:
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.capture }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.capture }
+    hraph_sylius_paygreen_plugin.action.capture_authorized:
+        class: Hraph\SyliusPaygreenPlugin\Payum\Action\CaptureAuthorizedAction
+        tags:
+            - { name: payum.action, factory: paygreen, alias: payum.action.capture_authorized }
+            - { name: payum.action, factory: paygreen_multiple, alias: payum.action.capture_authorized }
     hraph_sylius_paygreen_plugin.action.refund:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\RefundAction
         arguments:

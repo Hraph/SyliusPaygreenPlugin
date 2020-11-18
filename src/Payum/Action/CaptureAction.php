@@ -39,23 +39,23 @@ final class CaptureAction extends BaseApiAwareAction implements CaptureActionInt
         /** @var TokenInterface $token */
         $token = $request->getToken(); // Get current token
 
-        // Create a notify token to get status updates from PayGreen
-        $notifyToken = $this->tokenFactory->createNotifyToken($token->getGatewayName(), $token->getDetails());
-//        $refundToken = $this->tokenFactory->createRefundToken($token->getGatewayName(), $token->getDetails());
+        // Create token only if never did
+        if (false === isset($details[PaymentDetailsKeys::NOTIFIED_URL])) {
+            // Create a notify token to get status updates from PayGreen
+            $notifyToken = $this->tokenFactory->createNotifyToken($token->getGatewayName(), $token->getDetails());
 
-        $details['notified_url'] = $notifyToken->getTargetUrl();
-        $details['returned_url'] = $token->getAfterUrl();
+            $details[PaymentDetailsKeys::NOTIFIED_URL] = $notifyToken->getTargetUrl();
+        }
+        if (false === isset($details[PaymentDetailsKeys::RETURNED_URL])) {
+            $details[PaymentDetailsKeys::RETURNED_URL] = $token->getAfterUrl();
+        }
 
-        $metadata = $details['metadata'];
-//        $metadata['refund_token'] = $refundToken->getHash();
-        $details['metadata'] = $metadata;
-
-        if (true === $this->api->isMultipleTimePayment()) {
+        if ($this->api->isMultipleTimePayment()) { // Multiple time payment
             $details[PaymentDetailsKeys::FACTORY_USED] = PaygreenGatewayFactoryMultiple::FACTORY_NAME; // Save factory used
             $this->gateway->execute(new CreatePaymentMultiple($details));
         }
 
-        elseif (false === $this->api->isMultipleTimePayment()) {
+        else { // Direct payment
             $details[PaymentDetailsKeys::FACTORY_USED] = PaygreenGatewayFactory::FACTORY_NAME; // Save factory used
             $this->gateway->execute(new CreatePayment($details));
         }

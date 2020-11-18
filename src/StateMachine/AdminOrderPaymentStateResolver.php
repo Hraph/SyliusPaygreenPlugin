@@ -16,6 +16,10 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Core\OrderPaymentTransitions;
 use Sylius\Component\Order\Model\OrderInterface as BaseOrderInterface;
 use Sylius\Component\Order\StateResolver\StateResolverInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RequestContext;
 use Webmozart\Assert\Assert;
 
 final class StateResolver implements StateResolverInterface
@@ -24,11 +28,18 @@ final class StateResolver implements StateResolverInterface
     private $payum;
 
     /**
+     * @var RequestStack
+     */
+    private RequestStack $requestStack;
+
+    /**
      * StateResolver constructor.
+     * @param RequestStack $requestStack
      * @param RegistryInterface $payum
      */
-    public function __construct(RegistryInterface $payum)
+    public function __construct(RequestStack $requestStack, RegistryInterface $payum)
     {
+        $this->requestStack = $requestStack;
         $this->payum = $payum;
     }
 
@@ -39,14 +50,22 @@ final class StateResolver implements StateResolverInterface
     {
         Assert::isInstanceOf($order, OrderInterface::class);
 
+        $fromState = $order->getPaymentState();
         $targetTransition = $this->getTargetTransition($order);
+        $currentRoute = $this->requestStack->getCurrentRequest()->get("_route");
         $lastPayment = $order->getLastPayment();
 
+        // Change state 
+        if ($currentRoute !== "sylius_admin_order_payment_complete" || $currentRoute !== "sylius_admin_order_payment_refund")
+            return;
+        dump($fromState);
+        dump();
+        dump($targetTransition);
+        die();
         // Do several checks
         if (null === $lastPayment) {
             return;
         }
-
 
         // Check if it's a Paygreen payment
         $details = $lastPayment->getDetails();
@@ -75,6 +94,9 @@ final class StateResolver implements StateResolverInterface
         $gateway = $gatewayFactory->create($gatewayConfig->getConfig());
 
         $model = new ArrayObject($details);
+
+        dump($targetTransition);
+        die();
 
         [$totalPayed] = $this->getPaymentTotalWithState($order, PaymentInterface::STATE_COMPLETED);
         switch ($targetTransition) {
@@ -109,19 +131,27 @@ final class StateResolver implements StateResolverInterface
      */
     private function getTargetTransition(OrderInterface $order): ?string
     {
-        // Check if need to refund
-        [$refundedPaymentTotal, $refundedPayments] = $this->getPaymentTotalWithState($order, PaymentInterface::STATE_REFUNDED);
+        $refundedPaymentTotal = 0;
+        $refundedPayments = $this->getPaymentsWithState($order, PaymentInterface::STATE_REFUNDED);
+
+        foreach ($refundedPayments as $payment) {
+            $refundedPaymentTotal += $payment->getAmount();
+        }
 
         if (0 < $refundedPayments->count() && $refundedPaymentTotal >= $order->getTotal()) {
             return OrderPaymentTransitions::TRANSITION_REFUND;
         }
 
-        if (0 < $refundedPaymentTotal && $refundedPaymentTotal < $order->getTotal()) {
+        if ($refundedPaymentTotal < $order->getTotal() && 0 < $refundedPaymentTotal) {
             return OrderPaymentTransitions::TRANSITION_PARTIALLY_REFUND;
         }
 
-        // Check if need to pay
-        [$completedPaymentTotal, $completedPayments] = $this->getPaymentTotalWithState($order, PaymentInterface::STATE_COMPLETED);
+        $completedPaymentTotal = 0;
+        $completedPayments = $this->getPaymentsWithState($order, PaymentInterface::STATE_COMPLETED);
+
+        foreach ($completedPayments as $payment) {
+            $completedPaymentTotal += $payment->getAmount();
+        }
 
         if (
             (0 < $completedPayments->count() && $completedPaymentTotal >= $order->getTotal()) ||
@@ -130,19 +160,36 @@ final class StateResolver implements StateResolverInterface
             return OrderPaymentTransitions::TRANSITION_PAY;
         }
 
-        if (0 < $completedPaymentTotal && $completedPaymentTotal < $order->getTotal()) {
+        if ($completedPaymentTotal < $order->getTotal() && 0 < $completedPaymentTotal) {
             return OrderPaymentTransitions::TRANSITION_PARTIALLY_PAY;
         }
 
-        // Check if need to authorize
-        [$authorizedPaymentTotal, $authorizedPayments] = $this->getPaymentTotalWithState($order, PaymentInterface::STATE_AUTHORIZED);
+        // Authorized payments
+        $authorizedPaymentTotal = 0;
+        $authorizedPayments = $this->getPaymentsWithState($order, PaymentInterface::STATE_AUTHORIZED);
+
+        foreach ($authorizedPayments as $payment) {
+            $authorizedPaymentTotal += $payment->getAmount();
+        }
 
         if (0 < $authorizedPayments->count() && $authorizedPaymentTotal >= $order->getTotal()) {
             return OrderPaymentTransitions::TRANSITION_AUTHORIZE;
         }
 
-        if (0 < $authorizedPaymentTotal && $authorizedPaymentTotal < $order->getTotal()) {
+        if ($authorizedPaymentTotal < $order->getTotal() && 0 < $authorizedPaymentTotal) {
             return OrderPaymentTransitions::TRANSITION_PARTIALLY_AUTHORIZE;
+        }
+
+        // Processing payments
+        $processingPaymentTotal = 0;
+        $processingPayments = $this->getPaymentsWithState($order, PaymentInterface::STATE_PROCESSING);
+
+        foreach ($processingPayments as $payment) {
+            $processingPaymentTotal += $payment->getAmount();
+        }
+
+        if (0 < $processingPayments->count() && $processingPaymentTotal >= $order->getTotal()) {
+            return OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT;
         }
 
         return null;
