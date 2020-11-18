@@ -11,5 +11,5 @@ winzou_state_machine:
             before:
                 sylius_complete_payment:
                     on: ["pay", "refund"] # Also called when payment is authorized
-                    do: ["@hraph_sylius_paygreen_plugin.state_machine.state_resolver", "resolve"]
+                    do: ["@hraph_sylius_paygreen_plugin.state_machine.admin_order_payment_state_resolver", "resolve"]
                     args: ["object"]

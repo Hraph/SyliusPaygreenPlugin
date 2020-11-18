@@ -5,24 +5,21 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\StateMachine;
 
 use Doctrine\Common\Collections\Collection;
+use Hraph\SyliusPaygreenPlugin\Payum\Request\CaptureAuthorized;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
-use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Registry\RegistryInterface;
-use Payum\Core\Request\Capture;
 use Payum\Core\Request\Refund;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
+use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\OrderPaymentTransitions;
 use Sylius\Component\Order\Model\OrderInterface as BaseOrderInterface;
 use Sylius\Component\Order\StateResolver\StateResolverInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RequestContext;
 use Webmozart\Assert\Assert;
 
-final class StateResolver implements StateResolverInterface
+final class AdminOrderPaymentStateResolver implements StateResolverInterface
 {
     /** @var RegistryInterface */
     private $payum;
@@ -55,14 +52,10 @@ final class StateResolver implements StateResolverInterface
         $currentRoute = $this->requestStack->getCurrentRequest()->get("_route");
         $lastPayment = $order->getLastPayment();
 
-        // Change state 
-        if ($currentRoute !== "sylius_admin_order_payment_complete" || $currentRoute !== "sylius_admin_order_payment_refund")
+        // Only from Admin order route
+        if ($currentRoute !== "sylius_admin_order_payment_complete" && $currentRoute !== "sylius_admin_order_payment_refund")
             return;
-        dump($fromState);
-        dump();
-        dump($targetTransition);
-        die();
-        // Do several checks
+
         if (null === $lastPayment) {
             return;
         }
@@ -83,7 +76,6 @@ final class StateResolver implements StateResolverInterface
             return;
         }
 
-
         $gatewayConfig = $paymentMethod->getGatewayConfig();
         if (null === $gatewayConfig) {
             return;
@@ -93,33 +85,37 @@ final class StateResolver implements StateResolverInterface
         $gatewayFactory = $this->payum->getGatewayFactory($details[PaymentDetailsKeys::FACTORY_USED]);
         $gateway = $gatewayFactory->create($gatewayConfig->getConfig());
 
-        $model = new ArrayObject($details);
-
-        dump($targetTransition);
-        die();
-
         [$totalPayed] = $this->getPaymentTotalWithState($order, PaymentInterface::STATE_COMPLETED);
-        switch ($targetTransition) {
-            case OrderPaymentTransitions::TRANSITION_PARTIALLY_PAY:
-                $model['amount'] -= $totalPayed;
-                if ($model['amount'] <= 0) {
-                    return;
-                }
-            // no break: execute PAY as well
-            case OrderPaymentTransitions::TRANSITION_PAY:
-                $gateway->execute(new Capture($model));
 
+        switch ($fromState) {
+            // From Authorized to Pay
+            case OrderPaymentStates::STATE_AUTHORIZED:
+            case OrderPaymentStates::STATE_PARTIALLY_AUTHORIZED:
+                if ($targetTransition === OrderPaymentTransitions::TRANSITION_PARTIALLY_PAY) {
+                    $lastPayment->setAmount($lastPayment->getAmount() - $totalPayed); // Recount the amount
+                    if ($lastPayment->getAmount() <= 0) {
+                        return;
+                    }
+                }
+
+                if ($targetTransition === OrderPaymentTransitions::TRANSITION_PAY)
+                    $gateway->execute(new CaptureAuthorized($lastPayment)); // Capture from authorized
                 break;
-            case OrderPaymentTransitions::TRANSITION_PARTIALLY_REFUND:
-                [$totalRefunded] = $this->getPaymentTotalWithState($order, PaymentInterface::STATE_REFUNDED);
-                $model['amount'] = $totalPayed - $totalRefunded;
-                if ($model['amount'] <= 0) {
-                    return;
-                }
-            // no break execute REFUND as well
-            case OrderPaymentTransitions::TRANSITION_REFUND:
-                $gateway->execute(new Refund($model));
 
+            // From Paid to Refund
+            case OrderPaymentStates::STATE_PAID:
+            case OrderPaymentStates::STATE_PARTIALLY_PAID:
+                if ($targetTransition === OrderPaymentTransitions::TRANSITION_PARTIALLY_REFUND) {
+                    [$totalRefunded] = $this->getPaymentTotalWithState($order, PaymentInterface::STATE_REFUNDED);
+                    $lastPayment->setAmount($totalPayed - $totalRefunded); // Recount the amount
+                    if ($lastPayment->getAmount() <= 0) {
+                        return;
+                    }
+                }
+
+                if ($targetTransition === OrderPaymentTransitions::TRANSITION_REFUND) {
+                    $gateway->execute($result = new Refund($lastPayment));
+                }
                 break;
         }
     }

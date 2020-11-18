@@ -1,6 +1,7 @@
 services:
-    hraph_sylius_paygreen_plugin.state_machine.state_resolver:
-        class: Hraph\SyliusPaygreenPlugin\StateMachine\StateResolver
+    hraph_sylius_paygreen_plugin.state_machine.admin_order_payment_state_resolver:
+        class: Hraph\SyliusPaygreenPlugin\StateMachine\AdminOrderPaymentStateResolver
         public: true
         arguments:
+            - "@request_stack"
             - "@payum"
