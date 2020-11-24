@@ -2,3 +2,15 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en_US
+
+services:
+    # Makes classes in src/ available to be used as services;
+    # this creates a service per class whose id is the fully-qualified class name
+    Tests\Hraph\SyliusPaygreenPlugin\App\:
+        resource: '../src/*'
+        exclude: '../src/{Entity,Migrations,Tests,Kernel.php}'
+
+    app.client.paygreen_api_factory:
+        class: Tests\Hraph\SyliusPaygreenPlugin\App\Services\PaygreenApiFactoryDecorator
+        decorates: hraph_sylius_paygreen_plugin.client.paygreen_api_factory
+        arguments: ['@app.client.paygreen_api_factory.inner']

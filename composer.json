@@ -43,7 +43,8 @@
     "autoload": {
         "psr-4": {
             "Hraph\\SyliusPaygreenPlugin\\": "src/",
-            "Tests\\Hraph\\SyliusPaygreenPlugin\\": "tests/"
+            "Tests\\Hraph\\SyliusPaygreenPlugin\\": "tests/",
+            "Tests\\Hraph\\SyliusPaygreenPlugin\\App\\": "tests/Application/src"
         }
     },
     "autoload-dev": {
