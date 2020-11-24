@@ -52,11 +52,16 @@ class PaygreenShopType extends AbstractType
                     ]),
                 ]
             ])
+            ->add('name', TextType::class, [
+                'label' => 'hraph_sylius_paygreen_plugin.form.name',
+                'constraints' => [
+                    new NotBlank()
+                ]
+            ])
             ->add('description', TextType::class, [
                 'label' => 'hraph_sylius_paygreen_plugin.form.description',
                 'constraints' => [
-                    new NotBlank(),
-                    new Url()
+                    new NotBlank()
                 ]
             ])
             ->add('companyType', ChoiceType::class, [

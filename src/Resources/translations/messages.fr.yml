@@ -18,6 +18,7 @@ hraph_sylius_paygreen_plugin:
         url: URL
         business_identifier: SIRET
         description: Description
+        name: Nom de la boutique
         company_type: Forme juridique
         company_types:
             eieirl: Entrepreneur Individuel EI/EIRL
