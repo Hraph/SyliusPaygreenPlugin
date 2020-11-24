@@ -76,6 +76,9 @@ class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface
             ];
         }
 
+        // Set payment to change API config depending on context
+        $this->apiFactory->setPaymentContextForConfigResolver($payment);
+
         $request->setResult($details);
     }
 

@@ -7,6 +7,8 @@ namespace Hraph\SyliusPaygreenPlugin\Client;
 use Hraph\PaygreenApi\Configuration;
 use Hraph\PaygreenApi\HeaderSelector;
 use Hraph\PaygreenApi\PaygreenApiClient as PaygreenApiClientBase;
+use Hraph\SyliusPaygreenPlugin\Types\ApiConfig;
+use Hraph\SyliusPaygreenPlugin\Types\ApiOptions;
 
 class PaygreenApiClient extends PaygreenApiClientBase implements PaygreenApiClientInterface
 {
@@ -28,21 +30,21 @@ class PaygreenApiClient extends PaygreenApiClientBase implements PaygreenApiClie
 
     /**
      * PaygreenApiClient constructor.
-     * @param string $username
-     * @param string $apiKey
-     * @param bool $sandbox
-     * @param string $paymentType
+     * @param ApiConfig $apiConfig
+     * @param ApiOptions $options
      */
-    public function __construct(string $username, string $apiKey, bool $sandbox, string $paymentType)
+    public function __construct(ApiConfig $apiConfig, ApiOptions $options)
     {
         $header = new HeaderSelector();
-        $config = new Configuration();
-        parent::__construct($config, $header, $host_index = 0);
+        $internalConfig = new Configuration();
+        parent::__construct($internalConfig, $header, $host_index = 0);
 
-        $this->setUsername($username);
-        $this->setApiKey($apiKey);
-        $this->useSandboxApi($sandbox);
-        $this->setPaymentType($paymentType);
+        $this->setUsername($apiConfig->getUsername());
+        $this->setApiKey($apiConfig->getApiKey());
+        $this->useSandboxApi($options->isSandbox());
+        $this->setPaymentType($options->getPaymentType());
+        $this->setIsMultipleTimePayment($options->isMultiplePaymentTime());
+        $this->setMultipleTimePaymentTimes($options->getMultiplePaymentTimes());
     }
 
     /**

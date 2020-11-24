@@ -2,13 +2,23 @@ services:
     _defaults:
         public: true
 
-    hraph_sylius_paygreen_plugin.client.paygreen_api:
-        class: Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClient
+    hraph_sylius_paygreen_plugin.client.paygreen_api_default_config:
+        class: Hraph\SyliusPaygreenPlugin\Types\ApiConfig
         arguments:
             - "%hraph_sylius_paygreen_plugin.client.username%" # Parameter fitted in with username dynamically on load
             - "%hraph_sylius_paygreen_plugin.client.api_key%" # Parameter fitted in with api_key dynamically on load
+
+    hraph_sylius_paygreen_plugin.client.paygreen_api_default_options:
+        class: Hraph\SyliusPaygreenPlugin\Types\ApiOptions
+        arguments:
             - "%hraph_sylius_paygreen_plugin.client.sandbox%" # Parameter fitted in with sandbox dynamically on load
             - "%hraph_sylius_paygreen_plugin.client.payment_type%" # Parameter fitted in with payment_type dynamically on load
+
+    hraph_sylius_paygreen_plugin.client.paygreen_api_factory:
+        class: Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactory
+        arguments:
+            - "@hraph_sylius_paygreen_plugin.client.paygreen_api_default_config"
+            - "@hraph_sylius_paygreen_plugin.client.paygreen_api_default_options"
 
     hraph_sylius_paygreen_plugin.client.paygreen_api_manager:
         class: Hraph\SyliusPaygreenPlugin\Client\PaygreenApiManager
@@ -19,4 +29,4 @@ services:
     hraph_sylius_paygreen_plugin.client.repository.paygreen_shop_repository:
         class: Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenShopRepository
         arguments:
-            - "@hraph_sylius_paygreen_plugin.client.paygreen_api"
+            - "@hraph_sylius_paygreen_plugin.client.paygreen_api_factory"

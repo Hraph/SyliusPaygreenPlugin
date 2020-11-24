@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Payum;
 
-use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClient;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClientInterface;
-use Hraph\SyliusPaygreenPlugin\Payum\Action\CaptureAction;
-use Hraph\SyliusPaygreenPlugin\Payum\Action\StatusAction;
+use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactoryInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\GatewayFactory;
 
@@ -23,14 +21,12 @@ final class PaygreenGatewayFactoryMultiple extends GatewayFactory
         $config->defaults([
             'payum.factory_name' => self::FACTORY_NAME,
             'payum.factory_title' => 'PayGreen - Multiple',
-            'payum.api_client' => '@hraph_sylius_paygreen_plugin.client.paygreen_api', // Use registered service instance
+            'payum.api_client' => '@hraph_sylius_paygreen_plugin.client.paygreen_api_factory', // Use registered service instance
         ]);
 
         if (false === (bool) $config['payum.api']) {
             $config['payum.default_options'] = [
-                'use_sandbox_api' => false,
-                'payment_type' => "CB",
-                'times' => 3
+                'use_authorize' => false
             ];
 
             $config->defaults($config['payum.default_options']);
@@ -43,16 +39,14 @@ final class PaygreenGatewayFactoryMultiple extends GatewayFactory
             $config['payum.api'] = function (ArrayObject $config) {
                 $config->validateNotEmpty($config['payum.required_options']);
 
-                /** @var PaygreenApiClientInterface $paygreenApiClient */
-                $paygreenApiClient = $config['payum.api_client']; // Use service
+                /** @var PaygreenApiFactoryInterface $factory */
+                $factory = $config['payum.api_client']; // Use service
+                $factoryOptions = $factory->getOptions();
 
-                if ($config['use_sandbox_api'])
-                    $paygreenApiClient->useSandboxApi($config['use_sandbox_api']);
-                $paygreenApiClient->setPaymentType($config['payment_type']);
-                $paygreenApiClient->setIsMultipleTimePayment(true);
-                $paygreenApiClient->setMultipleTimePaymentTimes($config['times']);
+                $factoryOptions->setIsMultiplePaymentTime(true);
+                $factoryOptions->setMultiplePaymentTimes($config['times']);
 
-                return $paygreenApiClient;
+                return $factory;
             };
         }
     }

@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Payum;
 
-use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClient;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClientInterface;
-use Hraph\SyliusPaygreenPlugin\Payum\Action\StatusAction;
+use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactoryInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\GatewayFactory;
 
@@ -22,7 +21,7 @@ final class PaygreenGatewayFactory extends GatewayFactory
         $config->defaults([
             'payum.factory_name' => self::FACTORY_NAME,
             'payum.factory_title' => 'PayGreen',
-            'payum.api_client' => '@hraph_sylius_paygreen_plugin.client.paygreen_api', // Use registered service instance
+            'payum.api_client' => '@hraph_sylius_paygreen_plugin.client.paygreen_api_factory', // Use registered service instance
         ]);
 
         if (false === (bool) $config['payum.api']) {
@@ -39,10 +38,10 @@ final class PaygreenGatewayFactory extends GatewayFactory
             $config['payum.api'] = function (ArrayObject $config) {
                 $config->validateNotEmpty($config['payum.required_options']);
 
-                /** @var PaygreenApiClientInterface $paygreenApiClient */
-                $paygreenApiClient = $config['payum.api_client']; // Use service
+                /** @var PaygreenApiFactoryInterface $factory */
+                $factory = $config['payum.api_client']; // Use service
 
-                return $paygreenApiClient;
+                return $factory;
             };
         }
     }

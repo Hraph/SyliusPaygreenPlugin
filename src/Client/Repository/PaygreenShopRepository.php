@@ -7,6 +7,7 @@ namespace Hraph\SyliusPaygreenPlugin\Client\Repository;
 use Hraph\PaygreenApi\ApiException;
 use Hraph\PaygreenApi\Model\Shop;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClientInterface;
+use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
 use Symfony\Component\Intl\Exception\MethodNotImplementedException;
@@ -17,11 +18,11 @@ class PaygreenShopRepository implements PaygreenShopRepositoryInterface
 
     /**
      * PaygreenShopRepository constructor.
-     * @param PaygreenApiClientInterface $api
+     * @param PaygreenApiFactoryInterface $factory
      */
-    public function __construct(PaygreenApiClientInterface $api)
+    public function __construct(PaygreenApiFactoryInterface $factory)
     {
-        $this->api = $api;
+        $this->api = $factory->createNew(); // Use default config API
     }
 
 
