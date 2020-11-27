@@ -18,29 +18,29 @@ use Hraph\PaygreenApi\Model\Shop;
 class PaygreenShop extends ApiEntity implements PaygreenShopInterface
 {
     /**
-     * @var string
+     * @var string|null
      * @ORM\Id
      * @ORM\Column(name="id", type="string")
      */
-    private string $id;
+    private ?string $id = null;
 
     /**
      * @var string|null
      * @ORM\Column(name="private_key", type="string", nullable=true)
      */
-    private ?string $privateKey;
+    private ?string $privateKey = null;
 
     /**
      * @var string|null
      * @ORM\Column(name="name", type="string", nullable=true)
      */
-    private ?string $name;
+    private ?string $name = null;
 
     /**
      * @var string|null
      * @ORM\Column(name="url", type="string", nullable=true)
      */
-    private ?string $url;
+    private ?string $url = null;
 
     /**
      * @var string[]|null
@@ -52,25 +52,25 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
      * @var string|null
      * @ORM\Column(name="business_identifier", type="string", nullable=true)
      */
-    private ?string $businessIdentifier;
+    private ?string $businessIdentifier = null;
 
     /**
      * @var string|null
      * @ORM\Column(name="description", type="string", nullable=true)
      */
-    private ?string $description;
+    private ?string $description = null;
 
     /**
      * @var string|null
      * @ORM\Column(name="company_type", type="string", nullable=true)
      */
-    private ?string $companyType;
+    private ?string $companyType = null;
 
     /**
      * @var string|null
      * @ORM\Column(name="paiement_type", type="string", nullable=true)
      */
-    private ?string $paiementType;
+    private ?string $paiementType = null;
 
     /**
      * @var bool
@@ -82,13 +82,13 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
      * @var \DateTime|null
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
-    private ?\DateTime $createdAt;
+    private ?\DateTime $createdAt = null;
 
     /**
      * @var \DateTime|null
      * @ORM\Column(name="validated_at", type="datetime", nullable=true)
      */
-    private ?\DateTime $validatedAt;
+    private ?\DateTime $validatedAt = null;
 
     /**
      * @var array|null

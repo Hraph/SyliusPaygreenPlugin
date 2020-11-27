@@ -7,9 +7,9 @@ namespace Hraph\SyliusPaygreenPlugin\Entity;
 
 interface PaygreenShopInterface extends ApiEntityInterface
 {
-    public function getId(): string;
+    public function getId(): ?string;
 
-    public function setId(string $id): void;
+    public function setId(?string $id): void;
 
     public function getName(): ?string;
 
