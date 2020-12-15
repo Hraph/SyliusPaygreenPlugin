@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\StateMachine;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Persistence\ObjectManager;
+use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\CaptureAuthorized;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Registry\RegistryInterface;
@@ -16,13 +18,14 @@ use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\OrderPaymentTransitions;
 use Sylius\Component\Order\Model\OrderInterface as BaseOrderInterface;
 use Sylius\Component\Order\StateResolver\StateResolverInterface;
+use Sylius\Component\Resource\Exception\UpdateHandlingException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\Assert\Assert;
 
 final class AdminOrderPaymentStateResolver implements StateResolverInterface
 {
     /** @var RegistryInterface */
-    private $payum;
+    private RegistryInterface $payum;
 
     /**
      * @var RequestStack
@@ -30,18 +33,26 @@ final class AdminOrderPaymentStateResolver implements StateResolverInterface
     private RequestStack $requestStack;
 
     /**
+     * @var ObjectManager
+     */
+    private ObjectManager $manager;
+
+    /**
      * StateResolver constructor.
      * @param RequestStack $requestStack
      * @param RegistryInterface $payum
+     * @param ObjectManager $manager
      */
-    public function __construct(RequestStack $requestStack, RegistryInterface $payum)
+    public function __construct(RequestStack $requestStack, RegistryInterface $payum, ObjectManager $manager)
     {
         $this->requestStack = $requestStack;
         $this->payum = $payum;
+        $this->manager = $manager;
     }
 
     /**
      * @param OrderInterface|BaseOrderInterface $order
+     * @throws UpdateHandlingException
      */
     public function resolve(BaseOrderInterface $order): void
     {
@@ -98,9 +109,19 @@ final class AdminOrderPaymentStateResolver implements StateResolverInterface
                     }
                 }
 
-                if ($targetTransition === OrderPaymentTransitions::TRANSITION_PAY)
-                    $gateway->execute(new CaptureAuthorized($lastPayment)); // Capture from authorized
-                break;
+                if ($targetTransition === OrderPaymentTransitions::TRANSITION_PAY) {
+                    try {
+                        $gateway->execute(new CaptureAuthorized($lastPayment)); // Capture from authorized
+                    }
+                    catch (PaygreenException $exception) // Capture cannot be made
+                    {
+                        $lastPayment->setState(PaymentInterface::STATE_AUTHORIZED); // Cause the payment state has already been changed by sylius_payment after callback state machine we need to reset it
+                        $this->manager->flush();
+
+                        throw new UpdateHandlingException("Unable to capture payment"); // Will be catch by Resource controller
+                    }
+                }
+            break;
 
             // From Paid to Refund
             case OrderPaymentStates::STATE_PAID:
@@ -114,9 +135,18 @@ final class AdminOrderPaymentStateResolver implements StateResolverInterface
                 }
 
                 if ($targetTransition === OrderPaymentTransitions::TRANSITION_REFUND) {
-                    $gateway->execute($result = new Refund($lastPayment));
+                    try {
+                        $gateway->execute($result = new Refund($lastPayment));
+                    }
+                    catch (PaygreenException $exception) // Refund cannot be made
+                    {
+                        $lastPayment->setState(PaymentInterface::STATE_COMPLETED); // Cause the payment state has already been changed by sylius_payment after callback state machine we need to reset it
+                        $this->manager->flush();
+
+                        throw new UpdateHandlingException("Unable to refund payment"); // Will be catch by Resource controller
+                    }
                 }
-                break;
+            break;
         }
     }
 

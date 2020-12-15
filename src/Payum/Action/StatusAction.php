@@ -13,7 +13,7 @@ use Sylius\Bundle\PayumBundle\Request\GetStatus;
 use Sylius\Component\Core\Model\PaymentInterface;
 
 /**
- * Class StatusAction
+ * Class StatusAction is called by Payum controller
  * Check the status of the payment after capture and notify
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */

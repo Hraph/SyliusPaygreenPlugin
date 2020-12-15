@@ -16,6 +16,11 @@ use Payum\Core\Security\GenericTokenFactoryAwareTrait;
 use Payum\Core\Security\TokenInterface;
 use RuntimeException;
 
+/**
+ * AuthorizeAction is called by Payum controller
+ * Class AuthorizeAction
+ * @package Hraph\SyliusPaygreenPlugin\Payum\Action
+ */
 class AuthorizeAction extends BaseApiGatewayAwareAction implements AuthorizeActionInterface
 {
     use GenericTokenFactoryAwareTrait;

@@ -16,6 +16,11 @@ use Payum\Core\Request\Refund;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 
+/**
+ * RefundAction is called by the admin to refund the payment
+ * Class RefundAction
+ * @package Hraph\SyliusPaygreenPlugin\Payum\Action
+ */
 class RefundAction extends BaseApiGatewayAwareAction implements RefundActionInterface
 {
     /**

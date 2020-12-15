@@ -56,6 +56,7 @@ class PaygreenApiFactoryDecorator implements PaygreenApiFactoryInterface
 
     public function resolveConfigFromPaymentContext(?PaymentInterface $payment): ApiConfig
     {
-        return new ApiConfig("pierre", "paul");
+//        return new ApiConfig("pierre", "paul");
+        return $this->decorator->resolveConfigFromPaymentContext($payment);
     }
 }

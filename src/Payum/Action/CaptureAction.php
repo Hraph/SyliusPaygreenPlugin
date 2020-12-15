@@ -18,6 +18,11 @@ use Payum\Core\Security\GenericTokenFactoryAwareTrait;
 use Payum\Core\Security\TokenInterface;
 use RuntimeException;
 
+/**
+ * CaptureAction is called by Payum controller
+ * Class CaptureAction
+ * @package Hraph\SyliusPaygreenPlugin\Payum\Action
+ */
 final class CaptureAction extends BaseApiGatewayAwareAction implements CaptureActionInterface
 {
     use GenericTokenFactoryAwareTrait;

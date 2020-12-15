@@ -5,3 +5,4 @@ services:
         arguments:
             - "@request_stack"
             - "@payum"
+            - "@doctrine.orm.default_entity_manager"

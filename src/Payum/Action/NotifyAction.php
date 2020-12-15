@@ -16,6 +16,11 @@ use Payum\Core\Request\Notify;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * NotifyAction is called by Payum controller
+ * Class NotifyAction
+ * @package Hraph\SyliusPaygreenPlugin\Payum\Action
+ */
 final class NotifyAction extends BaseApiGatewayAwareAction implements NotifyActionInterface
 {
     /**

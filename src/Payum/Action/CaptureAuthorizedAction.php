@@ -15,6 +15,11 @@ use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
 
+/**
+ * CaptureAuthorized is called by the admin to process the payment
+ * Class CaptureAuthorizedAction
+ * @package Hraph\SyliusPaygreenPlugin\Payum\Action
+ */
 class CaptureAuthorizedAction extends BaseApiGatewayAwareAction implements CaptureAuthorizedActionInterface
 {
     /**
