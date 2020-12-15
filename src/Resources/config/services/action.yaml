@@ -6,6 +6,7 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\StatusAction
         arguments:
             - "@hraph_sylius_paygreen_plugin.request.get_http_request"
+            - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.status }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.status }
@@ -13,21 +14,28 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\NotifyAction
         arguments:
             - "@hraph_sylius_paygreen_plugin.request.get_http_request"
+            - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.notify }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.notify }
     hraph_sylius_paygreen_plugin.action.authorize:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\AuthorizeAction
+        arguments:
+            - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.authorize }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.authorize }
     hraph_sylius_paygreen_plugin.action.capture:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\CaptureAction
+        arguments:
+            - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.capture }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.capture }
     hraph_sylius_paygreen_plugin.action.capture_authorized:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\CaptureAuthorizedAction
+        arguments:
+            - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.capture_authorized }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.capture_authorized }
@@ -35,6 +43,7 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\RefundAction
         arguments:
             - "@hraph_sylius_paygreen_plugin.helper.convert_refund_data"
+            - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.refund }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.refund }
@@ -42,6 +51,7 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\ConvertPaymentAction
         arguments:
             - "@hraph_sylius_paygreen_plugin.helper.payment_description"
+            - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.convert_payment }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.convert_payment }

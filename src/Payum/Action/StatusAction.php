@@ -3,13 +3,12 @@
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
 use Hraph\PaygreenApi\ApiException;
-use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
+use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Hraph\SyliusPaygreenPlugin\Types\TransactionStatus;
 use Payum\Core\Exception\RequestNotSupportedException;
-use Payum\Core\Exception\RuntimeException;
-use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\GetHttpRequest;
+use Psr\Log\LoggerInterface;
 use Sylius\Bundle\PayumBundle\Request\GetStatus;
 use Sylius\Component\Core\Model\PaymentInterface;
 
@@ -18,10 +17,8 @@ use Sylius\Component\Core\Model\PaymentInterface;
  * Check the status of the payment after capture and notify
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
-final class StatusAction extends BaseApiAwareAction implements StatusActionInterface
+final class StatusAction extends BaseApiGatewayAwareAction implements StatusActionInterface
 {
-    use GatewayAwareTrait;
-
     /**
      * @var GetHttpRequest
      */
@@ -30,17 +27,18 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
     /**
      * StatusAction constructor.
      * @param GetHttpRequest $getHttpRequest
+     * @param LoggerInterface $logger
      */
-    public function __construct(GetHttpRequest $getHttpRequest)
+    public function __construct(GetHttpRequest $getHttpRequest, LoggerInterface $logger)
     {
+        parent::__construct($logger);
         $this->getHttpRequest = $getHttpRequest;
     }
 
     /**
      * @inheritDoc
-     * @throws ApiException
      */
-    public function execute($request)
+    public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
         $this->gateway->execute($this->getHttpRequest); // Get POST/GET data and query from request
@@ -112,15 +110,17 @@ final class StatusAction extends BaseApiAwareAction implements StatusActionInter
             }
             else throw new ApiException("Invalid API transaction data.");
         }
-        catch (ApiException $e){
-            throw new RuntimeException("PayGreen API Error: {$e->getMessage()}", $e->getCode());
+        catch (ApiException $exception){
+            $this->logger->error("PayGreen Status error: {$exception->getMessage()} ({$exception->getCode()})");
+
+            $request->markUnknown(); // Do not throw error
         }
     }
 
     /**
      * @inheritDoc
      */
-    public function supports($request)
+    public function supports($request): bool
     {
         return
             $request instanceof GetStatus &&

@@ -10,7 +10,7 @@ use Payum\Core\Reply\HttpPostRedirect;
 use Payum\Core\Reply\HttpResponse;
 use Payum\Core\Request\RenderTemplate;
 
-abstract class BaseRenderableAction extends BaseApiAwareAction implements BaseRenderableActionInterface
+abstract class BaseRenderableAction extends BaseApiGatewayAwareAction implements BaseRenderableActionInterface
 {
     use GatewayAwareTrait;
 

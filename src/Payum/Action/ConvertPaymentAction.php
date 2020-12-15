@@ -5,21 +5,18 @@ namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
 
 use Hraph\SyliusPaygreenPlugin\Helper\PaymentDescriptionInterface;
-use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
+use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\ApiAwareInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareInterface;
-use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\Convert;
-use Payum\Core\Security\GenericTokenFactoryAwareInterface;
+use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 
-class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface, GatewayAwareInterface, ApiAwareInterface
+class ConvertPaymentAction extends BaseApiGatewayAwareAction implements ActionInterface, GatewayAwareInterface, ApiAwareInterface
 {
-    use GatewayAwareTrait;
-
     /**
      * @var PaymentDescriptionInterface
      */
@@ -28,9 +25,11 @@ class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface
     /**
      * ConvertPaymentAction constructor.
      * @param PaymentDescriptionInterface $paymentDescription
+     * @param LoggerInterface $logger
      */
-    public function __construct(PaymentDescriptionInterface $paymentDescription)
+    public function __construct(PaymentDescriptionInterface $paymentDescription, LoggerInterface $logger)
     {
+        parent::__construct($logger);
         $this->paymentDescription = $paymentDescription;
     }
 
@@ -38,7 +37,7 @@ class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface
     /**
      * {@inheritdoc}
      */
-    public function execute($request)
+    public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
@@ -85,7 +84,7 @@ class ConvertPaymentAction extends BaseApiAwareAction implements ActionInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($request)
+    public function supports($request): bool
     {
         return
             $request instanceof Convert &&

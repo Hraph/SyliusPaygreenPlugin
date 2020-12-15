@@ -10,6 +10,7 @@ use Hraph\PaygreenApi\Model\PayinsBuyer;
 use Hraph\PaygreenApi\Model\PayinsCard;
 use Hraph\PaygreenApi\Model\PayinsRecc;
 use Hraph\PaygreenApi\Model\PayinsReccOrderDetails;
+use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePaymentMultiple;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
@@ -22,7 +23,7 @@ class CreatePaymentMultipleAction extends BaseRenderableAction implements BaseRe
      * @param mixed $request
      * @throws ApiException
      */
-    public function execute($request)
+    public function execute($request): void
     {
         $details = ArrayObject::ensureArrayObject($request->getModel());
         $doRedirectOrRender = true; // Redirect or render after transaction
@@ -41,22 +42,17 @@ class CreatePaymentMultipleAction extends BaseRenderableAction implements BaseRe
             $doRedirectOrRender = false; // Do nothing
         }
 
-        try {
-            $paymentRequest = $this
-                ->api
-                ->getPayinsTransactionApi()
-                ->apiIdentifiantPayinsTransactionXtimePost($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $payinsRecc);
+        $paymentRequest = $this
+            ->api
+            ->getPayinsTransactionApi()
+            ->apiIdentifiantPayinsTransactionXtimePost($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $payinsRecc);
 
-            if (!is_null($paymentRequest->getData()) && !is_null($paymentRequest->getData()->getId())) {
-                // Save transaction id for status action
-                $details[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID] = $paymentRequest->getData()->getId();
-            }
-            else
-                throw new ApiException("Invalid API transaction data.");
+        if (!is_null($paymentRequest->getData()) && !is_null($paymentRequest->getData()->getId())) {
+            // Save transaction id for status action
+            $details[PaymentDetailsKeys::PAYGREEN_MULTIPLE_TRANSACTION_ID] = $paymentRequest->getData()->getId();
         }
-        catch (ApiException $e){
-            throw new RuntimeException("PayGreen API Error: {$e->getMessage()}", $e->getCode());
-        }
+        else
+            throw new ApiException("Invalid API transaction data.");
 
         if (!$doRedirectOrRender) // Background request: no need to redirect
             return;
@@ -73,7 +69,7 @@ class CreatePaymentMultipleAction extends BaseRenderableAction implements BaseRe
     /**
      * @inheritDoc
      */
-    public function supports($request)
+    public function supports($request): bool
     {
         return
             $request instanceof CreatePaymentMultiple &&

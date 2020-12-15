@@ -8,6 +8,7 @@ namespace Hraph\SyliusPaygreenPlugin\Payum\Action\Api;
 use Hraph\PaygreenApi\ApiException;
 use Hraph\PaygreenApi\Model\CardPrint;
 use Hraph\PaygreenApi\Model\PayinsBuyer;
+use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreateFingerprint;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
@@ -20,7 +21,7 @@ class CreateFingerprintAction extends BaseRenderableAction implements BaseRender
      * @inheritDoc
      * @throws ApiException
      */
-    public function execute($request)
+    public function execute($request): void
     {
         $details = ArrayObject::ensureArrayObject($request->getModel());
 
@@ -28,22 +29,17 @@ class CreateFingerprintAction extends BaseRenderableAction implements BaseRender
         $cardPrint = new CardPrint($details->toUnsafeArrayWithoutLocal());
         $cardPrint->setBuyer(new PayinsBuyer($details['buyer']));
 
-        try {
-            $paymentRequest = $this
-                ->api
-                ->getPayinsCardprintApi()
-                ->apiIdentifiantPayinsCardprintPost($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $cardPrint);
+        $paymentRequest = $this
+            ->api
+            ->getPayinsCardprintApi()
+            ->apiIdentifiantPayinsCardprintPost($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $cardPrint);
 
-            if (!is_null($paymentRequest->getData()) && !is_null($paymentRequest->getData()->getId())) {
-                // Save transaction id for status action
-                $details[PaymentDetailsKeys::PAYGREEN_CARDPRINT_ID] = $paymentRequest->getData()->getId();
-            }
-            else
-                throw new ApiException("Invalid API transaction data.");
+        if (!is_null($paymentRequest->getData()) && !is_null($paymentRequest->getData()->getId())) {
+            // Save transaction id for status action
+            $details[PaymentDetailsKeys::PAYGREEN_CARDPRINT_ID] = $paymentRequest->getData()->getId();
         }
-        catch (ApiException $e){
-            throw new RuntimeException("PayGreen API Error: {$e->getMessage()}", $e->getCode());
-        }
+        else
+            throw new ApiException("Invalid API transaction data.");
 
         // API has returned a redirect url
         if (!is_null($paymentRequest->getData()->getUrl()))
@@ -57,7 +53,7 @@ class CreateFingerprintAction extends BaseRenderableAction implements BaseRender
     /**
      * @inheritDoc
      */
-    public function supports($request)
+    public function supports($request): bool
     {
         return
             $request instanceof CreateFingerprint &&

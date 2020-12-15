@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
 
-use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
+use Hraph\PaygreenApi\ApiException;
+use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
+use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePayment;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePaymentMultiple;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\CaptureAuthorized;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
-use Payum\Core\GatewayAwareTrait;
 
-class CaptureAuthorizedAction extends BaseApiAwareAction implements CaptureAuthorizedActionInterface
+class CaptureAuthorizedAction extends BaseApiGatewayAwareAction implements CaptureAuthorizedActionInterface
 {
-    use GatewayAwareTrait;
-
     /**
      * @inheritDoc
+     * @throws PaygreenException
      */
-    public function execute($request)
+    public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
@@ -33,17 +33,24 @@ class CaptureAuthorizedAction extends BaseApiAwareAction implements CaptureAutho
             false === isset($details[PaymentDetailsKeys::FACTORY_USED]))
             return; // Cardprint id is mandatory. Also return and notify url should already been set when authorize
 
-        if ($this->api->isMultipleTimePayment()) // Multiple time payment
-            $this->gateway->execute(new CreatePaymentMultiple($details));
+        try {
+            if ($this->api->isMultipleTimePayment()) // Multiple time payment
+                $this->gateway->execute(new CreatePaymentMultiple($details));
 
-        else // Direct payment
-            $this->gateway->execute(new CreatePayment($details));
+            else // Direct payment
+                $this->gateway->execute(new CreatePayment($details));
+        }
+        catch (ApiException $exception){
+            $this->logger->error("PayGreen Capture authorized error: {$exception->getMessage()} ({$exception->getCode()})");
+
+            throw new PaygreenException("PayGreen Capture authorized error: {$exception->getMessage()} ({$exception->getCode()})", PaygreenException::CODE_PAYUM); // Will be catch by state machine
+        }
     }
 
     /**
      * @inheritDoc
      */
-    public function supports($request)
+    public function supports($request): bool
     {
         return
             $request instanceof CaptureAuthorized &&

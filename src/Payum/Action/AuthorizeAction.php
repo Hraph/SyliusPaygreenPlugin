@@ -3,30 +3,27 @@
 
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
-use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
+use Hraph\PaygreenApi\ApiException;
+use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Hraph\SyliusPaygreenPlugin\Payum\PaygreenGatewayFactory;
 use Hraph\SyliusPaygreenPlugin\Payum\PaygreenGatewayFactoryMultiple;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreateFingerprint;
-use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePayment;
-use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePaymentMultiple;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
-use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\Authorize;
 use Payum\Core\Security\GenericTokenFactoryAwareTrait;
 use Payum\Core\Security\TokenInterface;
 use RuntimeException;
 
-class AuthorizeAction extends BaseApiAwareAction implements AuthorizeActionInterface
+class AuthorizeAction extends BaseApiGatewayAwareAction implements AuthorizeActionInterface
 {
-    use GatewayAwareTrait;
     use GenericTokenFactoryAwareTrait;
 
     /**
      * @inheritDoc
      */
-    public function execute($request)
+    public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
@@ -58,13 +55,19 @@ class AuthorizeAction extends BaseApiAwareAction implements AuthorizeActionInter
             $details[PaymentDetailsKeys::FACTORY_USED] = PaygreenGatewayFactory::FACTORY_NAME;
         }
 
-        $this->gateway->execute(new CreateFingerprint($details));
+        try {
+            $this->gateway->execute(new CreateFingerprint($details));
+        }
+        catch (ApiException $exception){
+            $this->logger->error("PayGreen Authorize error: {$exception->getMessage()} ({$exception->getCode()})");
+            return; // Cause Payum controller is not catching exception we cannot throw one. Will be redirected to return url and state will be determined by statusAction
+        }
     }
 
     /**
      * @inheritDoc
      */
-    public function supports($request)
+    public function supports($request): bool
     {
         return
             $request instanceof Authorize &&

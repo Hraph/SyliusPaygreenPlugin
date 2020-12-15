@@ -7,6 +7,7 @@ namespace Hraph\SyliusPaygreenPlugin\Client\Repository;
 
 use Hraph\PaygreenApi\ApiException;
 use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
+use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 
 interface PaygreenRepositoryInterface
 {
@@ -16,7 +17,7 @@ interface PaygreenRepositoryInterface
      * @param mixed $id The identifier.
      *
      * @return ApiEntityInterface|null The object.
-     * @throws ApiException
+     * @throws PaygreenException
      */
     public function find($id): ?ApiEntityInterface;
 
@@ -24,28 +25,28 @@ interface PaygreenRepositoryInterface
      * Finds all objects in the repository.
      *
      * @return ApiEntityInterface[] The objects.
-     * @throws ApiException
+     * @throws PaygreenException
      */
     public function findAll(): array;
 
     /**
      * Update entity
      * @param ApiEntityInterface $entity
-     * @throws ApiException
+     * @throws PaygreenException
      */
     public function update(ApiEntityInterface $entity): void;
 
     /**
      * Insert entity
      * @param ApiEntityInterface $entity
-     * @throws ApiException
+     * @throws PaygreenException
      */
     public function insert(ApiEntityInterface $entity): void;
 
     /**
      * Delete entity
      * @param ApiEntityInterface $entity
-     * @throws ApiException
+     * @throws PaygreenException
      */
     public function delete(ApiEntityInterface $entity): void;
 }

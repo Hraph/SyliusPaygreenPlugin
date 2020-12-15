@@ -6,20 +6,18 @@ namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
 
 use Hraph\PaygreenApi\ApiException;
-use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiAwareAction;
+use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
-use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Reply\HttpResponse;
 use Payum\Core\Request\GetHttpRequest;
 use Payum\Core\Request\Notify;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-final class NotifyAction extends BaseApiAwareAction implements NotifyActionInterface
+final class NotifyAction extends BaseApiGatewayAwareAction implements NotifyActionInterface
 {
-    use GatewayAwareTrait;
-
     /**
      * @var GetHttpRequest
      */
@@ -28,17 +26,18 @@ final class NotifyAction extends BaseApiAwareAction implements NotifyActionInter
     /**
      * NotifyAction constructor.
      * @param GetHttpRequest $getHttpRequest
+     * @param LoggerInterface $logger
      */
-    public function __construct(GetHttpRequest $getHttpRequest)
+    public function __construct(GetHttpRequest $getHttpRequest, LoggerInterface $logger)
     {
+        parent::__construct($logger);
         $this->getHttpRequest = $getHttpRequest;
     }
 
     /**
      * {@inheritdoc}
-     * @throws ApiException
      */
-    public function execute($request)
+    public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
@@ -60,9 +59,10 @@ final class NotifyAction extends BaseApiAwareAction implements NotifyActionInter
                 if (false === $payment->getSuccess())
                     throw new ApiException("Payment has not succeed" . (!empty($payment->getMessage()) ? ": ({$payment->getMessage()})." : "."));
             }
-            catch (\Exception $e){
-                // TODO LOG ERROR
-                throw new HttpResponse('Invalid API request', Response::HTTP_BAD_REQUEST); // Invalid pid
+            catch (\Exception $exception){
+                $this->logger->error("PayGreen Notify error: {$exception->getMessage()} ({$exception->getCode()})");
+
+                throw new HttpResponse('Invalid API request', Response::HTTP_BAD_REQUEST); // Invalid request
             }
 
             throw new HttpResponse('OK', Response::HTTP_OK);
@@ -74,7 +74,7 @@ final class NotifyAction extends BaseApiAwareAction implements NotifyActionInter
     /**
      * {@inheritdoc}
      */
-    public function supports($request)
+    public function supports($request): bool
     {
         return
             $request instanceof Notify &&

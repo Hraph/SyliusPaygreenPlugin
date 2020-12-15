@@ -10,6 +10,7 @@ use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClientInterface;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
+use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Symfony\Component\Intl\Exception\MethodNotImplementedException;
 
 class PaygreenShopRepository implements PaygreenShopRepositoryInterface
@@ -40,7 +41,7 @@ class PaygreenShopRepository implements PaygreenShopRepositoryInterface
             return $shop;
         }
         catch (\Exception $e) {
-            throw new ApiException("Error while get shop: {$e->getMessage()}");
+            throw new PaygreenException("Error while get shop: {$e->getMessage()}", PaygreenException::CODE_FIND);
         }
     }
 
@@ -63,7 +64,7 @@ class PaygreenShopRepository implements PaygreenShopRepositoryInterface
             return $shops;
         }
         catch (\Exception $e) {
-            throw new ApiException("Error while get shops: {$e->getMessage()}");
+            throw new PaygreenException("Error while get shops: {$e->getMessage()}", PaygreenException::CODE_FIND_ALL);
         }
     }
 
@@ -84,7 +85,7 @@ class PaygreenShopRepository implements PaygreenShopRepositoryInterface
                 throw new ApiException("Unable to update: {$result->getMessage()}");
         }
         catch (\Exception $e) {
-            throw new ApiException("Error while update shop: {$e->getMessage()}");
+            throw new PaygreenException("Error while update shop: {$e->getMessage()}", PaygreenException::CODE_UPDATE);
         }
     }
 
