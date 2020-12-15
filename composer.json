@@ -5,7 +5,7 @@
     "description": "Sylius integration for Paygreen.io payment provider",
     "license": "Apache-2.0",
     "require": {
-        "php": "^7.3",
+        "php": "^7.4",
         "hraph/paygreen-api-php": "^1.0",
         "sylius/sylius": "^1.8",
         "symfony/doctrine-bridge": "4.4.15"
