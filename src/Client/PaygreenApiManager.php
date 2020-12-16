@@ -54,7 +54,7 @@ class PaygreenApiManager
             $this->manager->flush();
         }
         catch (\Exception $e){
-            $result->setMessage("Unable to get Shops: {$e->getMessage()}");
+            $result->setMessage("Unable to synchronize Shops: {$e->getMessage()}");
             $result->setIsSuccess(false);
             $result->setData($e);
         } finally {

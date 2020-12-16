@@ -1,3 +1,10 @@
+test:
+    path: /{_locale}/createshop
+    defaults:
+        _controller: Tests\Hraph\SyliusPaygreenPlugin\App\Controller\MainController::createShopAction
+    requirements:
+        _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
+
 hraph_sylius_paygreen_plugin_shop:
     resource: "@SyliusPaygreenPlugin/Resources/config/shop_routing.yaml"
     prefix: /{_locale}

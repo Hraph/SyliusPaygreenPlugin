@@ -11,6 +11,7 @@ use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Intl\Exception\MethodNotImplementedException;
 
 class PaygreenShopRepository implements PaygreenShopRepositoryInterface
@@ -18,12 +19,19 @@ class PaygreenShopRepository implements PaygreenShopRepositoryInterface
     private PaygreenApiClientInterface $api;
 
     /**
+     * @var LoggerInterface
+     */
+    private LoggerInterface $logger;
+
+    /**
      * PaygreenShopRepository constructor.
      * @param PaygreenApiFactoryInterface $factory
+     * @param LoggerInterface $logger
      */
-    public function __construct(PaygreenApiFactoryInterface $factory)
+    public function __construct(PaygreenApiFactoryInterface $factory, LoggerInterface $logger)
     {
         $this->api = $factory->createNew(); // Use default config API
+        $this->logger = $logger;
     }
 
 
@@ -40,8 +48,10 @@ class PaygreenShopRepository implements PaygreenShopRepositoryInterface
             $shop->copyFromApiObject($apiShop);
             return $shop;
         }
-        catch (\Exception $e) {
-            throw new PaygreenException("Error while get shop: {$e->getMessage()}", PaygreenException::CODE_FIND);
+        catch (ApiException $exception) {
+            $this->logger->error("PayGreen Shop get error: {$exception->getMessage()} ({$exception->getCode()})");
+
+            throw new PaygreenException("PayGreen Shop get error: {$exception->getMessage()}", PaygreenException::CODE_FIND);
         }
     }
 
@@ -63,8 +73,10 @@ class PaygreenShopRepository implements PaygreenShopRepositoryInterface
 
             return $shops;
         }
-        catch (\Exception $e) {
-            throw new PaygreenException("Error while get shops: {$e->getMessage()}", PaygreenException::CODE_FIND_ALL);
+        catch (ApiException $exception) {
+            $this->logger->error("PayGreen Shops get error: {$exception->getMessage()} ({$exception->getCode()})");
+
+            throw new PaygreenException("PayGreen Shops get error: {$exception->getMessage()}", PaygreenException::CODE_FIND_ALL);
         }
     }
 
@@ -82,10 +94,12 @@ class PaygreenShopRepository implements PaygreenShopRepositoryInterface
             $result = $this->api->getShopApi()->apiIdentifiantShopShopIdPut($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $entity->getId(), $apiObject);
 
             if (!$result->getSuccess())
-                throw new ApiException("Unable to update: {$result->getMessage()}");
+                throw new ApiException("Update failed: {$result->getMessage()}");
         }
-        catch (\Exception $e) {
-            throw new PaygreenException("Error while update shop: {$e->getMessage()}", PaygreenException::CODE_UPDATE);
+        catch (ApiException $exception) {
+            $this->logger->error("PayGreen Shop update error: {$exception->getMessage()} ({$exception->getCode()})");
+
+            throw new PaygreenException("PayGreen Shop update error: {$exception->getMessage()}", PaygreenException::CODE_UPDATE);
         }
     }
 
@@ -94,7 +108,26 @@ class PaygreenShopRepository implements PaygreenShopRepositoryInterface
      */
     public function insert(ApiEntityInterface $entity): void
     {
-        throw new MethodNotImplementedException();
+        try {
+            if ($entity->isFromApiData())
+                return;
+
+            /** @var Shop $apiObject */
+            $apiObject = $entity->createApiObject();
+            $result = $this->api->getShopApi()->apiIdentifiantShopPost($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $apiObject);
+
+            if (!$result->getSuccess())
+                throw new ApiException("Insert failed: {$result->getMessage()}");
+            elseif (null !== $result->getData()) {
+                $entity->copyFromApiObject($result->getData());
+            }
+            else throw new ApiException("Wrong data");
+        }
+        catch (ApiException $exception) {
+            $this->logger->error("PayGreen Shop insert error: {$exception->getMessage()} ({$exception->getCode()})");
+
+            throw new PaygreenException("PayGreen Shop insert error: {$exception->getMessage()}", PaygreenException::CODE_INSERT);
+        }
     }
 
     /**

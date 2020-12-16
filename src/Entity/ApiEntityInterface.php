@@ -11,6 +11,11 @@ use Sylius\Component\Resource\Model\ResourceInterface;
 interface ApiEntityInterface extends ResourceInterface
 {
     /**
+     * @param mixed $id
+     */
+    function setId($id): void;
+
+    /**
      * Return the class name of the API object
      * @return string
      */

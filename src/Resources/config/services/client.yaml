@@ -30,3 +30,4 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenShopRepository
         arguments:
             - "@hraph_sylius_paygreen_plugin.client.paygreen_api_factory"
+            - "@monolog.logger"

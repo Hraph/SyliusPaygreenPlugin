@@ -105,15 +105,15 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
 
     /**
-     * @param mixed $id
+     * @inheritDoc
      */
     public function setId($id): void
     {
