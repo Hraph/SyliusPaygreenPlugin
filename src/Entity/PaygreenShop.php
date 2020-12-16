@@ -12,7 +12,7 @@ use Hraph\PaygreenApi\Model\Shop;
 /**
  * Class PaygreenShop
  * @package Hraph\SyliusPaygreenPlugin\Entity
- * @ORM\Entity
+ * @ORM\MappedSuperclass
  * @ORM\Table("sylius_paygreen_shop")
  */
 class PaygreenShop extends ApiEntity implements PaygreenShopInterface
@@ -22,78 +22,78 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
      * @ORM\Id
      * @ORM\Column(name="id", type="string")
      */
-    private ?string $id = null;
+    protected ?string $id = null;
 
     /**
      * @var string|null
      * @ORM\Column(name="private_key", type="string", nullable=true)
      */
-    private ?string $privateKey = null;
+    protected ?string $privateKey = null;
 
     /**
      * @var string|null
      * @ORM\Column(name="name", type="string", nullable=true)
      */
-    private ?string $name = null;
+    protected ?string $name = null;
 
     /**
      * @var string|null
      * @ORM\Column(name="url", type="string", nullable=true)
      */
-    private ?string $url = null;
+    protected ?string $url = null;
 
     /**
      * @var string[]|null
      * @ORM\Column(name="available_mode", type="simple_array", nullable=true)
      */
-    private ?array $availableMode = [];
+    protected ?array $availableMode = [];
 
     /**
      * @var string|null
      * @ORM\Column(name="business_identifier", type="string", nullable=true)
      */
-    private ?string $businessIdentifier = null;
+    protected ?string $businessIdentifier = null;
 
     /**
      * @var string|null
      * @ORM\Column(name="description", type="string", nullable=true)
      */
-    private ?string $description = null;
+    protected ?string $description = null;
 
     /**
      * @var string|null
      * @ORM\Column(name="company_type", type="string", nullable=true)
      */
-    private ?string $companyType = null;
+    protected ?string $companyType = null;
 
     /**
      * @var string|null
      * @ORM\Column(name="paiement_type", type="string", nullable=true)
      */
-    private ?string $paiementType = null;
+    protected ?string $paiementType = null;
 
     /**
      * @var bool
      * @ORM\Column(name="activate", type="boolean")
      */
-    private bool $activate = false;
+    protected bool $activate = false;
 
     /**
      * @var \DateTime|null
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
-    private ?\DateTime $createdAt = null;
+    protected ?\DateTime $createdAt = null;
 
     /**
      * @var \DateTime|null
      * @ORM\Column(name="validated_at", type="datetime", nullable=true)
      */
-    private ?\DateTime $validatedAt = null;
+    protected ?\DateTime $validatedAt = null;
 
     /**
      * @var array|null
      */
-    private ?array $extra = [];
+    protected ?array $extra = [];
 
 
     /**

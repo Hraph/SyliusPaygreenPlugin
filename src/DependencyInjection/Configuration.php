@@ -4,6 +4,15 @@ declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\DependencyInjection;
 
+use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
+use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface;
+use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransfer;
+use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
+use Hraph\SyliusPaygreenPlugin\Factory\PaygreenShopFactory;
+use Hraph\SyliusPaygreenPlugin\Factory\PaygreenTransferFactory;
+use Hraph\SyliusPaygreenPlugin\Repository\PaygreenShopRepository;
+use Hraph\SyliusPaygreenPlugin\Repository\PaygreenTransferRepository;
+use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -42,6 +51,43 @@ final class Configuration implements ConfigurationInterface
                 ->booleanNode('use_insite_mode')
                     ->info("Use the integrated iFrame")
                     ->defaultFalse()
+                ->end()
+                ->arrayNode('resources')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('paygreen_shop')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->variableNode('options')->end()
+                                ->arrayNode('classes')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('model')->defaultValue(PaygreenShop::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('interface')->defaultValue(PaygreenShopInterface::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('factory')->defaultValue(PaygreenShopFactory::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('repository')->defaultValue(PaygreenShopRepository::class)->cannotBeEmpty()->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('paygreen_transfer')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->variableNode('options')->end()
+                                ->arrayNode('classes')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('model')->defaultValue(PaygreenTransfer::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('interface')->defaultValue(PaygreenTransferInterface::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('factory')->defaultValue(PaygreenTransferFactory::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('repository')->defaultValue(PaygreenTransferRepository::class)->cannotBeEmpty()->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
                 ->end()
             ->end();
 

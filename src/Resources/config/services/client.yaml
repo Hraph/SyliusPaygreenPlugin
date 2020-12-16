@@ -23,11 +23,11 @@ services:
     hraph_sylius_paygreen_plugin.client.paygreen_api_manager:
         class: Hraph\SyliusPaygreenPlugin\Client\PaygreenApiManager
         arguments:
-            - "@hraph_sylius_paygreen_plugin.client.repository.paygreen_shop_repository"
+            - "@hraph_sylius_paygreen_plugin.client.repository.paygreen_api_shop_repository"
             - "@doctrine.orm.default_entity_manager"
 
-    hraph_sylius_paygreen_plugin.client.repository.paygreen_shop_repository:
-        class: Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenShopRepository
+    hraph_sylius_paygreen_plugin.client.repository.paygreen_api_shop_repository:
+        class: Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenApiShopRepository
         arguments:
             - "@hraph_sylius_paygreen_plugin.client.paygreen_api_factory"
             - "@monolog.logger"

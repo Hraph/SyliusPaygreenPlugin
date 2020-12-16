@@ -10,22 +10,22 @@ use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Exception\ServerException;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Hraph\PaygreenApi\ApiException;
-use Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenShopRepositoryInterface;
+use Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenApiShopRepositoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 
 class PaygreenShopNotifier
 {
     /**
-     * @var PaygreenShopRepositoryInterface
+     * @var PaygreenApiShopRepositoryInterface
      */
-    private PaygreenShopRepositoryInterface $shopRepository;
+    private PaygreenApiShopRepositoryInterface $shopRepository;
 
     /**
      * PaygreenShopNotifier constructor.
-     * @param PaygreenShopRepositoryInterface $shopRepository
+     * @param PaygreenApiShopRepositoryInterface $shopRepository
      */
-    public function __construct(PaygreenShopRepositoryInterface $shopRepository)
+    public function __construct(PaygreenApiShopRepositoryInterface $shopRepository)
     {
         $this->shopRepository = $shopRepository;
     }

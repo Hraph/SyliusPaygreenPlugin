@@ -5,7 +5,7 @@ services:
     hraph_sylius_paygreen_plugin.event_listener.paygreen_shop_notifier:
         class: Hraph\SyliusPaygreenPlugin\EventListener\PaygreenShopNotifier
         arguments:
-            - "@hraph_sylius_paygreen_plugin.client.repository.paygreen_shop_repository"
+            - "@hraph_sylius_paygreen_plugin.client.repository.paygreen_api_shop_repository"
         tags:
             -
                 name: 'doctrine.orm.entity_listener'
