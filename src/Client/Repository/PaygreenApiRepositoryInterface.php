@@ -8,6 +8,7 @@ namespace Hraph\SyliusPaygreenPlugin\Client\Repository;
 use Hraph\PaygreenApi\ApiException;
 use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
+use Symfony\Component\Intl\Exception\MethodNotImplementedException;
 
 interface PaygreenApiRepositoryInterface
 {
@@ -17,7 +18,7 @@ interface PaygreenApiRepositoryInterface
      * @param mixed $id The identifier.
      *
      * @return ApiEntityInterface|null The object.
-     * @throws PaygreenException
+     * @throws PaygreenException|MethodNotImplementedException
      */
     public function find($id): ?ApiEntityInterface;
 
@@ -25,28 +26,28 @@ interface PaygreenApiRepositoryInterface
      * Finds all objects in the repository.
      *
      * @return ApiEntityInterface[] The objects.
-     * @throws PaygreenException
+     * @throws PaygreenException|MethodNotImplementedException
      */
     public function findAll(): array;
 
     /**
      * Update entity
      * @param ApiEntityInterface $entity
-     * @throws PaygreenException
+     * @throws PaygreenException|MethodNotImplementedException
      */
     public function update(ApiEntityInterface $entity): void;
 
     /**
      * Insert entity
      * @param ApiEntityInterface $entity
-     * @throws PaygreenException
+     * @throws PaygreenException|MethodNotImplementedException
      */
     public function insert(ApiEntityInterface $entity): void;
 
     /**
      * Delete entity
      * @param ApiEntityInterface $entity
-     * @throws PaygreenException
+     * @throws PaygreenException|MethodNotImplementedException
      */
     public function delete(ApiEntityInterface $entity): void;
 }

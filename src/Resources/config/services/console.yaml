@@ -8,3 +8,10 @@ services:
             - "@hraph_sylius_paygreen_plugin.client.paygreen_api_manager"
         tags:
             - { name: console.command }
+
+    hraph_sylius_paygreen_plugin.command.paygreen_synchronize_transfers:
+        class: Hraph\SyliusPaygreenPlugin\Command\PaygreenSynchronizeTransfersCommand
+        arguments:
+            - "@hraph_sylius_paygreen_plugin.client.paygreen_api_manager"
+        tags:
+            - { name: console.command }

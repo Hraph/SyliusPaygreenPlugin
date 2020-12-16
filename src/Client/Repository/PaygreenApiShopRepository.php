@@ -144,6 +144,6 @@ class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
      */
     public function delete(ApiEntityInterface $entity): void
     {
-        throw new MethodNotImplementedException();
+        throw new MethodNotImplementedException("delete");
     }
 }
