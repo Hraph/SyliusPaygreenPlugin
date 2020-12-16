@@ -31,7 +31,7 @@ class MainController extends AbstractController
 
     public function createShopAction(Request $request): Response {
         $factory = new PaygreenShopFactory();
-        $shop = $factory->create();
+        $shop = $factory->createNew();
         $shop->setName("Test shop");
         $shop->setDescription("Test shop");
         $shop->setCompanyType("COMPANY");

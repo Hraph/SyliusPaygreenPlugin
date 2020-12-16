@@ -5,3 +5,14 @@ sylius_paygreen:
         sandbox: '%env(bool:PAYGREEN_API_SANDBOX)%'
     force_use_authorize: true
     use_insite_mode: true
+
+    resources:
+        paygreen_shop:
+            classes:
+                interface: Tests\Hraph\SyliusPaygreenPlugin\App\Entity\PaymentProvider\PaymentProviderShopInterface
+                model: Tests\Hraph\SyliusPaygreenPlugin\App\Entity\PaymentProvider\PaymentProviderShop
+                factory: Tests\Hraph\SyliusPaygreenPlugin\App\Factory\PaymentProvider\PaymentProviderShopFactory
+        paygreen_transfer:
+            classes:
+                interface: Tests\Hraph\SyliusPaygreenPlugin\App\Entity\PaymentProvider\PaymentProviderTransferInterface
+                model: Tests\Hraph\SyliusPaygreenPlugin\App\Entity\PaymentProvider\PaymentProviderTransfer
