@@ -5,14 +5,22 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\Factory;
 
 
-use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface;
 
 class PaygreenShopFactory implements PaygreenShopFactoryInterface
 {
-    public function create(): PaygreenShopInterface
+    private string $className;
+
+    public function __construct(string $className)
     {
-        $shop = new PaygreenShop();
+        $this->className = $className;
+    }
+
+    public function createNew(): PaygreenShopInterface
+    {
+        /** @var PaygreenShopInterface $shop */
+        $shop = new $this->className();
         $shop->setPaiementType($this->getPaiementType());
         $shop->setAvailableMode($this->getAvailableModes());
         return $shop;

@@ -15,6 +15,10 @@ services:
         resource: '../src/*'
         exclude: '../src/{Entity,Migrations,Tests,Kernel.php}'
 
+    Tests\Hraph\SyliusPaygreenPlugin\App\Controller\:
+        resource: '../src/Controller'
+        tags: [ 'controller.service_arguments' ]
+
     app.client.paygreen_api_factory:
         class: Tests\Hraph\SyliusPaygreenPlugin\App\Services\PaygreenApiFactoryDecorator
         decorates: hraph_sylius_paygreen_plugin.client.paygreen_api_factory

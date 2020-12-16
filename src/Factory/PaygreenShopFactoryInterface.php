@@ -5,8 +5,9 @@ namespace Hraph\SyliusPaygreenPlugin\Factory;
 
 
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface;
 
-interface PaygreenShopFactoryInterface
+interface PaygreenShopFactoryInterface extends FactoryInterface
 {
-    public function create(): PaygreenShopInterface;
+    public function createNew(): PaygreenShopInterface;
 }

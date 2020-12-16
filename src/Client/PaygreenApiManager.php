@@ -8,6 +8,8 @@ namespace Hraph\SyliusPaygreenPlugin\Client;
 use Doctrine\Persistence\ObjectManager;
 use Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenApiShopRepositoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
+use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface;
+use Hraph\SyliusPaygreenPlugin\Factory\PaygreenShopFactoryInterface;
 use Hraph\SyliusPaygreenPlugin\Types\ApiTaskResult;
 use Hraph\SyliusPaygreenPlugin\Types\ApiTaskResultInterface;
 
@@ -43,7 +45,7 @@ class PaygreenApiManager
         $retrieved = 0;
 
         try {
-            /** @var PaygreenShop[] $shops */
+            /** @var PaygreenShopInterface[] $shops */
             $shops = $this->shopRepository->findAll();
 
             foreach ($shops as $shop){

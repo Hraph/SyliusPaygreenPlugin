@@ -12,8 +12,15 @@ use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 
 class PaygreenTransferFactory implements PaygreenTransferFactoryInterface
 {
-    public function create(): PaygreenTransferInterface
+    private string $className;
+
+    public function __construct(string $className)
     {
-        return new PaygreenTransfer();
+        $this->className = $className;
+    }
+
+    public function createNew(): PaygreenTransferInterface
+    {
+        return new $this->className();
     }
 }

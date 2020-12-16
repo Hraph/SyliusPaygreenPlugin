@@ -10,7 +10,9 @@ use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClientInterface;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
+use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
+use Hraph\SyliusPaygreenPlugin\Factory\PaygreenShopFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Intl\Exception\MethodNotImplementedException;
 
@@ -24,26 +26,33 @@ class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
     private LoggerInterface $logger;
 
     /**
+     * @var PaygreenShopFactoryInterface
+     */
+    private PaygreenShopFactoryInterface $shopFactory;
+
+    /**
      * PaygreenShopRepository constructor.
      * @param PaygreenApiFactoryInterface $factory
+     * @param PaygreenShopFactoryInterface $shopFactory
      * @param LoggerInterface $logger
      */
-    public function __construct(PaygreenApiFactoryInterface $factory, LoggerInterface $logger)
+    public function __construct(PaygreenApiFactoryInterface $factory, PaygreenShopFactoryInterface $shopFactory, LoggerInterface $logger)
     {
         $this->api = $factory->createNew(); // Use default config API
+        $this->shopFactory = $shopFactory;
         $this->logger = $logger;
     }
 
 
     /**
      * @param string $id
-     * @return PaygreenShop
+     * @return PaygreenShopInterface
      * @inheritDoc
      */
-    public function find($id): ?PaygreenShop
+    public function find($id): ?PaygreenShopInterface
     {
         try {
-            $shop = new PaygreenShop();
+            $shop = $this->shopFactory->createNew();
             $apiShop = $this->api->getShopApi()->apiIdentifiantShopShopIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $id)->getData();
             $shop->copyFromApiObject($apiShop);
             return $shop;
@@ -56,7 +65,7 @@ class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
     }
 
     /**
-     * @return PaygreenShop[]
+     * @return PaygreenShopInterface[]
      * @inheritDoc
      */
     public function findAll(): array
@@ -66,7 +75,7 @@ class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
             $apiShops = $this->api->getShopsApi()->apiIdentifiantShopsGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix())->getData();
 
             foreach ($apiShops as $apiShop){
-                $shop = new PaygreenShop();
+                $shop = $this->shopFactory->createNew();
                 $shop->copyFromApiObject($apiShop);
                 $shops[] = $shop;
             }

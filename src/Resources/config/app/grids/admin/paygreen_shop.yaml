@@ -4,7 +4,7 @@ sylius_grid:
             driver:
                 name: doctrine/orm
                 options:
-                    class: Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop
+                    class: 'expr:parameter("hraph_sylius_paygreen_plugin.model.paygreen_shop.class")'
             sorting:
                 name: asc
             fields:

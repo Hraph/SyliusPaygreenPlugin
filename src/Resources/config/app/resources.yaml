@@ -1,2 +1,3 @@
 imports:
-    - { resource: "resources/paygreen_shop.yaml" }
+
+# Resources are created automatically by the Configuration extension
