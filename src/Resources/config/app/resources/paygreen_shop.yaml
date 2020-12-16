@@ -1,7 +1,0 @@
-sylius_resource:
-    resources:
-        hraph_sylius_paygreen_plugin.paygreen_shop:
-            classes:
-                model: Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop
-                interface: Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface
-
