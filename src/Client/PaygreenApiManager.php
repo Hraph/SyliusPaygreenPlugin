@@ -6,7 +6,7 @@ namespace Hraph\SyliusPaygreenPlugin\Client;
 
 
 use Doctrine\Persistence\ObjectManager;
-use Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenShopRepositoryInterface;
+use Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenApiShopRepositoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
 use Hraph\SyliusPaygreenPlugin\Types\ApiTaskResult;
 use Hraph\SyliusPaygreenPlugin\Types\ApiTaskResultInterface;
@@ -14,9 +14,9 @@ use Hraph\SyliusPaygreenPlugin\Types\ApiTaskResultInterface;
 class PaygreenApiManager
 {
     /**
-     * @var PaygreenShopRepositoryInterface
+     * @var PaygreenApiShopRepositoryInterface
      */
-    private PaygreenShopRepositoryInterface $shopRepository;
+    private PaygreenApiShopRepositoryInterface $shopRepository;
 
     /**
      * @var ObjectManager
@@ -25,10 +25,10 @@ class PaygreenApiManager
 
     /**
      * PaygreenApiManager constructor.
-     * @param PaygreenShopRepositoryInterface $shopRepository
+     * @param PaygreenApiShopRepositoryInterface $shopRepository
      * @param ObjectManager $manager
      */
-    public function __construct(PaygreenShopRepositoryInterface $shopRepository, ObjectManager $manager)
+    public function __construct(PaygreenApiShopRepositoryInterface $shopRepository, ObjectManager $manager)
     {
         $this->shopRepository = $shopRepository;
         $this->manager = $manager;

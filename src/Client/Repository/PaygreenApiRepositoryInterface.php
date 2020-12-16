@@ -9,7 +9,7 @@ use Hraph\PaygreenApi\ApiException;
 use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 
-interface PaygreenRepositoryInterface
+interface PaygreenApiRepositoryInterface
 {
     /**
      * Finds an object by its primary key / identifier.

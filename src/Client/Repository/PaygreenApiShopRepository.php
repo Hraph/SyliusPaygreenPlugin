@@ -14,7 +14,7 @@ use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Intl\Exception\MethodNotImplementedException;
 
-class PaygreenShopRepository implements PaygreenShopRepositoryInterface
+class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
 {
     private PaygreenApiClientInterface $api;
 
