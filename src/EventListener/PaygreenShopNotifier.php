@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\EventListener;
 
 
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\Exception\ServerException;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Hraph\PaygreenApi\ApiException;
 use Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenApiShopRepositoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
+use Sylius\Component\Resource\Exception\UpdateHandlingException;
 
 class PaygreenShopNotifier
 {
@@ -33,18 +30,28 @@ class PaygreenShopNotifier
     /**
      * @param PaygreenShop $paygreenShop
      * @param LifecycleEventArgs $event
-     * @throws PaygreenException
+     * @throws UpdateHandlingException
      */
     public function postUpdate(PaygreenShop $paygreenShop, LifecycleEventArgs $event): void{
-        $this->shopRepository->update($paygreenShop);
+        try {
+            $this->shopRepository->update($paygreenShop);
+        }
+        catch (PaygreenException $exception) {
+            throw new UpdateHandlingException($exception->getMessage(), 'paygreen.api_update_error'); // Handled by resource controller
+        }
     }
 
     /**
      * @param PaygreenShop $paygreenShop
      * @param LifecycleEventArgs $event
-     * @throws PaygreenException
+     * @throws UpdateHandlingException
      */
     public function prePersist(PaygreenShop $paygreenShop, LifecycleEventArgs $event): void {
-        $this->shopRepository->insert($paygreenShop);
+        try {
+            $this->shopRepository->insert($paygreenShop);
+        }
+        catch (PaygreenException $exception) {
+            throw new UpdateHandlingException($exception->getMessage(), 'paygreen.api_insert_error'); // Handled by resource controller
+        }
     }
 }

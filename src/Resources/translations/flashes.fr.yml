@@ -1,0 +1,5 @@
+sylius:
+    resource:
+        paygreen:
+            api_insert_error: Erreur lors de l'insertion avec PayGreen
+            api_update_error: Erreur lors de la mise à jour avec PayGreen
