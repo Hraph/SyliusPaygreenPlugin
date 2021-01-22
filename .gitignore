@@ -46,6 +46,7 @@
 /build/
 
 # Composer PHAR
+/composer.lock
 /composer.phar
 /tests/Application/yarn.lock
 
