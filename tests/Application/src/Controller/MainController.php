@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Tests\Hraph\SyliusPaygreenPlugin\App\Controller;
 
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
+use Doctrine\ORM\EntityManagerInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Factory\PaygreenShopFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,17 +15,17 @@ use Symfony\Component\HttpFoundation\Response;
 class MainController extends AbstractController
 {
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
-    private ObjectManager $manager;
+    private EntityManagerInterface $entityManager;
 
     /**
      * MainController constructor.
-     * @param ObjectManager $manager
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(ObjectManager $manager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->manager = $manager;
+        $this->entityManager = $entityManager;
     }
 
     public function createShopAction(Request $request): Response {
@@ -40,13 +39,13 @@ class MainController extends AbstractController
 
 
         try {
-            $this->manager->persist($shop);
+            $this->entityManager->persist($shop);
         }
         catch (PaygreenException $exception)
         {
             dump($exception);
         }
-        $this->manager->flush();
+        $this->entityManager->flush();
         return new Response();
     }
 }
