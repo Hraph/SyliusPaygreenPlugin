@@ -11,7 +11,7 @@ Sylius plugin for [Paygreen.io](https://paygreen.io/) payment provider
 | Package | Version |
 | --- | --- |
 | PHP |  ^7.4 |
-| sylius/sylius |  ^1.8 |
+| sylius/sylius |  ^1.8 \|\| ^1.9 |
 
 ### Instructions
 
