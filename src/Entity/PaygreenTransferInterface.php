@@ -7,6 +7,16 @@ namespace Hraph\SyliusPaygreenPlugin\Entity;
 
 interface PaygreenTransferInterface extends ApiEntityInterface
 {
+    public const STATE_PROCESSING = 'processing';
+
+    public const STATE_SUCCEEDED = 'succeeded';
+
+    public const STATE_FAILED = 'failed';
+
+    public const STATE_CANCELLED = 'cancelled';
+
+    public const STATE_UNKNOWN = 'unknown';
+
     /**
      * @return string|null
      */
