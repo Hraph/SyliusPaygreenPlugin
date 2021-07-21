@@ -355,5 +355,4 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
         $this->createdAt = $shop->getCreatedAt();
         $this->validatedAt = $shop->getValidatedAt();
     }
-
 }

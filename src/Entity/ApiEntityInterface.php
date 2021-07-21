@@ -44,4 +44,10 @@ interface ApiEntityInterface extends ResourceInterface
      * @return ModelInterface
      */
     public function createApiObject(): ModelInterface;
+
+    /**
+     * Return an array with custom mapping format: local property => api object attribute
+     * @return array
+     */
+    function getCustomApiObjectAttributeMapping(): array;
 }

@@ -25,7 +25,7 @@ class PaygreenShopType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', TextType::class, [
+            ->add('internalId', TextType::class, [
                 'label' => 'sylius.ui.id',
                 'disabled' => true,
                 'constraints' => [
