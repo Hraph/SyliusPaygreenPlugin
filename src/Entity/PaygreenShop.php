@@ -26,7 +26,7 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
 
     /**
      * @var string|null
-     * @ORM\Column(name="internal_id", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="internal_id", type="string", nullable=false, unique=false)
      */
     protected ?string $internalId = null;
 
@@ -341,7 +341,7 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
     {
         parent::copyFromApiObject($shop);
 
-        $this->id = $shop->getId();
+        $this->internalId = $shop->getId();
         $this->activate = $shop->getActivate();
         $this->name = $shop->getName();
         $this->extra = $shop->getExtra();

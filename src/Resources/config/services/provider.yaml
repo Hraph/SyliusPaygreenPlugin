@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        public: true
+
+    hraph_sylius_paygreen_plugin.provider.paygreen_shop:
+        class: Hraph\SyliusPaygreenPlugin\Provider\PaygreenShopProvider
+        arguments:
+            - "@hraph_sylius_paygreen_plugin.repository.paygreen_shop"
+            - "@hraph_sylius_paygreen_plugin.factory.paygreen_shop"

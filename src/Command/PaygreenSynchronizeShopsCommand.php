@@ -28,21 +28,25 @@ class PaygreenSynchronizeShopsCommand extends Command
         $this->apiManager = $apiManager;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
-        $this->setName(self::$defaultName);
+        $this
+            ->setDescription('Synchronize the Shop database with PayGreen API. API is the single source of truth and all local data will be replaced.')
+        ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $result = $this->apiManager->synchronizeShops();
 
         if ($result->isSuccess()){
             $output->writeln("{$result->getSuccessCount()} shops synchronized");
+            return Command::SUCCESS;
         }
         else {
             $output->writeln("Error in shop synchronization:");
             $output->writeln($result->getMessage());
+            return Command::FAILURE;
         }
     }
 

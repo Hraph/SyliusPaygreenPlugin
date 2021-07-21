@@ -6,7 +6,7 @@ hraph_sylius_paygreen_plugin_paygreen_shop:
         section: admin
         path: /paygreen/shop
         permission: true
-        templates: SyliusAdminBundle:Crud
+        templates: "@SyliusAdmin\\Crud"
         redirect: update
         grid: hraph_sylius_paygreen_plugin_paygreen_shop
         vars:

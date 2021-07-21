@@ -33,16 +33,18 @@ class PaygreenSynchronizeTransfersCommand extends Command
         $this->setName(self::$defaultName);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $result = $this->apiManager->synchronizeTransfers();
 
         if ($result->isSuccess()){
             $output->writeln("{$result->getSuccessCount()} transfers synchronized");
+            return Command::SUCCESS;
         }
         else {
             $output->writeln("Error in transfers synchronization:");
             $output->writeln($result->getMessage());
+            return Command::FAILURE;
         }
     }
 

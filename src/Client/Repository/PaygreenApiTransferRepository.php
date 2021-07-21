@@ -43,15 +43,15 @@ class PaygreenApiTransferRepository  implements PaygreenApiTransferRepositoryInt
 
 
     /**
-     * @param string $id
+     * @param string $internalId
      * @return PaygreenTransferInterface
      * @inheritDoc
      */
-    public function find($id): ?PaygreenTransferInterface
+    public function find($internalId): ?PaygreenTransferInterface
     {
         try {
             $transfer = $this->transferFactory->createNew();
-            $apiTransfer = $this->api->getPayoutTransferApi()->apiIdentifiantPayoutTransferIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $id)->getData();
+            $apiTransfer = $this->api->getPayoutTransferApi()->apiIdentifiantPayoutTransferIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $internalId)->getData();
             $transfer->copyFromApiObject($apiTransfer);
             return $transfer;
         }
