@@ -10,34 +10,26 @@ use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
-use Hraph\SyliusPaygreenPlugin\Factory\PaygreenTransferFactoryInterface;
+use Hraph\SyliusPaygreenPlugin\Provider\PaygreenTransferProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Polyfill\Intl\Icu\Exception\MethodNotImplementedException;
 
 class PaygreenApiTransferRepository  implements PaygreenApiTransferRepositoryInterface
 {
     private PaygreenApiClientInterface $api;
-
-    /**
-     * @var LoggerInterface
-     */
+    private PaygreenTransferProvider $transferProvider;
     private LoggerInterface $logger;
 
     /**
-     * @var PaygreenTransferFactoryInterface
-     */
-    private PaygreenTransferFactoryInterface $transferFactory;
-
-    /**
-     * PaygreenShopRepository constructor.
+     * PaygreenApiTransferRepository constructor.
      * @param PaygreenApiFactoryInterface $factory
-     * @param PaygreenTransferFactoryInterface $transferFactory
+     * @param PaygreenTransferProvider $transferProvider
      * @param LoggerInterface $logger
      */
-    public function __construct(PaygreenApiFactoryInterface $factory, PaygreenTransferFactoryInterface $transferFactory, LoggerInterface $logger)
+    public function __construct(PaygreenApiFactoryInterface $factory, PaygreenTransferProvider $transferProvider, LoggerInterface $logger)
     {
         $this->api = $factory->createNew(); // Use default config API
-        $this->transferFactory = $transferFactory;
+        $this->transferProvider = $transferProvider;
         $this->logger = $logger;
     }
 
@@ -50,10 +42,18 @@ class PaygreenApiTransferRepository  implements PaygreenApiTransferRepositoryInt
     public function find($internalId): ?PaygreenTransferInterface
     {
         try {
-            $transfer = $this->transferFactory->createNew();
             $apiTransfer = $this->api->getPayoutTransferApi()->apiIdentifiantPayoutTransferIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $internalId)->getData();
-            $transfer->copyFromApiObject($apiTransfer);
-            return $transfer;
+            $transfer = $this->transferProvider->provide($internalId);
+
+            if (null === $apiTransfer->getId()) { // Not found
+                return null;
+            }
+
+            if (!empty($apiTransfer)) {
+                $transfer->copyFromApiObject($apiTransfer);
+            }
+
+            return $apiTransfer;
         }
         catch (ApiException $exception) {
             $this->logger->error("PayGreen Transfers get error: {$exception->getMessage()} ({$exception->getCode()})");
@@ -73,9 +73,11 @@ class PaygreenApiTransferRepository  implements PaygreenApiTransferRepositoryInt
             $apiTransfers = $this->api->getPayoutTransferApi()->apiIdentifiantPayoutTransferGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix())->getData();
 
             foreach ($apiTransfers as $apiTransfer){
-                $transfer = $this->transferFactory->createNew();
-                $transfer->copyFromApiObject($apiTransfer);
-                $transfer[] = $transfer;
+                if (null !== $apiTransfer->getId()) {
+                    $transfer = $this->transferProvider->provide($apiTransfer->getId());
+                    $transfer->copyFromApiObject($apiTransfer);
+                    $transfer[] = $transfer;
+                }
             }
 
             return $transfer;

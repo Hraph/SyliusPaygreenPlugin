@@ -7,3 +7,9 @@ services:
         arguments:
             - "@hraph_sylius_paygreen_plugin.repository.paygreen_shop"
             - "@hraph_sylius_paygreen_plugin.factory.paygreen_shop"
+
+    hraph_sylius_paygreen_plugin.provider.paygreen_transfer:
+        class: Hraph\SyliusPaygreenPlugin\Provider\PaygreenTransferProvider
+        arguments:
+            - "@hraph_sylius_paygreen_plugin.repository.paygreen_transfer"
+            - "@hraph_sylius_paygreen_plugin.factory.paygreen_transfer"
