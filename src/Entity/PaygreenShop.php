@@ -18,11 +18,17 @@ use Hraph\PaygreenApi\Model\Shop;
 class PaygreenShop extends ApiEntity implements PaygreenShopInterface
 {
     /**
-     * @var string|null
-     * @ORM\Id
-     * @ORM\Column(name="id", type="string")
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
-    protected ?string $id = null;
+    private ?int $id = null;
+
+    /**
+     * @var string|null
+     * @ORM\Column(name="internal_id", type="string", nullable=false, unique=true)
+     */
+    protected ?string $internalId = null;
 
     /**
      * @var string|null
@@ -107,7 +113,7 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
     /**
      * @inheritDoc
      */
-    public function getId(): ?string
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -115,9 +121,17 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
     /**
      * @inheritDoc
      */
-    public function setId($id): void
+    public function getInternalId(): ?string
     {
-        $this->id = $id;
+        return $this->internalId;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInternalId(?string $internalId): void
+    {
+        $this->internalId = $internalId;
     }
 
     /**
