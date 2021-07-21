@@ -9,6 +9,7 @@ use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClient;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClientInterface;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactory;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactoryInterface;
+use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Types\ApiConfig;
 use Hraph\SyliusPaygreenPlugin\Types\ApiOptions;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -58,5 +59,20 @@ class PaygreenApiFactoryDecorator implements PaygreenApiFactoryInterface
     {
 //        return new ApiConfig("pierre", "paul");
         return $this->decorator->resolveConfigFromPaymentContext($payment);
+    }
+
+    public function setTransferContextForConfigResolver(PaygreenTransferInterface $transfer)
+    {
+        return $this->decorator->setTransferContextForConfigResolver($transfer);
+    }
+
+    public function resolveConfigFromTransferContext(?PaygreenTransferInterface $transfer): ApiConfig
+    {
+        return $this->decorator->resolveConfigFromTransferContext($transfer);
+    }
+
+    public function getTransferContext(): ?PaygreenTransferInterface
+    {
+        return $this->decorator->getTransferContext();
     }
 }
