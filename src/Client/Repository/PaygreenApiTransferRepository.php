@@ -12,7 +12,7 @@ use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Factory\PaygreenTransferFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Intl\Exception\MethodNotImplementedException;
+use Symfony\Polyfill\Intl\Icu\Exception\MethodNotImplementedException;
 
 class PaygreenApiTransferRepository  implements PaygreenApiTransferRepositoryInterface
 {

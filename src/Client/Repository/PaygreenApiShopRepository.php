@@ -9,12 +9,11 @@ use Hraph\PaygreenApi\Model\Shop;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClientInterface;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
-use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Factory\PaygreenShopFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Intl\Exception\MethodNotImplementedException;
+use Symfony\Polyfill\Intl\Icu\Exception\MethodNotImplementedException;
 
 class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
 {
