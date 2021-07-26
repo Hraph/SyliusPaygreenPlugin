@@ -5,42 +5,34 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\Client;
 
 
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenApiShopRepositoryInterface;
 use Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenApiTransferRepositoryInterface;
-use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface;
-use Hraph\SyliusPaygreenPlugin\Factory\PaygreenShopFactoryInterface;
+use Hraph\SyliusPaygreenPlugin\Repository\PaygreenShopRepository;
+use Hraph\SyliusPaygreenPlugin\Repository\PaygreenTransferRepository;
 use Hraph\SyliusPaygreenPlugin\Types\ApiTaskResult;
 use Hraph\SyliusPaygreenPlugin\Types\ApiTaskResultInterface;
 
 class PaygreenApiManager
 {
-    /**
-     * @var PaygreenApiShopRepositoryInterface
-     */
-    private PaygreenApiShopRepositoryInterface $shopRepository;
-
-    /**
-     * @var ObjectManager
-     */
-    private ObjectManager $manager;
-
-    /**
-     * @var PaygreenApiTransferRepositoryInterface
-     */
-    private PaygreenApiTransferRepositoryInterface $transferRepository;
+    private PaygreenApiShopRepositoryInterface $apiShopRepository;
+    private PaygreenApiTransferRepositoryInterface $apiTransferRepository;
+    private EntityManagerInterface $manager;
 
     /**
      * PaygreenApiManager constructor.
-     * @param PaygreenApiShopRepositoryInterface $shopRepository
-     * @param PaygreenApiTransferRepositoryInterface $transferRepository
-     * @param ObjectManager $manager
+     * @param PaygreenApiShopRepositoryInterface $apiShopRepository
+     * @param PaygreenApiTransferRepositoryInterface $apiTransferRepository
+     * @param EntityManagerInterface $manager
      */
-    public function __construct(PaygreenApiShopRepositoryInterface $shopRepository, PaygreenApiTransferRepositoryInterface $transferRepository, ObjectManager $manager)
+    public function __construct(
+                                PaygreenApiShopRepositoryInterface $apiShopRepository,
+                                PaygreenApiTransferRepositoryInterface $apiTransferRepository,
+                                EntityManagerInterface $manager)
     {
-        $this->shopRepository = $shopRepository;
-        $this->transferRepository = $transferRepository;
+        $this->apiShopRepository = $apiShopRepository;
+        $this->apiTransferRepository = $apiTransferRepository;
         $this->manager = $manager;
     }
 
@@ -54,10 +46,10 @@ class PaygreenApiManager
 
         try {
             /** @var PaygreenShopInterface[] $shops */
-            $shops = $this->shopRepository->findAll();
+            $shops = $this->apiShopRepository->findAll();
 
             foreach ($shops as $shop){
-                $this->manager->merge($shop);
+                $this->manager->persist($shop);
                 ++$retrieved;
             }
 
@@ -83,7 +75,7 @@ class PaygreenApiManager
 
         try {
             /** @var PaygreenShopInterface[] $shops */
-            $transfers = $this->transferRepository->findAll();
+            $transfers = $this->apiTransferRepository->findAll();
 
             foreach ($transfers as $transfer){
                 $this->manager->merge($transfer);

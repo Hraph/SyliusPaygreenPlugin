@@ -29,11 +29,23 @@ abstract class ApiEntity implements ApiEntityInterface
     }
 
     /**
+     * Map internalId with api object id attribute
+     * @inheritDoc
+     */
+    function getCustomApiObjectAttributeMapping(): array
+    {
+        return [
+            "internalId" => "id"
+        ];
+    }
+
+    /**
      * @inheritDoc
      */
     public function createApiObject(): ModelInterface
     {
         $apiObjectType = $this->getApiObjectType();
+        $customAttributeMapping = $this->getCustomApiObjectAttributeMapping();
         $apiData = [];
 
         if (!method_exists($apiObjectType, 'attributeMap'))
@@ -43,6 +55,10 @@ abstract class ApiEntity implements ApiEntityInterface
         $attributeMap = call_user_func($apiObjectType . '::attributeMap');
 
         foreach ($attributeMap as $privateAttrName => $publicAttrName) {
+            if ($customPublicAttrName = array_search($publicAttrName, $customAttributeMapping, true)) {
+                $publicAttrName = $customPublicAttrName;
+            }
+
             $getterName = 'get' . ucfirst($publicAttrName);
 
             // Entity property has getter for this API property

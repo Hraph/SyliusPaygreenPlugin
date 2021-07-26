@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\StateMachine;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\CaptureAuthorized;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
@@ -33,17 +33,17 @@ final class AdminOrderPaymentStateResolver implements StateResolverInterface
     private RequestStack $requestStack;
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
-    private ObjectManager $manager;
+    private EntityManagerInterface $manager;
 
     /**
      * StateResolver constructor.
      * @param RequestStack $requestStack
      * @param RegistryInterface $payum
-     * @param ObjectManager $manager
+     * @param EntityManagerInterface $manager
      */
-    public function __construct(RequestStack $requestStack, RegistryInterface $payum, ObjectManager $manager)
+    public function __construct(RequestStack $requestStack, RegistryInterface $payum, EntityManagerInterface $manager)
     {
         $this->requestStack = $requestStack;
         $this->payum = $payum;

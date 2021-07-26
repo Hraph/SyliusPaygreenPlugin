@@ -9,6 +9,7 @@ imports:
     - { resource: "services/client.yaml" }
     - { resource: "services/menu.yaml" }
     - { resource: "services/state_machine.yaml" }
+    - { resource: "services/provider.yaml" }
 
 services:
     _defaults:

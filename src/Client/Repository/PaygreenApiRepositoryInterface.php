@@ -15,12 +15,12 @@ interface PaygreenApiRepositoryInterface
     /**
      * Finds an object by its primary key / identifier.
      *
-     * @param mixed $id The identifier.
+     * @param mixed $internalId The identifier.
      *
      * @return ApiEntityInterface|null The object.
      * @throws PaygreenException|MethodNotImplementedException
      */
-    public function find($id): ?ApiEntityInterface;
+    public function find($internalId): ?ApiEntityInterface;
 
     /**
      * Finds all objects in the repository.

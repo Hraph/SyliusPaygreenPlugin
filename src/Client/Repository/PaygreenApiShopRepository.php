@@ -9,12 +9,11 @@ use Hraph\PaygreenApi\Model\Shop;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClientInterface;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
-use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
-use Hraph\SyliusPaygreenPlugin\Factory\PaygreenShopFactoryInterface;
+use Hraph\SyliusPaygreenPlugin\Provider\PaygreenShopProvider;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Intl\Exception\MethodNotImplementedException;
+use Symfony\Polyfill\Intl\Icu\Exception\MethodNotImplementedException;
 
 class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
 {
@@ -25,36 +24,35 @@ class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
      */
     private LoggerInterface $logger;
 
-    /**
-     * @var PaygreenShopFactoryInterface
-     */
-    private PaygreenShopFactoryInterface $shopFactory;
+    private PaygreenShopProvider $shopProvider;
 
     /**
      * PaygreenShopRepository constructor.
      * @param PaygreenApiFactoryInterface $factory
-     * @param PaygreenShopFactoryInterface $shopFactory
+     * @param PaygreenShopProvider $shopProvider
      * @param LoggerInterface $logger
      */
-    public function __construct(PaygreenApiFactoryInterface $factory, PaygreenShopFactoryInterface $shopFactory, LoggerInterface $logger)
+    public function __construct(PaygreenApiFactoryInterface $factory, PaygreenShopProvider $shopProvider, LoggerInterface $logger)
     {
         $this->api = $factory->createNew(); // Use default config API
-        $this->shopFactory = $shopFactory;
+        $this->shopProvider = $shopProvider;
         $this->logger = $logger;
     }
 
 
     /**
-     * @param string $id
+     * @param string $internalId
      * @return PaygreenShopInterface
      * @inheritDoc
      */
-    public function find($id): ?PaygreenShopInterface
+    public function find($internalId): ?PaygreenShopInterface
     {
         try {
-            $shop = $this->shopFactory->createNew();
-            $apiShop = $this->api->getShopApi()->apiIdentifiantShopShopIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $id)->getData();
-            $shop->copyFromApiObject($apiShop);
+            $apiShop = $this->api->getShopApi()->apiIdentifiantShopShopIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $internalId)->getData();
+            $shop = $this->shopProvider->provide($internalId);
+            if (isset($apiShop)) {
+                $shop->copyFromApiObject($apiShop);
+            }
             return $shop;
         }
         catch (ApiException $exception) {
@@ -75,9 +73,11 @@ class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
             $apiShops = $this->api->getShopsApi()->apiIdentifiantShopsGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix())->getData();
 
             foreach ($apiShops as $apiShop){
-                $shop = $this->shopFactory->createNew();
-                $shop->copyFromApiObject($apiShop);
-                $shops[] = $shop;
+                if (null !== $apiShop->getId()) {
+                    $shop = $this->shopProvider->provide($apiShop->getId());
+                    $shop->copyFromApiObject($apiShop);
+                    $shops[] = $shop;
+                }
             }
 
             return $shops;
@@ -100,7 +100,7 @@ class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
 
             /** @var Shop $apiObject */
             $apiObject = $entity->createApiObject();
-            $result = $this->api->getShopApi()->apiIdentifiantShopShopIdPut($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $entity->getId(), $apiObject);
+            $result = $this->api->getShopApi()->apiIdentifiantShopShopIdPut($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $entity->getInternalId(), $apiObject);
 
             if (!$result->getSuccess())
                 throw new ApiException("Update failed: {$result->getMessage()}");

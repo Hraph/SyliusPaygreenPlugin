@@ -31,7 +31,7 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenApiShopRepository
         arguments:
             - "@hraph_sylius_paygreen_plugin.client.paygreen_api_factory"
-            - "@hraph_sylius_paygreen_plugin.factory.paygreen_shop"
+            - "@hraph_sylius_paygreen_plugin.provider.paygreen_shop"
             - "@monolog.logger"
 
     hraph_sylius_paygreen_plugin.client.repository.paygreen_api_transfer_repository:

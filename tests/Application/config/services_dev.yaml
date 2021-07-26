@@ -1,3 +1,5 @@
 services:
     winzou\Bundle\StateMachineBundle\Command\winzouStateMachineDebugCommand:
         tags: ['console.command']
+        arguments:
+            - []
