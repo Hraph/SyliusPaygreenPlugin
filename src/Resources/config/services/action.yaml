@@ -52,6 +52,7 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\ConvertPaymentAction
         arguments:
             - "@hraph_sylius_paygreen_plugin.helper.payment_description"
+            - "%hraph_sylius_paygreen_plugin.client.order_id_prefix%"
             - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.convert_payment }

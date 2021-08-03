@@ -27,6 +27,7 @@ final class SyliusPaygreenPluginExtension extends AbstractResourceExtension
         $container->setParameter("hraph_sylius_paygreen_plugin.client.payment_type", $config['payment_type']);
         $container->setParameter("hraph_sylius_paygreen_plugin.client.force_use_authorize", $config['force_use_authorize']);
         $container->setParameter("hraph_sylius_paygreen_plugin.client.use_insite_mode", $config['use_insite_mode']);
+        $container->setParameter("hraph_sylius_paygreen_plugin.client.order_id_prefix", $config['order_id_prefix']);
 
         $this->registerResources('hraph_sylius_paygreen_plugin', 'doctrine/orm', $config['resources'], $container);
     }
