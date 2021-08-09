@@ -6,6 +6,7 @@ namespace Hraph\SyliusPaygreenPlugin\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Hraph\PaygreenApi\Model\ModelInterface;
 use Hraph\PaygreenApi\Model\Transfer;
 
 /**
@@ -235,5 +236,22 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
     public function setExecutedAt(?\DateTime $executedAt): void
     {
         $this->executedAt = $executedAt;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function copyFromApiObject(ModelInterface $transfer): void
+    {
+        parent::copyFromApiObject($transfer);
+
+        $this->internalId = $transfer->getId();
+        $this->status = $transfer->getStatus();
+        $this->amount = $transfer->getAmount();
+        $this->currency = $transfer->getCurrency();
+        $this->bankId = $transfer->getBankId();
+        $this->createdAt = $transfer->getCreatedAt();
+        $this->scheduledAt = $transfer->getScheduledAt();
+        $this->executedAt = $transfer->getExecutedAt();
     }
 }

@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenApiShopRepositoryInterface;
 use Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenApiTransferRepositoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface;
+use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Repository\PaygreenShopRepository;
 use Hraph\SyliusPaygreenPlugin\Repository\PaygreenTransferRepository;
 use Hraph\SyliusPaygreenPlugin\Types\ApiTaskResult;
@@ -74,11 +75,11 @@ class PaygreenApiManager
         $retrieved = 0;
 
         try {
-            /** @var PaygreenShopInterface[] $shops */
+            /** @var PaygreenTransferInterface[] $shops */
             $transfers = $this->apiTransferRepository->findAll();
 
             foreach ($transfers as $transfer){
-                $this->manager->merge($transfer);
+                $this->manager->persist($transfer);
                 ++$retrieved;
             }
 

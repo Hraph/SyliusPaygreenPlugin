@@ -2,6 +2,7 @@ services:
     _defaults:
         public: true
 
+    # Payments
     hraph_sylius_paygreen_plugin.action.status:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\StatusAction
         arguments:
@@ -51,6 +52,7 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\ConvertPaymentAction
         arguments:
             - "@hraph_sylius_paygreen_plugin.helper.payment_description"
+            - "%hraph_sylius_paygreen_plugin.client.order_id_prefix%"
             - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.convert_payment }
@@ -74,3 +76,22 @@ services:
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.create_fingerprint }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.create_fingerprint }
+
+    # Transfers
+    hraph_sylius_paygreen_plugin.action.transfer_status:
+        class: Hraph\SyliusPaygreenPlugin\Payum\Action\TransferStatusAction
+        arguments:
+            - "@hraph_sylius_paygreen_plugin.request.get_http_request"
+            - "@monolog.logger"
+        tags:
+            - { name: payum.action, factory: paygreen, alias: payum.action.status }
+    hraph_sylius_paygreen_plugin.action.transfer:
+        class: Hraph\SyliusPaygreenPlugin\Payum\Action\TransferAction
+        arguments:
+            - "@monolog.logger"
+        tags:
+            - { name: payum.action, factory: paygreen, alias: payum.action.capture_authorized }
+    hraph_sylius_paygreen_plugin.action.create_transfer:
+        class: Hraph\SyliusPaygreenPlugin\Payum\Action\Api\CreateTransferAction
+        tags:
+            - { name: payum.action, factory: paygreen, alias: payum.action.create_fingerprint }
