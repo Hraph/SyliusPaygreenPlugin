@@ -93,5 +93,7 @@ services:
             - { name: payum.action, factory: paygreen, alias: payum.action.capture_authorized }
     hraph_sylius_paygreen_plugin.action.create_transfer:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\Api\CreateTransferAction
+        arguments:
+            - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.create_fingerprint }
