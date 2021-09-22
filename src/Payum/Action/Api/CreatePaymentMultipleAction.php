@@ -6,11 +6,11 @@ namespace Hraph\SyliusPaygreenPlugin\Payum\Action\Api;
 
 
 use Hraph\PaygreenApi\ApiException;
+use Hraph\PaygreenApi\Model\PayinsBillingAddress;
 use Hraph\PaygreenApi\Model\PayinsBuyer;
 use Hraph\PaygreenApi\Model\PayinsCard;
 use Hraph\PaygreenApi\Model\PayinsRecc;
 use Hraph\PaygreenApi\Model\PayinsReccOrderDetails;
-use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePaymentMultiple;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
@@ -32,6 +32,7 @@ class CreatePaymentMultipleAction extends BaseRenderableAction implements BaseRe
         $payinsRecc = new PayinsRecc($details->toUnsafeArrayWithoutLocal());
         $payinsRecc
             ->setBuyer(new PayinsBuyer($details['buyer']))
+            ->setBillingAddress(new PayinsBillingAddress($details['billing_address']))
             ->setOrderDetails(new PayinsReccOrderDetails($details['order_details']));
 
         // Fingerprint confirmation
