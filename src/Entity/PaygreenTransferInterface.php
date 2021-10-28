@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\Entity;
 
 
-interface PaygreenTransferInterface extends ApiEntityInterface
+use Sylius\Component\Resource\Model\ResourceInterface;
+
+interface PaygreenTransferInterface extends ResourceInterface, ApiEntityInterface
 {
     public const STATE_PROCESSING = 'processing';
 
@@ -16,6 +18,16 @@ interface PaygreenTransferInterface extends ApiEntityInterface
     public const STATE_CANCELLED = 'cancelled';
 
     public const STATE_UNKNOWN = 'unknown';
+
+    /**
+     * @return string|null
+     */
+    public function getShopInternalId(): ?string;
+
+    /**
+     * @param string|null $shopInternalId
+     */
+    public function setShopInternalId(?string $shopInternalId): void;
 
     /**
      * @return string|null
@@ -96,4 +108,9 @@ interface PaygreenTransferInterface extends ApiEntityInterface
      * @param \DateTime|null $executedAt
      */
     public function setExecutedAt(?\DateTime $executedAt): void;
+
+    /**
+     * @return bool
+     */
+    public function isWalletToWalletTransfer(): bool;
 }

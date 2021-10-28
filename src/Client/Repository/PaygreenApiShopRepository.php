@@ -12,6 +12,7 @@ use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Provider\PaygreenShopProvider;
+use Hraph\SyliusPaygreenPlugin\Types\ApiConfig;
 use Psr\Log\LoggerInterface;
 use Symfony\Polyfill\Intl\Icu\Exception\MethodNotImplementedException;
 
@@ -144,5 +145,13 @@ class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
     public function delete(ApiEntityInterface $entity): void
     {
         throw new MethodNotImplementedException("delete");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function updateApiContext(ApiConfig $config): void
+    {
+        $this->api->setApiConfig($config);
     }
 }

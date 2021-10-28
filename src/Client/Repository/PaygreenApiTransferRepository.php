@@ -11,6 +11,8 @@ use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Provider\PaygreenTransferProvider;
+use Hraph\SyliusPaygreenPlugin\Types\ApiConfig;
+use Hraph\SyliusPaygreenPlugin\Types\ApiOptions;
 use Psr\Log\LoggerInterface;
 use Symfony\Polyfill\Intl\Icu\Exception\MethodNotImplementedException;
 
@@ -69,18 +71,20 @@ class PaygreenApiTransferRepository  implements PaygreenApiTransferRepositoryInt
     public function findAll(): array
     {
         try {
-            $transfer = [];
+            $transfers = [];
             $apiTransfers = $this->api->getPayoutTransferApi()->apiIdentifiantPayoutTransferGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix())->getData();
+            //TODO: handle pagination
 
             foreach ($apiTransfers as $apiTransfer){
                 if (null !== $apiTransfer->getId()) {
                     $transfer = $this->transferProvider->provide($apiTransfer->getId());
                     $transfer->copyFromApiObject($apiTransfer);
-                    $transfer[] = $transfer;
+                    $transfer->setShopInternalId($this->api->getUsername());
+                    $transfers[] = $transfer;
                 }
             }
 
-            return $transfer;
+            return $transfers;
         }
         catch (ApiException $exception) {
             $this->logger->error("PayGreen Transfers get error: {$exception->getMessage()} ({$exception->getCode()})");
@@ -111,5 +115,13 @@ class PaygreenApiTransferRepository  implements PaygreenApiTransferRepositoryInt
     public function delete(ApiEntityInterface $entity): void
     {
         throw new MethodNotImplementedException("delete");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function updateApiContext(ApiConfig $config): void
+    {
+        $this->api->setApiConfig($config);
     }
 }

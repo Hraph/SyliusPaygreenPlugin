@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\Types;
 
 
-class TransactionStatus
+class ApiTransactionStatus
 {
     public const STATUS_SUCCEEDED = "SUCCESSED"; // Paygreen API are using wrong spelling
     public const STATUS_REFUSED = "REFUSED";

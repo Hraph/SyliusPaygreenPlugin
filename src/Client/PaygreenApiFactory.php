@@ -42,7 +42,7 @@ class PaygreenApiFactory implements PaygreenApiFactoryInterface
     /**
      * @inheritDoc
      */
-    public function setPaymentContextForConfigResolver (PaymentInterface $payment): void
+    public function setPaymentContextForConfigResolver(PaymentInterface $payment): void
     {
         $this->paymentContext = $payment;
         $this->usingPaymentContext = true;

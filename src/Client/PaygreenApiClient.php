@@ -56,7 +56,7 @@ class PaygreenApiClient extends PaygreenApiClientBase implements PaygreenApiClie
     }
 
     /**
-     * @param string $paymentType
+     * @inheritDoc
      */
     public function setPaymentType(string $paymentType): void
     {
@@ -64,7 +64,7 @@ class PaygreenApiClient extends PaygreenApiClientBase implements PaygreenApiClie
     }
 
     /**
-     * @return bool
+     * @inheritDoc
      */
     public function isMultipleTimePayment(): bool
     {
@@ -72,7 +72,7 @@ class PaygreenApiClient extends PaygreenApiClientBase implements PaygreenApiClie
     }
 
     /**
-     * @param bool $bool
+     * @inheritDoc
      */
     public function setIsMultipleTimePayment(bool $bool): void
     {
@@ -80,7 +80,7 @@ class PaygreenApiClient extends PaygreenApiClientBase implements PaygreenApiClie
     }
 
     /**
-     * @return int
+     * @inheritDoc
      */
     public function getMultipleTimePaymentTimes(): int
     {
@@ -88,12 +88,19 @@ class PaygreenApiClient extends PaygreenApiClientBase implements PaygreenApiClie
     }
 
     /**
-     * @param int $times
+     * @inheritDoc
      */
     public function setMultipleTimePaymentTimes(int $times): void
     {
         $this->multipleTimePaymentTimes = $times;
     }
 
-
+    /**
+     * @inheritDoc
+     */
+    public function setApiConfig(ApiConfig $config): void
+    {
+        $this->setUsername($config->getUsername());
+        $this->setApiKey($config->getApiKey());
+    }
 }

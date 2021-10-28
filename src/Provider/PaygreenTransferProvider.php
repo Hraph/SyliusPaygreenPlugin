@@ -26,6 +26,7 @@ class PaygreenTransferProvider
 
         if (null === $entity) {
             $entity = $this->transferFactory->createNew();
+            $entity->setInternalId($internalId);
         }
 
         return $entity;

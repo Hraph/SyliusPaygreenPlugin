@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Client\Repository;
 
-
-use Hraph\PaygreenApi\ApiException;
 use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
+use Hraph\SyliusPaygreenPlugin\Types\ApiConfig;
 use Symfony\Component\Intl\Exception\MethodNotImplementedException;
 
 interface PaygreenApiRepositoryInterface
@@ -50,4 +49,10 @@ interface PaygreenApiRepositoryInterface
      * @throws PaygreenException|MethodNotImplementedException
      */
     public function delete(ApiEntityInterface $entity): void;
+
+    /**
+     * Change the context of the API by passing new config
+     * @param ApiConfig $config
+     */
+    public function updateApiContext(ApiConfig $config): void;
 }

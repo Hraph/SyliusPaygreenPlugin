@@ -8,10 +8,12 @@ namespace Hraph\SyliusPaygreenPlugin\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenApiShopRepositoryInterface;
 use Hraph\SyliusPaygreenPlugin\Client\Repository\PaygreenApiTransferRepositoryInterface;
+use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Repository\PaygreenShopRepository;
 use Hraph\SyliusPaygreenPlugin\Repository\PaygreenTransferRepository;
+use Hraph\SyliusPaygreenPlugin\Types\ApiConfig;
 use Hraph\SyliusPaygreenPlugin\Types\ApiTaskResult;
 use Hraph\SyliusPaygreenPlugin\Types\ApiTaskResultInterface;
 
@@ -19,21 +21,21 @@ class PaygreenApiManager
 {
     private PaygreenApiShopRepositoryInterface $apiShopRepository;
     private PaygreenApiTransferRepositoryInterface $apiTransferRepository;
+    private PaygreenShopRepository $shopRepository;
+    private ApiConfig $paygreenDefaultConfig;
     private EntityManagerInterface $manager;
 
-    /**
-     * PaygreenApiManager constructor.
-     * @param PaygreenApiShopRepositoryInterface $apiShopRepository
-     * @param PaygreenApiTransferRepositoryInterface $apiTransferRepository
-     * @param EntityManagerInterface $manager
-     */
     public function __construct(
                                 PaygreenApiShopRepositoryInterface $apiShopRepository,
                                 PaygreenApiTransferRepositoryInterface $apiTransferRepository,
+                                PaygreenShopRepository $shopRepository,
+                                ApiConfig $paygreenDefaultConfig,
                                 EntityManagerInterface $manager)
     {
         $this->apiShopRepository = $apiShopRepository;
         $this->apiTransferRepository = $apiTransferRepository;
+        $this->shopRepository = $shopRepository;
+        $this->paygreenDefaultConfig = $paygreenDefaultConfig;
         $this->manager = $manager;
     }
 
@@ -75,14 +77,33 @@ class PaygreenApiManager
         $retrieved = 0;
 
         try {
-            /** @var PaygreenTransferInterface[] $shops */
-            $transfers = $this->apiTransferRepository->findAll();
+            /** @var PaygreenShop[] $shops */
+            $shops = $this->shopRepository->findAll();
 
-            foreach ($transfers as $transfer){
-                $this->manager->persist($transfer);
-                ++$retrieved;
+            if (empty($shops)) { // Store context from default store only
+                $contextsConfigs = [$this->paygreenDefaultConfig];
+            }
+            else { // Store a context for each shop
+                $contextsConfigs = [];
+                foreach ($shops as $shop) {
+                    if (null !== $shop->getInternalId() && null !== $shop->getPrivateKey()) {
+                        $contextsConfigs[] = new ApiConfig($shop->getInternalId(), $shop->getPrivateKey());
+                    }
+                }
             }
 
+            // Get transfers from each shop (each api contexts)
+            foreach ($contextsConfigs as $contextConfig) {
+                $this->apiTransferRepository->updateApiContext($contextConfig); // Replace context for next query
+
+                /** @var PaygreenTransferInterface[] $shops */
+                $transfers = $this->apiTransferRepository->findAll();
+
+                foreach ($transfers as $transfer){
+                    $this->manager->persist($transfer);
+                    ++$retrieved;
+                }
+            }
             $this->manager->flush();
         }
         catch (\Exception $e){

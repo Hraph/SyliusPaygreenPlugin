@@ -6,7 +6,7 @@ use Hraph\PaygreenApi\ApiException;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\GetTransferStatus;
-use Hraph\SyliusPaygreenPlugin\Types\TransferStatus;
+use Hraph\SyliusPaygreenPlugin\Types\ApiTransferStatus;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\GetHttpRequest;
 use Psr\Log\LoggerInterface;
@@ -61,18 +61,18 @@ final class TransferStatusAction extends BaseApiGatewayAwareAction implements Tr
             if (!is_null($transferData->getData()) && !is_null($transferData->getData()->getResult()) && !is_null($transferData->getData()->getResult()->getStatus())) {
 
                 switch ($transferData->getData()->getResult()->getStatus()){
-                    case TransferStatus::STATUS_CANCELLED:
+                    case ApiTransferStatus::STATUS_CANCELLED:
                         $request->markCanceled();
                         break;
 
-                    case TransferStatus::STATUS_SUCCEEDED:
+                    case ApiTransferStatus::STATUS_SUCCEEDED:
                         $request->markSucceeded();
 
-                    case TransferStatus::STATUS_PENDING:
+                    case ApiTransferStatus::STATUS_PENDING:
                         $request->markPending();
                         break;
 
-                    case TransferStatus::STATUS_FAILED:
+                    case ApiTransferStatus::STATUS_FAILED:
                         $request->markFailed();
                         break;
 

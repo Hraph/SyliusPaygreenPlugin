@@ -26,7 +26,7 @@ class PaygreenShop extends ApiEntity implements PaygreenShopInterface
 
     /**
      * @var string|null
-     * @ORM\Column(name="internal_id", type="string", nullable=false, unique=false)
+     * @ORM\Column(name="internal_id", type="string", nullable=true, unique=true)
      */
     protected ?string $internalId = null;
 

@@ -26,6 +26,7 @@ class PaygreenShopProvider
 
         if (null === $entity) {
             $entity = $this->shopFactory->createNew();
+            $entity->setInternalId($internalId);
         }
 
         return $entity;

@@ -25,6 +25,8 @@ services:
         arguments:
             - "@hraph_sylius_paygreen_plugin.client.repository.paygreen_api_shop_repository"
             - "@hraph_sylius_paygreen_plugin.client.repository.paygreen_api_transfer_repository"
+            - "@hraph_sylius_paygreen_plugin.repository.paygreen_shop"
+            - "@hraph_sylius_paygreen_plugin.client.paygreen_api_default_config"
             - "@doctrine.orm.default_entity_manager"
 
     hraph_sylius_paygreen_plugin.client.repository.paygreen_api_shop_repository:

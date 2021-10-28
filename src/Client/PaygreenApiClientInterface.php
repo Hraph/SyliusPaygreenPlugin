@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\Client;
 
 use Hraph\PaygreenApi\PaygreenApiClientInterface as PaygreenApiClientInterfaceBase;
+use Hraph\SyliusPaygreenPlugin\Types\ApiConfig;
 
 interface PaygreenApiClientInterface extends PaygreenApiClientInterfaceBase
 {
@@ -37,4 +38,9 @@ interface PaygreenApiClientInterface extends PaygreenApiClientInterfaceBase
      * @param int $times
      */
     public function setMultipleTimePaymentTimes(int $times): void;
+
+    /**
+     * @param ApiConfig $config
+     */
+    public function setApiConfig(ApiConfig $config): void;
 }

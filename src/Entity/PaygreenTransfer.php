@@ -8,6 +8,7 @@ namespace Hraph\SyliusPaygreenPlugin\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Hraph\PaygreenApi\Model\ModelInterface;
 use Hraph\PaygreenApi\Model\Transfer;
+use Hraph\SyliusPaygreenPlugin\Types\ApiTransferStatus;
 
 /**
  * Class PaygreenTransfer
@@ -17,6 +18,8 @@ use Hraph\PaygreenApi\Model\Transfer;
  */
 class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
 {
+    private const DEFAULT_CURRENCY_CODE = "EUR";
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -26,9 +29,15 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
 
     /**
      * @var string|null
-     * @ORM\Column(name="internal_id", type="string", nullable=false, unique=true)
+     * @ORM\Column(name="internal_id", type="string", nullable=true, unique=true)
      */
     protected ?string $internalId = null;
+
+    /**
+     * @var string|null
+     * @ORM\Column(name="shop_internal_id", type="string", nullable=true)
+     */
+    protected ?string $shopInternalId = null;
 
     /**
      * @var string|null
@@ -46,17 +55,17 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
      * @var string|null
      * @ORM\Column(name="currency", type="string", length=3)
      */
-    protected ?string $currency = null;
+    protected ?string $currency = self::DEFAULT_CURRENCY_CODE;
 
     /**
      * @var string|null
-     * @ORM\Column(name="bank_id", type="string")
+     * @ORM\Column(name="bank_id", type="string", nullable=true)
      */
     protected ?string $bankId = null;
 
     /**
      * @var string|null
-     * @ORM\Column(name="shop_id", type="string")
+     * @ORM\Column(name="shop_id", type="string", nullable=true)
      */
     protected ?string $shopId = null;
 
@@ -108,6 +117,22 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
     public function setInternalId(?string $internalId): void
     {
         $this->internalId = $internalId;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShopInternalId(): ?string
+    {
+        return $this->shopInternalId;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setShopInternalId(?string $shopInternalId): void
+    {
+        $this->shopInternalId = $shopInternalId;
     }
 
     /**
@@ -246,12 +271,40 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
         parent::copyFromApiObject($transfer);
 
         $this->internalId = $transfer->getId();
-        $this->status = $transfer->getStatus();
-        $this->amount = $transfer->getAmount();
+        $this->status = $this->adaptApiStatusCode($transfer->getStatus());
+        $this->amount = intval($transfer->getAmount());
         $this->currency = $transfer->getCurrency();
+        $this->shopId = $transfer->getShopId();
         $this->bankId = $transfer->getBankId();
         $this->createdAt = $transfer->getCreatedAt();
         $this->scheduledAt = $transfer->getScheduledAt();
         $this->executedAt = $transfer->getExecutedAt();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isWalletToWalletTransfer(): bool
+    {
+        return $this->bankId === null;
+    }
+
+    /**
+     * Return adapted status code from the internal paygreen codes
+     * @param string $apiStatusCode
+     * @return string
+     */
+    private function adaptApiStatusCode(string $apiStatusCode): string
+    {
+        switch ($apiStatusCode) {
+            case ApiTransferStatus::STATUS_SUCCEEDED:
+                return self::STATE_SUCCEEDED;
+            case ApiTransferStatus::STATUS_CANCELLED:
+                return self::STATE_CANCELLED;
+            case ApiTransferStatus::STATUS_PENDING:
+                return self::STATE_PROCESSING;
+            default:
+                return self::STATE_FAILED;
+        }
     }
 }

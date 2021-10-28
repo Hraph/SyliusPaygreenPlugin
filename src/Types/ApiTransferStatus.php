@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\Types;
 
 
-class TransferStatus
+class ApiTransferStatus
 {
     public const STATUS_SUCCEEDED = "SUCCESS";
     public const STATUS_CANCELLED = "CANCEL";
