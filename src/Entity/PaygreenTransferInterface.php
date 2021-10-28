@@ -17,7 +17,7 @@ interface PaygreenTransferInterface extends ResourceInterface, ApiEntityInterfac
 
     public const STATE_CANCELLED = 'cancelled';
 
-    public const STATE_UNKNOWN = 'unknown';
+    public const STATE_NEW = 'new';
 
     /**
      * @return string|null
@@ -78,6 +78,16 @@ interface PaygreenTransferInterface extends ResourceInterface, ApiEntityInterfac
      * @param string|null $shopId
      */
     public function setShopId(?string $shopId): void;
+
+    /**
+     * @return array
+     */
+    public function getDetails(): array;
+
+    /**
+     * @param array $details
+     */
+    public function setDetails(array $details): void;
 
     /**
      * @return \DateTime|null

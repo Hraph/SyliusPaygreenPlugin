@@ -41,9 +41,9 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
 
     /**
      * @var string|null
-     * @ORM\Column(name="status", type="string", length=10)
+     * @ORM\Column(name="status", type="string", length=16)
      */
-    protected ?string $status = null;
+    protected ?string $status = self::STATE_NEW;
 
     /**
      * @var int
@@ -68,6 +68,12 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
      * @ORM\Column(name="shop_id", type="string", nullable=true)
      */
     protected ?string $shopId = null;
+
+    /**
+     * @var array
+     * @ORM\Column(name="details", type="json")
+     */
+    protected array $details = [];
 
     /**
      * @var \DateTime|null
@@ -213,6 +219,22 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
     public function setShopId(?string $shopId): void
     {
         $this->shopId = $shopId;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDetails(): array
+    {
+        return $this->details;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDetails(array $details): void
+    {
+        $this->details = $details;
     }
 
     /**
