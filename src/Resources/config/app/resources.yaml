@@ -1,3 +1,14 @@
-imports:
-
-# Resources are created automatically by the Configuration extension
+sylius_resource:
+    resources:
+        hraph_sylius_paygreen_plugin.paygreen_shop:
+            classes:
+                model: Hraph\SyliusPaygreenPlugin\Entity\PaygreenShop
+                interface: Hraph\SyliusPaygreenPlugin\Entity\PaygreenShopInterface
+                factory: Hraph\SyliusPaygreenPlugin\Factory\PaygreenShopFactory
+                repository: Hraph\SyliusPaygreenPlugin\Repository\PaygreenShopRepository
+        hraph_sylius_paygreen_plugin.paygreen_transfer:
+            classes:
+                model: Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransfer
+                interface: Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface
+                factory: Hraph\SyliusPaygreenPlugin\Factory\PaygreenTransferFactory
+                repository: Hraph\SyliusPaygreenPlugin\Repository\PaygreenTransferRepository
