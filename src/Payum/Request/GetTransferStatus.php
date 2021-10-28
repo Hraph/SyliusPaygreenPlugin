@@ -83,4 +83,14 @@ class GetTransferStatus extends Generic
     {
         return $this->status === PaygreenTransferInterface::STATE_SUCCEEDED;
     }
+
+    public function markUnknown()
+    {
+        $this->status = PaygreenTransferInterface::STATE_UNKNOWN;
+    }
+
+    public function isUnknown()
+    {
+        return $this->status === PaygreenTransferInterface::STATE_UNKNOWN;
+    }
 }

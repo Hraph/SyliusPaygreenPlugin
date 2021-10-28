@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        public: true
+
+    hraph_sylius_paygreen_plugin.extension.update_transfer_state:
+        class: Hraph\SyliusPaygreenPlugin\Payum\Extension\UpdateTransferStateExtension
+        arguments:
+            - "@sm.factory"
+        tags:
+            - { name: payum.extension, all: true, prepend: true }

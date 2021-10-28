@@ -19,6 +19,8 @@ interface PaygreenTransferInterface extends ResourceInterface, ApiEntityInterfac
 
     public const STATE_NEW = 'new';
 
+    public const STATE_UNKNOWN = 'unknown';
+
     /**
      * @return string|null
      */
@@ -32,12 +34,12 @@ interface PaygreenTransferInterface extends ResourceInterface, ApiEntityInterfac
     /**
      * @return string|null
      */
-    public function getStatus(): ?string;
+    public function getState(): ?string;
 
     /**
      * @param string|null $status
      */
-    public function setStatus(?string $status): void;
+    public function setState(?string $status): void;
 
     /**
      * @return int

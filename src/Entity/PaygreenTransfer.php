@@ -41,9 +41,9 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
 
     /**
      * @var string|null
-     * @ORM\Column(name="status", type="string", length=16)
+     * @ORM\Column(name="state", type="string", length=16)
      */
-    protected ?string $status = self::STATE_NEW;
+    protected ?string $state = self::STATE_NEW;
 
     /**
      * @var int
@@ -102,6 +102,17 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
     }
 
     /**
+     * Change attribute mapping from state to status
+     * @inheritDoc
+     */
+    function getCustomApiObjectAttributeMapping(): array
+    {
+        return array_merge(parent::getCustomApiObjectAttributeMapping(), [
+            "state" => "status"
+        ]);
+    }
+
+    /**
      * @inheritDoc
      */
     public function getId(): ?int
@@ -144,17 +155,17 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
     /**
      * @inheritDoc
      */
-    public function getStatus(): ?string
+    public function getState(): ?string
     {
-        return $this->status;
+        return $this->state;
     }
 
     /**
      * @inheritDoc
      */
-    public function setStatus(?string $status): void
+    public function setState(?string $state): void
     {
-        $this->status = $status;
+        $this->state = $state;
     }
 
     /**
@@ -293,7 +304,7 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
         parent::copyFromApiObject($transfer);
 
         $this->internalId = $transfer->getId();
-        $this->status = $this->adaptApiStatusCode($transfer->getStatus());
+        $this->state = $this->adaptApiStateCode($transfer->getStatus());
         $this->amount = intval($transfer->getAmount());
         $this->currency = $transfer->getCurrency();
         $this->shopId = $transfer->getShopId();
@@ -316,7 +327,7 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
      * @param string $apiStatusCode
      * @return string
      */
-    private function adaptApiStatusCode(string $apiStatusCode): string
+    private function adaptApiStateCode(string $apiStatusCode): string
     {
         switch ($apiStatusCode) {
             case ApiTransferStatus::STATUS_SUCCEEDED:

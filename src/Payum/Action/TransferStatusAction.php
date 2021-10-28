@@ -7,6 +7,7 @@ use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\GetTransferStatus;
 use Hraph\SyliusPaygreenPlugin\Types\ApiTransferStatus;
+use Hraph\SyliusPaygreenPlugin\Types\TransferDetailsKeys;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\GetHttpRequest;
 use Psr\Log\LoggerInterface;
@@ -45,9 +46,15 @@ final class TransferStatusAction extends BaseApiGatewayAwareAction implements Ac
 
         /** @var PaygreenTransferInterface|null $transfer */
         $transfer = $request->getModel();
+        $transferDetails = $transfer->getDetails();
+        $tid = null;
 
-        if (null === $transfer || null === $transfer->getInternalId()) { // Invalid transfer
-            $request->markFailed();
+        // Transfer already executed
+        if (true === isset($transferDetails[TransferDetailsKeys::PAYGREEN_TRANSFER_ID])) {
+            $tid = $transferDetails[TransferDetailsKeys::PAYGREEN_TRANSFER_ID];
+        }
+        else { // Transaction ID is not set in transfer data. Invalid transfer
+            $request->markNew();
             return;
         }
 
@@ -56,7 +63,7 @@ final class TransferStatusAction extends BaseApiGatewayAwareAction implements Ac
             $transferData = $this
                 ->api
                 ->getPayoutTransferApi()
-                ->apiIdentifiantPayoutTransferIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $transfer->getInternalId());
+                ->apiIdentifiantPayoutTransferIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $tid);
 
             // Got transaction and valid status
             if (!is_null($transferData->getData()) && !is_null($transferData->getData()->getResult()) && !is_null($transferData->getData()->getResult()->getStatus())) {
@@ -78,7 +85,7 @@ final class TransferStatusAction extends BaseApiGatewayAwareAction implements Ac
                         break;
 
                     default:
-                        $request->markNew();
+                        $request->markUnknown();
                         break;
                 }
             }
@@ -87,7 +94,7 @@ final class TransferStatusAction extends BaseApiGatewayAwareAction implements Ac
         catch (ApiException $exception){
             $this->logger->error("PayGreen Status error: {$exception->getMessage()} ({$exception->getCode()})");
 
-            $request->markNew(); // Do not throw error
+            $request->markUnknown(); // Do not throw error
         }
     }
 

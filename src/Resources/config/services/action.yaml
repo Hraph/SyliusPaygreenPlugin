@@ -86,10 +86,18 @@ services:
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.transfer_status }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.transfer_status }
+    hraph_sylius_paygreen_plugin.action.base_transfer:
+        class: Hraph\SyliusPaygreenPlugin\Payum\Action\BaseTransferAction
+        arguments:
+            - "@monolog.logger"
+        tags:
+            - { name: payum.action, factory: paygreen, alias: payum.action.base_transfer }
+            - { name: payum.action, factory: paygreen_multiple, alias: payum.action.base_transfer }
     hraph_sylius_paygreen_plugin.action.transfer:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\TransferAction
         arguments:
             - "@monolog.logger"
+            - "@hraph_sylius_paygreen_plugin.provider.gateway_config"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.transfer }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.transfer }
