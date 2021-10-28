@@ -71,4 +71,9 @@ interface PaygreenApiFactoryInterface
      * @return PaygreenTransferInterface|null
      */
     public function getTransferContext(): ?PaygreenTransferInterface;
+
+    /**
+     * @return bool
+     */
+    public function isUsingPaymentContext(): bool;
 }

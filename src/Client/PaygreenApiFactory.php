@@ -12,25 +12,11 @@ use Sylius\Component\Core\Model\PaymentInterface;
 
 class PaygreenApiFactory implements PaygreenApiFactoryInterface
 {
-    /**
-     * @var ApiConfig
-     */
     private ApiConfig $defaultConfig;
-
-    /**
-     * @var ApiOptions
-     */
     private ApiOptions $options;
-
-    /**
-     * @var PaymentInterface|null
-     */
     private ?PaymentInterface $paymentContext = null;
-
-    /**
-     * @var PaygreenTransferInterface|null
-     */
     private ?PaygreenTransferInterface $transferContext = null;
+    private bool $usingPaymentContext = true;
 
     /**
      * PaygreenApiFactory constructor.
@@ -48,7 +34,9 @@ class PaygreenApiFactory implements PaygreenApiFactoryInterface
      */
     public function createNew(): PaygreenApiClientInterface
     {
-        return new PaygreenApiClient($this->resolveConfigFromPaymentContext($this->paymentContext), $this->options);
+        return new PaygreenApiClient($this->usingPaymentContext ?
+            $this->resolveConfigFromPaymentContext($this->paymentContext) :
+            $this->resolveConfigFromTransferContext($this->transferContext), $this->options);
     }
 
     /**
@@ -57,6 +45,7 @@ class PaygreenApiFactory implements PaygreenApiFactoryInterface
     public function setPaymentContextForConfigResolver (PaymentInterface $payment): void
     {
         $this->paymentContext = $payment;
+        $this->usingPaymentContext = true;
     }
 
     /**
@@ -65,6 +54,7 @@ class PaygreenApiFactory implements PaygreenApiFactoryInterface
     public function setTransferContextForConfigResolver(PaygreenTransferInterface $transfer): void
     {
         $this->transferContext = $transfer;
+        $this->usingPaymentContext = false;
     }
 
     /**
@@ -113,5 +103,13 @@ class PaygreenApiFactory implements PaygreenApiFactoryInterface
     public function getTransferContext(): ?PaygreenTransferInterface
     {
         return $this->transferContext;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isUsingPaymentContext(): bool
+    {
+        return $this->usingPaymentContext;
     }
 }
