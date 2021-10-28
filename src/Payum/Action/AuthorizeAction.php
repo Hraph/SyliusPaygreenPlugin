@@ -22,12 +22,14 @@ use RuntimeException;
  * Class AuthorizeAction
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
-class AuthorizeAction extends BaseApiGatewayAwareAction implements ActionInterface, GenericTokenFactoryAwareInterface
+final class AuthorizeAction extends BaseApiGatewayAwareAction implements ActionInterface, GenericTokenFactoryAwareInterface
 {
     use GenericTokenFactoryAwareTrait;
 
     /**
      * @inheritDoc
+     *
+     * @param Authorize $request
      */
     public function execute($request): void
     {

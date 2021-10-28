@@ -21,7 +21,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
  * Class RefundAction
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
-class RefundAction extends BaseApiGatewayAwareAction implements ActionInterface
+final class RefundAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
     /**
      * @var ConvertRefundDataInterface
@@ -42,6 +42,7 @@ class RefundAction extends BaseApiGatewayAwareAction implements ActionInterface
     /**
      * {@inheritdoc}
      * @throws PaygreenException
+     * @param Refund $request
      */
     public function execute($request): void
     {

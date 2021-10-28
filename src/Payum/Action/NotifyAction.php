@@ -41,10 +41,13 @@ final class NotifyAction extends BaseApiGatewayAwareAction implements ActionInte
 
     /**
      * {@inheritdoc}
+     * @param Notify $request
      */
     public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
+
+        $token = $request->getToken();
 
         // Model contains only details
         $details = ArrayObject::ensureArrayObject($request->getModel());

@@ -37,6 +37,7 @@ final class StatusAction extends BaseApiGatewayAwareAction implements ActionInte
 
     /**
      * @inheritDoc
+     * @param GetStatus $request
      */
     public function execute($request): void
     {

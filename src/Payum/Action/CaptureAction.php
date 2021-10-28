@@ -30,6 +30,8 @@ final class CaptureAction extends BaseApiGatewayAwareAction implements ActionInt
 
     /**
      * @inheritDoc
+     *
+     * @param Capture $request
      */
     public function execute($request): void
     {

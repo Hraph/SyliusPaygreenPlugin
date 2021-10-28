@@ -25,9 +25,10 @@ use RuntimeException;
  * Class TransferAction
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
-final class TransferAction extends BaseApiGatewayAwareAction implements TransferActionInterface
+final class TransferAction implements ActionInterface, GatewayAwareInterface, GenericTokenFactoryAwareInterface
 {
     use GenericTokenFactoryAwareTrait;
+    use GatewayAwareTrait;
 
     /**
      * @inheritDoc

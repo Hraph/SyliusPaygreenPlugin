@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 
-class ConvertPaymentAction extends BaseApiGatewayAwareAction implements ActionInterface
+final class ConvertPaymentAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
     private PaymentDescriptionInterface $paymentDescription;
     private ?string $orderIdPrefix;
@@ -34,6 +34,7 @@ class ConvertPaymentAction extends BaseApiGatewayAwareAction implements ActionIn
 
     /**
      * {@inheritdoc}
+     * @param Convert $request
      */
     public function execute($request): void
     {

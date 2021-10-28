@@ -16,7 +16,7 @@ class GetTransferStatus extends Generic
     {
         parent::__construct($model);
 
-        $this->markUnknown();
+        $this->markNew();
     }
 
     public function getValue(): string
@@ -64,14 +64,14 @@ class GetTransferStatus extends Generic
         return $this->status === PaygreenTransferInterface::STATE_FAILED;
     }
 
-    public function markUnknown(): void
+    public function markNew(): void
     {
-        $this->status = PaygreenTransferInterface::STATE_UNKNOWN;
+        $this->status = PaygreenTransferInterface::STATE_NEW;
     }
 
-    public function isUnknown(): bool
+    public function isNew(): bool
     {
-        return $this->status === PaygreenTransferInterface::STATE_UNKNOWN;
+        return $this->status === PaygreenTransferInterface::STATE_NEW;
     }
 
     public function markSucceeded(): void

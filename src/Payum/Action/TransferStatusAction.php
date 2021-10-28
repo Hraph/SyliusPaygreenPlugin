@@ -36,6 +36,7 @@ final class TransferStatusAction extends BaseApiGatewayAwareAction implements Ac
 
     /**
      * @inheritDoc
+     * @param GetTransferStatus $request
      */
     public function execute($request): void
     {
@@ -77,7 +78,7 @@ final class TransferStatusAction extends BaseApiGatewayAwareAction implements Ac
                         break;
 
                     default:
-                        $request->markUnknown();
+                        $request->markNew();
                         break;
                 }
             }
@@ -86,7 +87,7 @@ final class TransferStatusAction extends BaseApiGatewayAwareAction implements Ac
         catch (ApiException $exception){
             $this->logger->error("PayGreen Status error: {$exception->getMessage()} ({$exception->getCode()})");
 
-            $request->markUnknown(); // Do not throw error
+            $request->markNew(); // Do not throw error
         }
     }
 

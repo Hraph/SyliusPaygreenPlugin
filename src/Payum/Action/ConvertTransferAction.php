@@ -10,7 +10,7 @@ use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\Convert;
 use Psr\Log\LoggerInterface;
 
-class ConvertTransferAction extends BaseApiGatewayAwareAction implements ActionInterface
+final class ConvertTransferAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
     /**
      * ConvertPaymentAction constructor.
@@ -24,6 +24,7 @@ class ConvertTransferAction extends BaseApiGatewayAwareAction implements ActionI
 
     /**
      * {@inheritdoc}
+     * @param Convert $request
      */
     public function execute($request): void
     {

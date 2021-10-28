@@ -20,11 +20,12 @@ use Payum\Core\Exception\RequestNotSupportedException;
  * Class CaptureAuthorizedAction
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
-class CaptureAuthorizedAction extends BaseApiGatewayAwareAction implements ActionInterface
+final class CaptureAuthorizedAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
     /**
      * @inheritDoc
      * @throws PaygreenException
+     * @param CaptureAuthorized $request
      */
     public function execute($request): void
     {
