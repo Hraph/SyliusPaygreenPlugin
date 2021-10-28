@@ -14,6 +14,7 @@ use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\Capture;
+use Payum\Core\Security\GenericTokenFactoryAwareInterface;
 use Payum\Core\Security\GenericTokenFactoryAwareTrait;
 use Payum\Core\Security\TokenInterface;
 use RuntimeException;
@@ -23,7 +24,7 @@ use RuntimeException;
  * Class CaptureAction
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
-final class CaptureAction extends BaseApiGatewayAwareAction implements CaptureActionInterface
+final class CaptureAction extends BaseApiGatewayAwareAction implements ActionInterface, GenericTokenFactoryAwareInterface
 {
     use GenericTokenFactoryAwareTrait;
 

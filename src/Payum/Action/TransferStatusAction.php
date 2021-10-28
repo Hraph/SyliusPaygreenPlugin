@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
  * Check the status of the transfer after create
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
-final class TransferStatusAction extends BaseApiGatewayAwareAction implements TransferStatusActionInterface
+final class TransferStatusAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
     /**
      * @var GetHttpRequest

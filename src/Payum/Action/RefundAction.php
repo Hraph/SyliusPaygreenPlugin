@@ -21,13 +21,12 @@ use Sylius\Component\Core\Model\PaymentInterface;
  * Class RefundAction
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
-class RefundAction extends BaseApiGatewayAwareAction implements RefundActionInterface
+class RefundAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
     /**
      * @var ConvertRefundDataInterface
      */
     private ConvertRefundDataInterface $convertOrderRefundData;
-
 
     /**
      * RefundAction constructor.

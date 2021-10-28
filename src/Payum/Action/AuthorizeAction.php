@@ -12,6 +12,7 @@ use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\Authorize;
+use Payum\Core\Security\GenericTokenFactoryAwareInterface;
 use Payum\Core\Security\GenericTokenFactoryAwareTrait;
 use Payum\Core\Security\TokenInterface;
 use RuntimeException;
@@ -21,7 +22,7 @@ use RuntimeException;
  * Class AuthorizeAction
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
-class AuthorizeAction extends BaseApiGatewayAwareAction implements AuthorizeActionInterface
+class AuthorizeAction extends BaseApiGatewayAwareAction implements ActionInterface, GenericTokenFactoryAwareInterface
 {
     use GenericTokenFactoryAwareTrait;
 

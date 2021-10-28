@@ -5,7 +5,7 @@ namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 use Hraph\PaygreenApi\ApiException;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
-use Hraph\SyliusPaygreenPlugin\Types\TransactionStatus;
+use Hraph\SyliusPaygreenPlugin\Types\ApiTransactionStatus;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\GetHttpRequest;
 use Psr\Log\LoggerInterface;
@@ -17,7 +17,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
  * Check the status of the payment after capture and notify
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
-final class StatusAction extends BaseApiGatewayAwareAction implements StatusActionInterface
+final class StatusAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
     /**
      * @var GetHttpRequest
@@ -79,27 +79,27 @@ final class StatusAction extends BaseApiGatewayAwareAction implements StatusActi
             if (!is_null($paymentData->getData()) && !is_null($paymentData->getData()->getResult()) && !is_null($paymentData->getData()->getResult()->getStatus())) {
 
                 switch ($paymentData->getData()->getResult()->getStatus()){
-                    case TransactionStatus::STATUS_REFUSED:
-                    case TransactionStatus::STATUS_CANCELLED:
+                    case ApiTransactionStatus::STATUS_REFUSED:
+                    case ApiTransactionStatus::STATUS_CANCELLED:
                         $request->markCanceled();
                         break;
 
-                    case TransactionStatus::STATUS_SUCCEEDED:
+                    case ApiTransactionStatus::STATUS_SUCCEEDED:
                         if (!$isFingerprintTransaction)
                             $request->markCaptured(); // Succeeded when payment
                         else
                             $request->markAuthorized(); // Authorized when Fingerprint
                         break;
 
-                    case TransactionStatus::STATUS_PENDING: // Paygreen pending means no payment attempts
+                    case ApiTransactionStatus::STATUS_PENDING: // Paygreen pending means no payment attempts
                         $request->markNew();
                         break;
 
-                    case TransactionStatus::STATUS_REFUNDED:
+                    case ApiTransactionStatus::STATUS_REFUNDED:
                         $request->markRefunded();
                         break;
 
-                    case TransactionStatus::STATUS_EXPIRED:
+                    case ApiTransactionStatus::STATUS_EXPIRED:
                         $request->markExpired();
                         break;
 

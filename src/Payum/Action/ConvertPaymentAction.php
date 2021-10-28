@@ -7,16 +7,13 @@ namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
 use Hraph\SyliusPaygreenPlugin\Helper\PaymentDescriptionInterface;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
-use Payum\Core\Action\ActionInterface;
-use Payum\Core\ApiAwareInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
-use Payum\Core\GatewayAwareInterface;
 use Payum\Core\Request\Convert;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 
-class ConvertPaymentAction extends BaseApiGatewayAwareAction implements ActionInterface, GatewayAwareInterface, ApiAwareInterface
+class ConvertPaymentAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
     private PaymentDescriptionInterface $paymentDescription;
     private ?string $orderIdPrefix;

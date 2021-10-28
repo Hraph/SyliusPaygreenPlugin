@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Class NotifyAction
  * @package Hraph\SyliusPaygreenPlugin\Payum\Action
  */
-final class NotifyAction extends BaseApiGatewayAwareAction implements NotifyActionInterface
+final class NotifyAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
     /**
      * @var GetHttpRequest
