@@ -13,6 +13,9 @@ use Payum\Core\Bridge\Spl\ArrayObject;
 
 class CreateTransferAction extends BaseApiGatewayAwareAction
 {
+    /**
+     * @throws ApiException
+     */
     public function execute($request)
     {
         $details = ArrayObject::ensureArrayObject($request->getModel());

@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
-
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
-use Hraph\SyliusPaygreenPlugin\Helper\PaymentDescriptionInterface;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\ApiAwareInterface;
@@ -13,8 +12,6 @@ use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareInterface;
 use Payum\Core\Request\Convert;
 use Psr\Log\LoggerInterface;
-use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Model\PaymentInterface;
 
 class ConvertTransferAction extends BaseApiGatewayAwareAction implements ActionInterface, GatewayAwareInterface, ApiAwareInterface
 {
@@ -41,11 +38,16 @@ class ConvertTransferAction extends BaseApiGatewayAwareAction implements ActionI
         $details = [
             'amount' => $transfer->getAmount(),
             'currency' => $transfer->getCurrency(),
-            'shop_id' => $transfer->getShopId(),
             'metadata' => [
                 'transfer_id' => $transfer->getId()
             ],
         ];
+        if (null !== $transfer->getShopId()) {
+            $details['shop_id'] = $transfer->getShopId();
+        }
+        else if (null !== $transfer->getBankId()) {
+            $details['bank_id'] = $transfer->getBankId();
+        }
 
         // Set transfer to change API config depending on context
         $this->apiFactory->setTransferContextForConfigResolver($transfer);
