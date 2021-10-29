@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
-
 use Hraph\PaygreenApi\ApiException;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
@@ -24,16 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class NotifyAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
-    /**
-     * @var GetHttpRequest
-     */
     private GetHttpRequest $getHttpRequest;
 
-    /**
-     * NotifyAction constructor.
-     * @param GetHttpRequest $getHttpRequest
-     * @param LoggerInterface $logger
-     */
     public function __construct(GetHttpRequest $getHttpRequest, LoggerInterface $logger)
     {
         parent::__construct($logger);

@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
 use Hraph\PaygreenApi\ApiException;
+use Hraph\SyliusPaygreenPlugin\Client\Adapter\PaygreenPaymentApiStatusAdapter;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
-use Hraph\SyliusPaygreenPlugin\Types\ApiTransactionStatus;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\GetHttpRequest;
 use Psr\Log\LoggerInterface;
 use Sylius\Bundle\PayumBundle\Request\GetStatus;
-use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Payment\Model\PaymentInterface;
 
 /**
  * Class StatusAction is called by Payum controller
@@ -19,20 +21,14 @@ use Sylius\Component\Core\Model\PaymentInterface;
  */
 final class StatusAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
-    /**
-     * @var GetHttpRequest
-     */
     private GetHttpRequest $getHttpRequest;
+    private PaygreenPaymentApiStatusAdapter $apiStatusAdapter;
 
-    /**
-     * StatusAction constructor.
-     * @param GetHttpRequest $getHttpRequest
-     * @param LoggerInterface $logger
-     */
-    public function __construct(GetHttpRequest $getHttpRequest, LoggerInterface $logger)
+    public function __construct(GetHttpRequest $getHttpRequest, PaygreenPaymentApiStatusAdapter $apiStatusAdapter, LoggerInterface $logger)
     {
         parent::__construct($logger);
         $this->getHttpRequest = $getHttpRequest;
+        $this->apiStatusAdapter = $apiStatusAdapter;
     }
 
     /**
@@ -44,9 +40,9 @@ final class StatusAction extends BaseApiGatewayAwareAction implements ActionInte
         RequestNotSupportedException::assertSupports($this, $request);
         $this->gateway->execute($this->getHttpRequest); // Get POST/GET data and query from request
 
-        /** @var PaymentInterface $payment */
-        $payment = $request->getModel();
-        $paymentDetails = $payment->getDetails();
+        /** @var PaymentInterface $paymentModel */
+        $paymentModel = $request->getModel();
+        $paymentDetails = $paymentModel->getDetails();
         $pid = null;
         $isFingerprintTransaction = false;
 
@@ -71,39 +67,35 @@ final class StatusAction extends BaseApiGatewayAwareAction implements ActionInte
 
         try {
             // Search transaction
-            $paymentData = $this
+            $payment = $this
                 ->api
                 ->getPayinsTransactionApi()
                 ->apiIdentifiantPayinsTransactionIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $pid);
+            $paymentData = $payment->getData();
 
             // Got transaction and valid status
-            if (!is_null($paymentData->getData()) && !is_null($paymentData->getData()->getResult()) && !is_null($paymentData->getData()->getResult()->getStatus())) {
+            if (!is_null($paymentData) && !is_null($paymentData->getResult()) && !is_null($paymentData->getResult()->getStatus())) {
+                $state = $this->apiStatusAdapter->adapt($paymentData->getResult()->getStatus(),$isFingerprintTransaction);
 
-                switch ($paymentData->getData()->getResult()->getStatus()){
-                    case ApiTransactionStatus::STATUS_REFUSED:
-                    case ApiTransactionStatus::STATUS_CANCELLED:
+                switch ($state){
+                    case PaymentInterface::STATE_CANCELLED:
                         $request->markCanceled();
                         break;
-
-                    case ApiTransactionStatus::STATUS_SUCCEEDED:
-                        if (!$isFingerprintTransaction)
-                            $request->markCaptured(); // Succeeded when payment
-                        else
-                            $request->markAuthorized(); // Authorized when Fingerprint
+                    case PaymentInterface::STATE_COMPLETED:
+                        $request->markCaptured(); // Succeeded when payment
                         break;
-
-                    case ApiTransactionStatus::STATUS_PENDING: // Paygreen pending means no payment attempts
+                    case PaymentInterface::STATE_AUTHORIZED:
+                        $request->markAuthorized(); // Authorized when Fingerprint
+                        break;
+                    case PaymentInterface::STATE_NEW:
                         $request->markNew();
                         break;
-
-                    case ApiTransactionStatus::STATUS_REFUNDED:
+                    case PaymentInterface::STATE_REFUNDED:
                         $request->markRefunded();
                         break;
-
-                    case ApiTransactionStatus::STATUS_EXPIRED:
+                    case PaymentInterface::STATE_FAILED:
                         $request->markExpired();
                         break;
-
                     default:
                         $request->markUnknown();
                         break;
@@ -112,7 +104,7 @@ final class StatusAction extends BaseApiGatewayAwareAction implements ActionInte
             else throw new ApiException("Invalid API transaction data.");
         }
         catch (ApiException $exception){
-            $this->logger->error("PayGreen Status error: {$exception->getMessage()} ({$exception->getCode()})");
+            $this->logger->error("PayGreen Status error: {$exception->getMessage()} ({$exception->getCode()}) - TransactionId=$pid");
 
             $request->markUnknown(); // Do not throw error
         }

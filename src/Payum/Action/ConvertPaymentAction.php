@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
-
 use Hraph\SyliusPaygreenPlugin\Helper\PaymentDescriptionInterface;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Payum\Core\Exception\RequestNotSupportedException;
@@ -18,12 +17,6 @@ final class ConvertPaymentAction extends BaseApiGatewayAwareAction implements Ac
     private PaymentDescriptionInterface $paymentDescription;
     private ?string $orderIdPrefix;
 
-    /**
-     * ConvertPaymentAction constructor.
-     * @param PaymentDescriptionInterface $paymentDescription
-     * @param string|null $orderIdPrefix
-     * @param LoggerInterface $logger
-     */
     public function __construct(PaymentDescriptionInterface $paymentDescription, ?string $orderIdPrefix,  LoggerInterface $logger)
     {
         parent::__construct($logger);

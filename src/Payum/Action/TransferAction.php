@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
 use Hraph\PaygreenApi\ApiException;
+use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Payum\PaygreenGatewayFactory;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreateTransfer;
@@ -56,7 +57,7 @@ final class TransferAction implements ActionInterface, GatewayAwareInterface, Ge
 
         $details = ArrayObject::ensureArrayObject($request->getModel());
 
-        /** @var Transfer $transfer */
+        /** @var PaygreenTransferInterface $transfer */
         $transfer = $request->getFirstModel();
 
         /** @var TokenInterface|null $token */
@@ -72,7 +73,7 @@ final class TransferAction implements ActionInterface, GatewayAwareInterface, Ge
         }
         catch (ApiException $exception){
             $this->logger->error("PayGreen Transfer error: {$exception->getMessage()} ({$exception->getCode()})");
-            throw new PaygreenException("PayGreen Transfer error: {$exception->getMessage()} ({$exception->getCode()})");
+            throw new PaygreenException("PayGreen Transfer error: {$exception->getMessage()} ({$exception->getCode()}) - TransactionId={$transfer->getInternalId()}");
         }
     }
 

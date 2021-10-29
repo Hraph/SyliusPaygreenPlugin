@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
-
 use Hraph\PaygreenApi\ApiException;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;

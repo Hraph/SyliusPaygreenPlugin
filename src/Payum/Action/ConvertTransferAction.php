@@ -12,15 +12,10 @@ use Psr\Log\LoggerInterface;
 
 final class ConvertTransferAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
-    /**
-     * ConvertPaymentAction constructor.
-     * @param LoggerInterface $logger
-     */
     public function __construct(LoggerInterface $logger)
     {
         parent::__construct($logger);
     }
-
 
     /**
      * {@inheritdoc}

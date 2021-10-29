@@ -42,3 +42,9 @@ services:
             - "@hraph_sylius_paygreen_plugin.client.paygreen_api_factory"
             - "@hraph_sylius_paygreen_plugin.provider.paygreen_transfer"
             - "@monolog.logger"
+
+    hraph_sylius_paygreen_plugin.client.adapter.paygreen_transfer_api_status_adapter:
+        class: Hraph\SyliusPaygreenPlugin\Client\Adapter\PaygreenTransferApiStatusAdapter
+
+    hraph_sylius_paygreen_plugin.client.adapter.paygreen_payment_api_status_adapter:
+        class: Hraph\SyliusPaygreenPlugin\Client\Adapter\PaygreenPaymentApiStatusAdapter

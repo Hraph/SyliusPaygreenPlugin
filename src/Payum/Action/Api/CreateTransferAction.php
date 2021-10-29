@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action\Api;
 
-
 use Hraph\PaygreenApi\ApiException;
 use Hraph\PaygreenApi\Model\Transfer;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreateTransfer;

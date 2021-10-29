@@ -7,6 +7,7 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\StatusAction
         arguments:
             - "@hraph_sylius_paygreen_plugin.request.get_http_request"
+            - "@hraph_sylius_paygreen_plugin.client.adapter.paygreen_payment_api_status_adapter"
             - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.status }
@@ -60,19 +61,22 @@ services:
     hraph_sylius_paygreen_plugin.action.create_payment:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\Api\CreatePaymentAction
         arguments:
-            - "%hraph_sylius_paygreen_plugin.client.use_insite_mode%" # Parameter fitted in with use_insite_mode dynamically on load
+            - "%hraph_sylius_paygreen_plugin.client.use_insite_mode%"# Parameter fitted in with use_insite_mode dynamically on load
+            - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.create_payment }
     hraph_sylius_paygreen_plugin.action.create_payment_multiple:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\Api\CreatePaymentMultipleAction
         arguments:
-            - "%hraph_sylius_paygreen_plugin.client.use_insite_mode%" # Parameter fitted in with use_insite_mode dynamically on load
+            - "%hraph_sylius_paygreen_plugin.client.use_insite_mode%"# Parameter fitted in with use_insite_mode dynamically on load
+            - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.create_payment }
     hraph_sylius_paygreen_plugin.action.create_fingerprint:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\Api\CreateFingerprintAction
         arguments:
             - "%hraph_sylius_paygreen_plugin.client.use_insite_mode%" # Parameter fitted in with use_insite_mode dynamically on load
+            - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.create_fingerprint }
             - { name: payum.action, factory: paygreen_multiple, alias: payum.action.create_fingerprint }
@@ -82,6 +86,7 @@ services:
         class: Hraph\SyliusPaygreenPlugin\Payum\Action\TransferStatusAction
         arguments:
             - "@hraph_sylius_paygreen_plugin.request.get_http_request"
+            - "@hraph_sylius_paygreen_plugin.client.adapter.paygreen_transfer_api_status_adapter"
             - "@monolog.logger"
         tags:
             - { name: payum.action, factory: paygreen, alias: payum.action.transfer_status }

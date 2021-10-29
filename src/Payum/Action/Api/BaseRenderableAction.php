@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action\Api;
 
-
 use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Reply\HttpPostRedirect;
 use Payum\Core\Reply\HttpResponse;
 use Payum\Core\Request\RenderTemplate;
+use Psr\Log\LoggerInterface;
 
 abstract class BaseRenderableAction extends BaseApiGatewayAwareAction implements BaseRenderableActionInterface
 {
@@ -16,12 +16,9 @@ abstract class BaseRenderableAction extends BaseApiGatewayAwareAction implements
 
     private bool $useInsiteMode;
 
-    /**
-     * BaseRenderableAction constructor.
-     * @param bool $useInsiteMode
-     */
-    public function __construct(bool $useInsiteMode = false)
+    public function __construct(bool $useInsiteMode, LoggerInterface $logger)
     {
+        parent::__construct($logger);
         $this->useInsiteMode = $useInsiteMode;
     }
 

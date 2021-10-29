@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
 use Hraph\PaygreenApi\ApiException;
+use Hraph\SyliusPaygreenPlugin\Client\Adapter\PaygreenPaymentApiStatusAdapter;
+use Hraph\SyliusPaygreenPlugin\Client\Adapter\PaygreenTransferApiStatusAdapter;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Payum\Action\Api\BaseApiGatewayAwareAction;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\GetTransferStatus;
-use Hraph\SyliusPaygreenPlugin\Types\ApiTransferStatus;
 use Hraph\SyliusPaygreenPlugin\Types\TransferDetailsKeys;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\GetHttpRequest;
@@ -19,20 +22,14 @@ use Psr\Log\LoggerInterface;
  */
 final class TransferStatusAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
-    /**
-     * @var GetHttpRequest
-     */
     private GetHttpRequest $getHttpRequest;
+    private PaygreenTransferApiStatusAdapter $apiStatusAdapter;
 
-    /**
-     * StatusAction constructor.
-     * @param GetHttpRequest $getHttpRequest
-     * @param LoggerInterface $logger
-     */
-    public function __construct(GetHttpRequest $getHttpRequest, LoggerInterface $logger)
+    public function __construct(GetHttpRequest $getHttpRequest, PaygreenTransferApiStatusAdapter $apiStatusAdapter, LoggerInterface $logger)
     {
         parent::__construct($logger);
         $this->getHttpRequest = $getHttpRequest;
+        $this->apiStatusAdapter = $apiStatusAdapter;
     }
 
     /**
@@ -44,9 +41,9 @@ final class TransferStatusAction extends BaseApiGatewayAwareAction implements Ac
         RequestNotSupportedException::assertSupports($this, $request);
         $this->gateway->execute($this->getHttpRequest); // Get POST/GET data and query from request
 
-        /** @var PaygreenTransferInterface|null $transfer */
-        $transfer = $request->getModel();
-        $transferDetails = $transfer->getDetails();
+        /** @var PaygreenTransferInterface $transferModel */
+        $transferModel = $request->getModel();
+        $transferDetails = $transferModel->getDetails();
         $tid = null;
 
         // Transfer already executed
@@ -60,31 +57,29 @@ final class TransferStatusAction extends BaseApiGatewayAwareAction implements Ac
 
         try {
             // Search transaction
-            $transferData = $this
+            $transfer = $this
                 ->api
                 ->getPayoutTransferApi()
                 ->apiIdentifiantPayoutTransferIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $tid);
+            $transferData = $transfer->getData();
 
             // Got transaction and valid status
-            if (!is_null($transferData->getData()) && !is_null($transferData->getData()->getResult()) && !is_null($transferData->getData()->getResult()->getStatus())) {
+            if (!is_null($transferData) && !is_null($transferData->getResult()) && !is_null($transferData->getResult()->getStatus())) {
+                $state = $this->apiStatusAdapter->adapt($transferData->getResult()->getStatus());
 
-                switch ($transferData->getData()->getResult()->getStatus()){
-                    case ApiTransferStatus::STATUS_CANCELLED:
+                switch ($state){
+                    case PaygreenTransferInterface::STATE_CANCELLED:
                         $request->markCanceled();
                         break;
-
-                    case ApiTransferStatus::STATUS_SUCCEEDED:
+                    case PaygreenTransferInterface::STATE_COMPLETED:
                         $request->markCompleted();
                         break;
-
-                    case ApiTransferStatus::STATUS_PENDING:
+                    case PaygreenTransferInterface::STATE_PROCESSING:
                         $request->markProcessing();
                         break;
-
-                    case ApiTransferStatus::STATUS_FAILED:
+                    case PaygreenTransferInterface::STATE_FAILED:
                         $request->markFailed();
                         break;
-
                     default:
                         $request->markUnknown();
                         break;
@@ -93,7 +88,7 @@ final class TransferStatusAction extends BaseApiGatewayAwareAction implements Ac
             else throw new ApiException("Invalid API transfer data.");
         }
         catch (ApiException $exception){
-            $this->logger->error("PayGreen Status error: {$exception->getMessage()} ({$exception->getCode()})");
+            $this->logger->error("PayGreen Status error: {$exception->getMessage()} ({$exception->getCode()}) - TransactionId=$tid");
 
             $request->markUnknown(); // Do not throw error
         }

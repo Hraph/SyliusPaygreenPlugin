@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
-
 use Hraph\PaygreenApi\ApiException;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Helper\ConvertRefundDataInterface;
@@ -23,16 +22,8 @@ use Sylius\Component\Core\Model\PaymentInterface;
  */
 final class RefundAction extends BaseApiGatewayAwareAction implements ActionInterface
 {
-    /**
-     * @var ConvertRefundDataInterface
-     */
     private ConvertRefundDataInterface $convertOrderRefundData;
 
-    /**
-     * RefundAction constructor.
-     * @param ConvertRefundDataInterface $convertOrderRefundData
-     * @param LoggerInterface $logger
-     */
     public function __construct(ConvertRefundDataInterface $convertOrderRefundData, LoggerInterface $logger)
     {
         parent::__construct($logger);
