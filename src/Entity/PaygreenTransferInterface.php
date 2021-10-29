@@ -11,7 +11,7 @@ interface PaygreenTransferInterface extends ResourceInterface, ApiEntityInterfac
 {
     public const STATE_PROCESSING = 'processing';
 
-    public const STATE_SUCCEEDED = 'succeeded';
+    public const STATE_COMPLETED = 'completed';
 
     public const STATE_FAILED = 'failed';
 

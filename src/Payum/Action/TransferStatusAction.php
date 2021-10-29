@@ -74,10 +74,11 @@ final class TransferStatusAction extends BaseApiGatewayAwareAction implements Ac
                         break;
 
                     case ApiTransferStatus::STATUS_SUCCEEDED:
-                        $request->markSucceeded();
+                        $request->markCompleted();
+                        break;
 
                     case ApiTransferStatus::STATUS_PENDING:
-                        $request->markPending();
+                        $request->markProcessing();
                         break;
 
                     case ApiTransferStatus::STATUS_FAILED:

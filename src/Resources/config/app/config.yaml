@@ -13,6 +13,30 @@ winzou_state_machine:
                     on: ["pay", "refund"] # Also called when payment is authorized
                     do: ["@hraph_sylius_paygreen_plugin.state_machine.admin_order_payment_state_resolver", "resolve"]
                     args: ["object"]
+    hraph_paygreen_transfer:
+        class: "%hraph_sylius_paygreen_plugin.model.paygreen_transfer.class%"
+        property_path: state
+        graph: hraph_paygreen_transfer
+        state_machine_class: "%sylius.state_machine.class%"
+        states:
+            new: ~
+            processing: ~
+            completed: ~
+            failed: ~
+            cancelled: ~
+        transitions:
+            process:
+                from: [ new ]
+                to: processing
+            complete:
+                from: [ new, processing ]
+                to: completed
+            fail:
+                from: [ new, processing ]
+                to: failed
+            cancel:
+                from: [ new, processing ]
+                to: cancelled
 
 payum:
     storages:

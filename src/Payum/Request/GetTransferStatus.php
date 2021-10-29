@@ -44,12 +44,12 @@ class GetTransferStatus extends Generic
         return $this->status === PaygreenTransferInterface::STATE_CANCELLED;
     }
 
-    public function markPending(): void
+    public function markProcessing(): void
     {
         $this->status = PaygreenTransferInterface::STATE_PROCESSING;
     }
 
-    public function isPending(): bool
+    public function isProcessing(): bool
     {
         return $this->status === PaygreenTransferInterface::STATE_PROCESSING;
     }
@@ -74,14 +74,14 @@ class GetTransferStatus extends Generic
         return $this->status === PaygreenTransferInterface::STATE_NEW;
     }
 
-    public function markSucceeded(): void
+    public function markCompleted(): void
     {
-        $this->status = PaygreenTransferInterface::STATE_SUCCEEDED;
+        $this->status = PaygreenTransferInterface::STATE_COMPLETED;
     }
 
-    public function isSucceeded(): bool
+    public function isCompleted(): bool
     {
-        return $this->status === PaygreenTransferInterface::STATE_SUCCEEDED;
+        return $this->status === PaygreenTransferInterface::STATE_COMPLETED;
     }
 
     public function markUnknown()

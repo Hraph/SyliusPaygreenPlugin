@@ -303,12 +303,18 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
     {
         parent::copyFromApiObject($transfer);
 
-        $this->internalId = $transfer->getId();
+        if ($this->internalId !== $transfer->getId()) {
+            $this->internalId = $transfer->getId();
+        }
         $this->state = $this->adaptApiStateCode($transfer->getStatus());
         $this->amount = intval($transfer->getAmount());
         $this->currency = $transfer->getCurrency();
-        $this->shopId = $transfer->getShopId();
-        $this->bankId = $transfer->getBankId();
+        if (null === $this->shopId) {
+            $this->shopId = $transfer->getShopId();
+        }
+        if (null === $this->bankId) {
+            $this->bankId = $transfer->getBankId();
+        }
         $this->createdAt = $transfer->getCreatedAt();
         $this->scheduledAt = $transfer->getScheduledAt();
         $this->executedAt = $transfer->getExecutedAt();
@@ -331,7 +337,7 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
     {
         switch ($apiStatusCode) {
             case ApiTransferStatus::STATUS_SUCCEEDED:
-                return self::STATE_SUCCEEDED;
+                return self::STATE_COMPLETED;
             case ApiTransferStatus::STATUS_CANCELLED:
                 return self::STATE_CANCELLED;
             case ApiTransferStatus::STATUS_PENDING:
