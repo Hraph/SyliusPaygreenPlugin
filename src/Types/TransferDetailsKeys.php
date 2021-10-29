@@ -8,5 +8,6 @@ namespace Hraph\SyliusPaygreenPlugin\Types;
 class TransferDetailsKeys
 {
     public const PAYGREEN_TRANSFER_ID = "paygreen_tid";
-    public const NOTIFIED_URL = "callbackUrl";
+    public const PAYGREEN_SHOP_ID = "paygreen_shop_id";
+    public const NOTIFIED_URL = "callback_url";
 }

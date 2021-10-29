@@ -23,14 +23,15 @@ class CreateTransferAction extends BaseApiGatewayAwareAction
         // Create transfer object for PayGreen API from ConvertAction
         $transfer = new Transfer($details->toUnsafeArrayWithoutLocal());
 
-        $paymentRequest = $this
+        $transferRequest = $this
             ->api
             ->getPayoutTransferApi()
             ->apiIdentifiantPayoutTransferPost($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $transfer);
 
-        if (!is_null($paymentRequest->getData()) && !is_null($paymentRequest->getData()->getId())) {
+        if (!is_null($transferRequest->getData()) && !is_null($transferRequest->getData()->getId())) {
             // Save transaction id for status action
-            $details[TransferDetailsKeys::PAYGREEN_TRANSFER_ID] = $paymentRequest->getData()->getId();
+            $details[TransferDetailsKeys::PAYGREEN_TRANSFER_ID] = $transferRequest->getData()->getId();
+            $details[TransferDetailsKeys::PAYGREEN_SHOP_ID] = $this->api->getUsername();
         }
         else
             throw new ApiException("Invalid API transfer data.");

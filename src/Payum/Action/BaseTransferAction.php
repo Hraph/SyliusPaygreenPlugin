@@ -6,6 +6,7 @@ use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\GetTransferStatus;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Transfer;
 use Payum\Core\Action\ActionInterface;
+use Hraph\SyliusPaygreenPlugin\Types\TransferDetailsKeys;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareInterface;
@@ -43,6 +44,16 @@ final class BaseTransferAction implements ActionInterface, GatewayAwareInterface
             $this->gateway->execute($request);
         } finally {
             $transfer->setDetails((array) $details);
+
+            // Update internal id
+            if (null === $transfer->getInternalId() && isset($details[TransferDetailsKeys::PAYGREEN_TRANSFER_ID])) {
+                $transfer->setInternalId($details[TransferDetailsKeys::PAYGREEN_TRANSFER_ID]);
+            }
+
+            // Update shopInternalId
+            if (null === $transfer->getShopInternalId() && isset($details[TransferDetailsKeys::PAYGREEN_SHOP_ID])) {
+                $transfer->setShopInternalId($details[TransferDetailsKeys::PAYGREEN_SHOP_ID]);
+            }
         }
     }
 

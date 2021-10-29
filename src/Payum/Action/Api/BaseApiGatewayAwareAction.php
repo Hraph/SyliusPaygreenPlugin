@@ -55,6 +55,4 @@ abstract class BaseApiGatewayAwareAction implements ActionInterface, ApiAwareInt
         $this->apiFactory = $apiFactory;
         $this->api = $apiFactory->createNew(); // This will create a client depending on config and options provided by gateway and previous Payum request
     }
-
-
 }

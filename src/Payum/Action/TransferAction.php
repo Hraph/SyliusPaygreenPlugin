@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
 use Hraph\PaygreenApi\ApiException;
-use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransfer;
-use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
+use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Payum\PaygreenGatewayFactory;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreateTransfer;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Transfer;
@@ -17,7 +16,6 @@ use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareInterface;
 use Payum\Core\GatewayAwareTrait;
-use Payum\Core\Request\Convert;
 use Payum\Core\Security\GenericTokenFactoryAwareInterface;
 use Payum\Core\Security\GenericTokenFactoryAwareTrait;
 use Payum\Core\Security\TokenInterface;
@@ -62,11 +60,11 @@ final class TransferAction implements ActionInterface, GatewayAwareInterface, Ge
         $transfer = $request->getFirstModel();
 
         /** @var TokenInterface|null $token */
-        $token = $request->getToken(); // Get current token if present
+        $token = $request->getToken(); // Get current token if present. If coming from a payum controller, token should be present
         $gatewayConfig = $this->gatewayConfigProvider->provideByFactoryName(PaygreenGatewayFactory::FACTORY_NAME); // To create a notify token we need a valid gateway config
 
         // Create a notify token to get status updates from PayGreen
-        $notifyToken = $this->tokenFactory->createNotifyToken((null !== $token) ? $token->getGatewayName() : $gatewayConfig->getGatewayName(), new PaygreenTransfer());
+        $notifyToken = $this->tokenFactory->createNotifyToken((null !== $token) ? $token->getGatewayName() : $gatewayConfig->getGatewayName(), (null !== $token) ? $token->getDetails() : $transfer);
         $details[TransferDetailsKeys::NOTIFIED_URL] = $notifyToken->getTargetUrl();
 
         try {
@@ -74,7 +72,7 @@ final class TransferAction implements ActionInterface, GatewayAwareInterface, Ge
         }
         catch (ApiException $exception){
             $this->logger->error("PayGreen Transfer error: {$exception->getMessage()} ({$exception->getCode()})");
-            return; // Cause Payum controller is not catching exception we cannot throw one. Will be redirected to return url and state will be determined by statusAction
+            throw new PaygreenException("PayGreen Transfer error: {$exception->getMessage()} ({$exception->getCode()})");
         }
     }
 
