@@ -4,25 +4,20 @@ namespace Hraph\SyliusPaygreenPlugin\Payum\Extension;
 
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\GetTransferStatus;
-use Hraph\SyliusPaygreenPlugin\Types\TransferTransitions;
+use Hraph\SyliusPaygreenPlugin\StateMachine\PaygreenTransferStateApplicator;
 use Payum\Core\Extension\Context;
 use Payum\Core\Extension\ExtensionInterface;
 use Payum\Core\Request\Generic;
 use Payum\Core\Request\GetStatusInterface;
 use Payum\Core\Request\Notify;
-use SM\Factory\FactoryInterface;
-use Sylius\Component\Payment\Model\PaymentInterface;
-use Sylius\Component\Resource\StateMachine\StateMachineInterface;
-use Webmozart\Assert\Assert;
 
 class UpdateTransferStateExtension implements ExtensionInterface
 {
-    /** @var FactoryInterface */
-    private $factory;
+    private PaygreenTransferStateApplicator $stateApplicator;
 
-    public function __construct(FactoryInterface $factory)
+    public function __construct(PaygreenTransferStateApplicator $stateApplicator)
     {
-        $this->factory = $factory;
+        $this->stateApplicator = $stateApplicator;
     }
 
     public function onPreExecute(Context $context): void
@@ -71,20 +66,7 @@ class UpdateTransferStateExtension implements ExtensionInterface
 
         $context->getGateway()->execute($status = new GetTransferStatus($transfer));
         $value = $status->getValue();
-        if ($transfer->getState() !== $value && PaymentInterface::STATE_UNKNOWN !== $value) {
-            $this->updateTransferState($transfer, $value);
-        }
-    }
 
-    private function updateTransferState(PaygreenTransferInterface $transfer, string $nextState): void
-    {
-        $stateMachine = $this->factory->get($transfer, TransferTransitions::GRAPH);
-
-        /** @var StateMachineInterface $stateMachine */
-        Assert::isInstanceOf($stateMachine, StateMachineInterface::class);
-
-        if (null !== $transition = $stateMachine->getTransitionToState($nextState)) {
-            $stateMachine->apply($transition);
-        }
+        $this->stateApplicator->apply($transfer, $value); // Applicator will check if state is not UNKNOWN
     }
 }

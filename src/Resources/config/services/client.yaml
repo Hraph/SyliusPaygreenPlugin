@@ -41,6 +41,8 @@ services:
         arguments:
             - "@hraph_sylius_paygreen_plugin.client.paygreen_api_factory"
             - "@hraph_sylius_paygreen_plugin.provider.paygreen_transfer"
+            - "@hraph_sylius_paygreen_plugin.client.adapter.paygreen_transfer_api_status_adapter"
+            - "@hraph_sylius_paygreen_plugin.state_machine.paygreen_transfer_state_applicator"
             - "@monolog.logger"
 
     hraph_sylius_paygreen_plugin.client.adapter.paygreen_transfer_api_status_adapter:

@@ -1,8 +1,15 @@
 services:
+    _defaults:
+        public: true
+
     hraph_sylius_paygreen_plugin.state_machine.admin_order_payment_state_resolver:
         class: Hraph\SyliusPaygreenPlugin\StateMachine\AdminOrderPaymentStateResolver
-        public: true
         arguments:
             - "@request_stack"
             - "@payum"
             - "@doctrine.orm.default_entity_manager"
+
+    hraph_sylius_paygreen_plugin.state_machine.paygreen_transfer_state_applicator:
+        class: Hraph\SyliusPaygreenPlugin\StateMachine\PaygreenTransferStateApplicator
+        arguments:
+            - "@sm.factory"

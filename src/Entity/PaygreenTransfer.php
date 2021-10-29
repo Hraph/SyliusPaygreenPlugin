@@ -77,6 +77,7 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
 
     /**
      * @var \DateTime|null
+     * @Gedmo\Mapping\Annotation\Timestampable(on="create")
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
     protected ?\DateTime $createdAt = null;
@@ -306,7 +307,6 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
         if ($this->internalId !== $transfer->getId()) {
             $this->internalId = $transfer->getId();
         }
-        $this->state = $this->adaptApiStateCode($transfer->getStatus());
         $this->amount = intval($transfer->getAmount());
         $this->currency = $transfer->getCurrency();
         if (null === $this->shopId) {
@@ -326,24 +326,5 @@ class PaygreenTransfer extends ApiEntity implements PaygreenTransferInterface
     public function isWalletToWalletTransfer(): bool
     {
         return $this->bankId === null;
-    }
-
-    /**
-     * Return adapted status code from the internal paygreen codes
-     * @param string $apiStatusCode
-     * @return string
-     */
-    private function adaptApiStateCode(string $apiStatusCode): string
-    {
-        switch ($apiStatusCode) {
-            case ApiTransferStatus::STATUS_SUCCEEDED:
-                return self::STATE_COMPLETED;
-            case ApiTransferStatus::STATUS_CANCELLED:
-                return self::STATE_CANCELLED;
-            case ApiTransferStatus::STATUS_PENDING:
-                return self::STATE_PROCESSING;
-            default:
-                return self::STATE_FAILED;
-        }
     }
 }

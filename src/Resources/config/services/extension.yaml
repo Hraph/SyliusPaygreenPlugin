@@ -5,6 +5,6 @@ services:
     hraph_sylius_paygreen_plugin.extension.update_transfer_state:
         class: Hraph\SyliusPaygreenPlugin\Payum\Extension\UpdateTransferStateExtension
         arguments:
-            - "@sm.factory"
+            - "@hraph_sylius_paygreen_plugin.state_machine.paygreen_transfer_state_applicator"
         tags:
             - { name: payum.extension, all: true, prepend: true }

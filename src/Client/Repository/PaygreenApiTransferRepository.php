@@ -5,12 +5,14 @@ namespace Hraph\SyliusPaygreenPlugin\Client\Repository;
 
 
 use Hraph\PaygreenApi\ApiException;
+use Hraph\SyliusPaygreenPlugin\Client\Adapter\PaygreenTransferApiStatusAdapter;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiClientInterface;
 use Hraph\SyliusPaygreenPlugin\Client\PaygreenApiFactoryInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\ApiEntityInterface;
 use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Provider\PaygreenTransferProvider;
+use Hraph\SyliusPaygreenPlugin\StateMachine\PaygreenTransferStateApplicator;
 use Hraph\SyliusPaygreenPlugin\Types\ApiConfig;
 use Hraph\SyliusPaygreenPlugin\Types\ApiOptions;
 use Psr\Log\LoggerInterface;
@@ -20,21 +22,22 @@ class PaygreenApiTransferRepository  implements PaygreenApiTransferRepositoryInt
 {
     private PaygreenApiClientInterface $api;
     private PaygreenTransferProvider $transferProvider;
+    private PaygreenTransferApiStatusAdapter $apiStatusAdapter;
+    private PaygreenTransferStateApplicator $stateApplicator;
     private LoggerInterface $logger;
 
-    /**
-     * PaygreenApiTransferRepository constructor.
-     * @param PaygreenApiFactoryInterface $factory
-     * @param PaygreenTransferProvider $transferProvider
-     * @param LoggerInterface $logger
-     */
-    public function __construct(PaygreenApiFactoryInterface $factory, PaygreenTransferProvider $transferProvider, LoggerInterface $logger)
+    public function __construct(PaygreenApiFactoryInterface $factory,
+                                PaygreenTransferProvider $transferProvider,
+                                PaygreenTransferApiStatusAdapter $apiStatusAdapter,
+                                PaygreenTransferStateApplicator $stateApplicator,
+                                LoggerInterface $logger)
     {
         $this->api = $factory->createNew(); // Use default config API
         $this->transferProvider = $transferProvider;
+        $this->apiStatusAdapter = $apiStatusAdapter;
+        $this->stateApplicator = $stateApplicator;
         $this->logger = $logger;
     }
-
 
     /**
      * @param string $internalId
@@ -52,10 +55,15 @@ class PaygreenApiTransferRepository  implements PaygreenApiTransferRepositoryInt
             }
 
             if (!empty($apiTransfer)) {
+                $transfer = $this->transferProvider->provide($apiTransfer->getId());
                 $transfer->copyFromApiObject($apiTransfer);
+                $transfer->setShopInternalId($this->api->getUsername());
+
+                $nextState = $this->apiStatusAdapter->adapt($apiTransfer->getStatus());
+                $this->stateApplicator->apply($transfer, $nextState);
             }
 
-            return $apiTransfer;
+            return $transfer;
         }
         catch (ApiException $exception) {
             $this->logger->error("PayGreen Transfers get error: {$exception->getMessage()} ({$exception->getCode()})");
@@ -80,6 +88,10 @@ class PaygreenApiTransferRepository  implements PaygreenApiTransferRepositoryInt
                     $transfer = $this->transferProvider->provide($apiTransfer->getId());
                     $transfer->copyFromApiObject($apiTransfer);
                     $transfer->setShopInternalId($this->api->getUsername());
+
+                    $nextState = $this->apiStatusAdapter->adapt($apiTransfer->getStatus());
+                    $this->stateApplicator->apply($transfer, $nextState);
+
                     $transfers[] = $transfer;
                 }
             }
