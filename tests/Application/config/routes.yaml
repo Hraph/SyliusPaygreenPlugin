@@ -5,6 +5,13 @@ test:
     requirements:
         _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
 
+test_transfer:
+    path: /{_locale}/createtransfer
+    defaults:
+        _controller: Tests\Hraph\SyliusPaygreenPlugin\App\Controller\MainController::createTransferAction
+    requirements:
+        _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
+
 hraph_sylius_paygreen_plugin_shop:
     resource: "@SyliusPaygreenPlugin/Resources/config/shop_routing.yaml"
     prefix: /{_locale}
