@@ -73,7 +73,7 @@ final class TransferAction implements ActionInterface, GatewayAwareInterface, Ge
         }
         catch (ApiException $exception){
             $this->logger->error("PayGreen Transfer error: {$exception->getMessage()} ({$exception->getCode()})");
-            throw new PaygreenException("PayGreen Transfer error: {$exception->getMessage()} ({$exception->getCode()}) - TransactionId={$transfer->getInternalId()}");
+            throw new PaygreenException("PayGreen Transfer error: {$exception->getMessage()} ({$exception->getCode()})" . ((null !== $transfer->getInternalId()) ? " - TransactionId={$transfer->getInternalId()}" : ""), PaygreenException::CODE_PAYUM);
         }
     }
 

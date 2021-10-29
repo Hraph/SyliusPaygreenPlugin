@@ -24,6 +24,8 @@ services:
         decorates: hraph_sylius_paygreen_plugin.client.paygreen_api_factory
         arguments: ['@app.client.paygreen_api_factory.inner']
 
+    Hraph\SyliusPaygreenPlugin\Provider\GatewayConfigProvider: '@hraph_sylius_paygreen_plugin.provider.gateway_config'
+    
     app.controller.main:
         class: Tests\Hraph\SyliusPaygreenPlugin\App\Controller\MainController
         arguments: []
