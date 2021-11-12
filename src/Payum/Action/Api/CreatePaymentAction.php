@@ -9,6 +9,7 @@ use Hraph\PaygreenApi\ApiException;
 use Hraph\PaygreenApi\Model\Payins;
 use Hraph\PaygreenApi\Model\PayinsBuyer;
 use Hraph\PaygreenApi\Model\PayinsCard;
+use Hraph\PaygreenApi\Model\PayinsShippingAddress;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePayment;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
@@ -29,6 +30,7 @@ class CreatePaymentAction extends BaseRenderableAction implements BaseRenderable
         // Create payins object for PayGreen API from ConvertAction
         $payins = new Payins($details->toUnsafeArrayWithoutLocal());
         $payins->setBuyer(new PayinsBuyer($details['buyer']));
+        $payins->setBillingAddress(new PayinsShippingAddress($details['billing_address']));
 
         // Fingerprint confirmation
         if (isset($details[PaymentDetailsKeys::PAYGREEN_CARDPRINT_ID])) {
@@ -57,7 +59,7 @@ class CreatePaymentAction extends BaseRenderableAction implements BaseRenderable
         if (!is_null($paymentRequest->getData()->getUrl()))
             $this->redirectOrRenderUrl($paymentRequest->getData()->getUrl());
 
-        // Otherwise use returnedUrl
+        // Otherwise, use returnedUrl
         else
             throw new HttpPostRedirect($details[PaymentDetailsKeys::RETURNED_URL]);
     }
