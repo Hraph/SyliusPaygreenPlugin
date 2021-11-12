@@ -10,6 +10,7 @@ use Hraph\PaygreenApi\Model\PayinsBuyer;
 use Hraph\PaygreenApi\Model\PayinsCard;
 use Hraph\PaygreenApi\Model\PayinsRecc;
 use Hraph\PaygreenApi\Model\PayinsReccOrderDetails;
+use Hraph\PaygreenApi\Model\PayinsShippingAddress;
 use Hraph\SyliusPaygreenPlugin\Exception\PaygreenException;
 use Hraph\SyliusPaygreenPlugin\Payum\Request\Api\CreatePaymentMultiple;
 use Hraph\SyliusPaygreenPlugin\Types\PaymentDetailsKeys;
@@ -32,7 +33,8 @@ class CreatePaymentMultipleAction extends BaseRenderableAction implements BaseRe
         $payinsRecc = new PayinsRecc($details->toUnsafeArrayWithoutLocal());
         $payinsRecc
             ->setBuyer(new PayinsBuyer($details['buyer']))
-            ->setOrderDetails(new PayinsReccOrderDetails($details['order_details']));
+            ->setOrderDetails(new PayinsReccOrderDetails($details['order_details']))
+            ->setBillingAddress(new PayinsShippingAddress($details['billing_address']));
 
         // Fingerprint confirmation
         if (isset($details[PaymentDetailsKeys::PAYGREEN_CARDPRINT_ID])) {
@@ -61,7 +63,7 @@ class CreatePaymentMultipleAction extends BaseRenderableAction implements BaseRe
         if (!is_null($paymentRequest->getData()->getUrl()))
             $this->redirectOrRenderUrl($paymentRequest->getData()->getUrl());
 
-        // Otherwise use returnedUrl
+        // Otherwise, use returnedUrl
         else
             throw new HttpPostRedirect($details[PaymentDetailsKeys::RETURNED_URL]);
     }

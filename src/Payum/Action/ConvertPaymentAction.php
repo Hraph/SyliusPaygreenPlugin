@@ -57,6 +57,14 @@ class ConvertPaymentAction extends BaseApiGatewayAwareAction implements ActionIn
                 'first_name' => $order->getBillingAddress()->getFirstName(),
                 'last_name' => $order->getBillingAddress()->getLastName(),
             ],
+            'billing_address' => [
+                'first_name' => $order->getBillingAddress()->getFirstName(),
+                'last_name' => $order->getBillingAddress()->getLastName(),
+                'address' => $order->getBillingAddress()->getStreet(),
+                'zip_code' => $order->getBillingAddress()->getPostcode(),
+                'city' => $order->getBillingAddress()->getCity(),
+                'country' => $order->getBillingAddress()->getCountryCode(),
+            ],
             "order_id" => "{$order->getNumber()}-{$order->getPayments()->count()}", // Cause an order ID is unique for PayGreen we need to add paymentId in case of new attempt
             "payment_type" => $this->api->getPaymentType(),
             'description' => $this->paymentDescription->getPaymentDescription($payment, $order),
