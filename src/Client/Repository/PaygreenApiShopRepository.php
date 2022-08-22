@@ -95,15 +95,17 @@ class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
     public function update(ApiEntityInterface $entity): void
     {
         try {
-            if ($entity->isFromApiData())
+            if ($entity->isFromApiData()) {
                 return;
+            }
 
             /** @var Shop $apiObject */
             $apiObject = $entity->createApiObject();
             $result = $this->api->getShopApi()->apiIdentifiantShopShopIdPut($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $entity->getInternalId(), $apiObject);
 
-            if (!$result->getSuccess())
+            if (!$result->getSuccess()) {
                 throw new ApiException("Update failed: {$result->getMessage()}");
+            }
         }
         catch (ApiException $exception) {
             $this->logger->error("PayGreen Shop update error: {$exception->getMessage()} ({$exception->getCode()})");
@@ -118,19 +120,23 @@ class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
     public function insert(ApiEntityInterface $entity): void
     {
         try {
-            if ($entity->isFromApiData())
+            if ($entity->isFromApiData()) {
                 return;
+            }
 
             /** @var Shop $apiObject */
             $apiObject = $entity->createApiObject();
             $result = $this->api->getShopApi()->apiIdentifiantShopPost($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $apiObject);
 
-            if (!$result->getSuccess())
+            if (!$result->getSuccess()) {
                 throw new ApiException("Insert failed: {$result->getMessage()}");
+            }
             elseif (null !== $result->getData()) {
                 $entity->copyFromApiObject($result->getData());
             }
-            else throw new ApiException("Wrong data");
+            else {
+                throw new ApiException("Wrong data");
+            }
         }
         catch (ApiException $exception) {
             $this->logger->error("PayGreen Shop insert error: {$exception->getMessage()} ({$exception->getCode()})");
