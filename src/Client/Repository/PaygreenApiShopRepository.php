@@ -18,13 +18,8 @@ use Symfony\Polyfill\Intl\Icu\Exception\MethodNotImplementedException;
 class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
 {
     private PaygreenApiClientInterface $api;
-
-    /**
-     * @var LoggerInterface
-     */
-    private LoggerInterface $logger;
-
     private PaygreenShopProvider $shopProvider;
+    private LoggerInterface $logger;
 
     /**
      * PaygreenShopRepository constructor.
@@ -50,6 +45,10 @@ class PaygreenApiShopRepository implements PaygreenApiShopRepositoryInterface
         try {
             $apiShop = $this->api->getShopApi()->apiIdentifiantShopShopIdGet($this->api->getUsername(), $this->api->getApiKeyWithPrefix(), $internalId)->getData();
             $shop = $this->shopProvider->provide($internalId);
+            if (null === $shop->getId()) { // Not found
+                return null;
+            }
+
             if (isset($apiShop)) {
                 $shop->copyFromApiObject($apiShop);
             }

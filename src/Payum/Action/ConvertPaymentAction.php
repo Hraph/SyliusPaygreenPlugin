@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Payum\Action;
 
@@ -17,20 +18,20 @@ use Sylius\Component\Core\Model\PaymentInterface;
 
 class ConvertPaymentAction extends BaseApiGatewayAwareAction implements ActionInterface, GatewayAwareInterface, ApiAwareInterface
 {
-    /**
-     * @var PaymentDescriptionInterface
-     */
     private PaymentDescriptionInterface $paymentDescription;
+    private ?string $orderIdPrefix;
 
     /**
      * ConvertPaymentAction constructor.
      * @param PaymentDescriptionInterface $paymentDescription
+     * @param string|null $orderIdPrefix
      * @param LoggerInterface $logger
      */
-    public function __construct(PaymentDescriptionInterface $paymentDescription, LoggerInterface $logger)
+    public function __construct(PaymentDescriptionInterface $paymentDescription, ?string $orderIdPrefix,  LoggerInterface $logger)
     {
         parent::__construct($logger);
         $this->paymentDescription = $paymentDescription;
+        $this->orderIdPrefix = $orderIdPrefix;
     }
 
 
@@ -46,6 +47,7 @@ class ConvertPaymentAction extends BaseApiGatewayAwareAction implements ActionIn
 
         /** @var OrderInterface $order */
         $order = $payment->getOrder();
+        $orderIdPrefix = (null !== $this->orderIdPrefix) ? $this->orderIdPrefix . '-' : '';
 
         $details = [
             'amount' => $payment->getAmount(),
@@ -65,7 +67,7 @@ class ConvertPaymentAction extends BaseApiGatewayAwareAction implements ActionIn
                 'city' => $order->getBillingAddress()->getCity(),
                 'country' => $order->getBillingAddress()->getCountryCode(),
             ],
-            "order_id" => "{$order->getNumber()}-{$order->getPayments()->count()}", // Cause an order ID is unique for PayGreen we need to add paymentId in case of new attempt
+            "order_id" => "{$orderIdPrefix}{$order->getNumber()}-{$order->getPayments()->count()}", // Cause an order ID is unique for PayGreen we need to add paymentId in case of new attempt
             "payment_type" => $this->api->getPaymentType(),
             'description' => $this->paymentDescription->getPaymentDescription($payment, $order),
             'metadata' => [

@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Client;
 
 
+use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Types\ApiConfig;
 use Hraph\SyliusPaygreenPlugin\Types\ApiOptions;
-use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 
 class PaygreenApiFactory implements PaygreenApiFactoryInterface
@@ -25,6 +26,11 @@ class PaygreenApiFactory implements PaygreenApiFactoryInterface
      * @var PaymentInterface|null
      */
     private ?PaymentInterface $paymentContext = null;
+
+    /**
+     * @var PaygreenTransferInterface|null
+     */
+    private ?PaygreenTransferInterface $transferContext = null;
 
     /**
      * PaygreenApiFactory constructor.
@@ -48,7 +54,7 @@ class PaygreenApiFactory implements PaygreenApiFactoryInterface
     /**
      * @inheritDoc
      */
-    public function setPaymentContextForConfigResolver (PaymentInterface $payment)
+    public function setPaymentContextForConfigResolver (PaymentInterface $payment): void
     {
         $this->paymentContext = $payment;
     }
@@ -56,7 +62,24 @@ class PaygreenApiFactory implements PaygreenApiFactoryInterface
     /**
      * @inheritDoc
      */
-    public function resolveConfigFromPaymentContext(?PaymentInterface $payment): ApiConfig {
+    public function setTransferContextForConfigResolver(PaygreenTransferInterface $transfer): void
+    {
+        $this->transferContext = $transfer;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function resolveConfigFromPaymentContext(?PaymentInterface $payment): ApiConfig
+    {
+        return $this->defaultConfig;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function resolveConfigFromTransferContext(?PaygreenTransferInterface $transfer): ApiConfig
+    {
         return $this->defaultConfig;
     }
 
@@ -82,5 +105,13 @@ class PaygreenApiFactory implements PaygreenApiFactoryInterface
     public function getPaymentContext(): ?PaymentInterface
     {
         return $this->paymentContext;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTransferContext(): ?PaygreenTransferInterface
+    {
+        return $this->transferContext;
     }
 }

@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Hraph\SyliusPaygreenPlugin\Client;
 
 
+use Hraph\SyliusPaygreenPlugin\Entity\PaygreenTransferInterface;
 use Hraph\SyliusPaygreenPlugin\Types\ApiConfig;
 use Hraph\SyliusPaygreenPlugin\Types\ApiOptions;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -24,13 +26,29 @@ interface PaygreenApiFactoryInterface
     public function setPaymentContextForConfigResolver(PaymentInterface $payment);
 
     /**
+     * Set a transfer that would be used to determine the API config
+     * @param PaygreenTransferInterface $transfer
+     * @return mixed
+     */
+    public function setTransferContextForConfigResolver(PaygreenTransferInterface $transfer);
+
+    /**
      * Return a ApiConfig depending on the payment context.
      * Return the default config unless the method is decorated.
-     * Becareful: payment could be null for some a Payum request and sould return the default config
+     * Becareful: payment could be null for some a Payum request and should return the default config
      * @param PaymentInterface|null $payment
      * @return ApiConfig
      */
     public function resolveConfigFromPaymentContext(?PaymentInterface $payment): ApiConfig;
+
+    /**
+     * Return a ApiConfig depending on the transfer context.
+     * Return the default config unless the method is decorated.
+     * Becareful: payment could be null for some a Payum request and should return the default config
+     * @param PaygreenTransferInterface|null $transfer
+     * @return ApiConfig
+     */
+    public function resolveConfigFromTransferContext(?PaygreenTransferInterface $transfer): ApiConfig;
 
     /**
      * Get options for API
@@ -48,4 +66,9 @@ interface PaygreenApiFactoryInterface
      * @return PaymentInterface|null
      */
     public function getPaymentContext(): ?PaymentInterface;
+
+    /**
+     * @return PaygreenTransferInterface|null
+     */
+    public function getTransferContext(): ?PaygreenTransferInterface;
 }

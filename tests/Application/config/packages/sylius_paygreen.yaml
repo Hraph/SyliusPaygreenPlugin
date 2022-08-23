@@ -5,6 +5,7 @@ sylius_paygreen:
         sandbox: '%env(bool:PAYGREEN_API_SANDBOX)%'
     force_use_authorize: true
     use_insite_mode: true
+    order_id_prefix: DEV
 
     resources:
         paygreen_shop:
